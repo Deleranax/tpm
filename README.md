@@ -2,7 +2,7 @@
 
 TPM is a community driven package manager for ComputerCraft written in Lua, that can be hosted on GitHub (or any service that offers static file serving). The base package `tpm` is hosted in this repository, along with the `Default TPM Repository`.
 
-The `Default TPM Repository` is hosted in this GitHub repository, along with all TPM repositories tools. You can submit new packages by opening a pull request against the `main` branch (see [Submit a package](#ComposeAndSubmitApackage)).
+The `Default TPM Repository` is hosted in this GitHub repository, along with all TPM repositories tools. You can submit new packages by opening a pull request against the `main` branch (see [Compose and submit a package](#ComposeAndSubmitApackage)).
 
 ## Host a TPM Repository
 
