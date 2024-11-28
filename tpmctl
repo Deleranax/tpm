@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# TPM Repository Control Command Line Interface
+# Copyright (C) 2024 Deleranax
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+function update {
+  for name in $(ls packages -1 --color=no); do
+    echo "Processing $name"
+    hash=""
+    jq empty < "./packages/$name/manifest.json" || exit 1
+    manifest=$(jq ".files = []" < "./packages/$name/manifest.json")
+    for file in $(find "./packages/$name" -name "*.lua" | sort); do
+      echo "- $file"
+      hash="$hash$(sha256sum $file | cut -d " " -f 1)"
+      manifest=$(jq ".files += [\"$file\"]" <<< "$manifest")
+    done
+    hash="$(echo -n "$hash" | sha256sum - | cut -d " " -f 1)"
+    manifest=$(jq ".digest = \"$hash\"" <<< "$manifest")
+    echo "$manifest" > ./packages/$name/manifest.json
+  done
+}
+
+case $1 in
+"update")
+  update
+  ;;
+esac
+
+cd $OLD_WD
