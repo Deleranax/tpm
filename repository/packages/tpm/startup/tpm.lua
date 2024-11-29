@@ -1,4 +1,4 @@
-local tpm = require("/apis/tpm-api")
+local tpm = require("tpm")
 shell.setPath(shell.path()..":/programs/:/programs/http/")
 
 tpm.reloadDatabase()

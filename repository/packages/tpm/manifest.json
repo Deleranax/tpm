@@ -9,11 +9,5 @@
   ],
   "dependencies": [
     "crypt"
-  ],
-  "digest": "529df0dcb7cefd3712291ddd279ecf444aea972086b905b23d7632cb8dbfb169",
-  "files": [
-    "./packages/tpm/apis/tpm-api.lua",
-    "./packages/tpm/programs/tpm.lua",
-    "./packages/tpm/startup/tpm.lua"
   ]
 }

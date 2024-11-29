@@ -16,27 +16,61 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function update {
+function printUsage {
+  echo "TPM Repository Control Command Line Interface"
+  echo ""
+  echo "$(basename $0) <cmd> [arg1]"
+  echo ""
+  echo "List of commands:"
+  echo "update-index <name>: (Re)Construct repository index. If the name is not specified, reuse the current repository name in index."
+}
+
+function updateIndex {
+  # Get repository name : Argument must be provided or index must be readable
+  if [ -z $1 ]; then
+    jq ".name" -re ./index.json > /dev/null || { echo "Error: Name must be specified (cannot read index)"; exit 1; }
+    repo_name=$(jq ".name" ./index.json)
+    index=$(jq ".name = \"$(echo $repo_name | tr -d \")\"" <<< "{}")
+  else
+    index=$(jq ".name = \"$1\"" <<< "{}")
+  fi
+
+  files=()
+  timestamp=$(date +%s)
+
+  index=$(jq ".timestamp = $timestamp" <<< "$index")
+
   for name in $(ls packages -1 --color=no); do
     echo "Processing $name"
     hash=""
-    jq empty < "./packages/$name/manifest.json" || exit 1
-    manifest=$(jq ".files = []" < "./packages/$name/manifest.json")
-    for file in $(find "./packages/$name" -name "*.lua" | sort); do
+
+    for file in $(find "./packages/$name" -name "*.lua" -printf '%P\n' | sort); do
       echo "- $file"
-      hash="$hash$(sha256sum $file | cut -d " " -f 1)"
-      manifest=$(jq ".files += [\"$file\"]" <<< "$manifest")
+      files=("${files[@]}" $file)
+      index=$(jq ".packages.$name.files += [{\"path\": \"$file\", \"digest\": \"$(sha256sum "./packages/$name/$file" | cut -d " " -f 1)\"}]" <<< "$index")
     done
-    hash="$(echo -n "$hash" | sha256sum - | cut -d " " -f 1)"
-    manifest=$(jq ".digest = \"$hash\"" <<< "$manifest")
-    echo "$manifest" > ./packages/$name/manifest.json
+    echo "$index" > ./index.json
+    echo "$timestamp" > timestamp
+
+    # Source: https://stackoverflow.com/questions/22055238/search-duplicate-element-array
+    uniqueNum=$(printf '%s\n' "${files[@]}" | awk '!($0 in seen){seen[$0];c++} END {print c}')
+    (( uniqueNum != ${#files[@]} )) && {
+      echo ""
+      echo "WARNING: Found files collisions:"
+      printf '%s\n' "${files[@]}" | awk '!($0 in seen){seen[$0];next} 1' | sed 's/^/- /'
+    }
   done
 }
 
 case $1 in
-"update")
-  update
-  ;;
+"update-index")
+  if [ -z $2 ] && ! [ -r ./index.json ]; then
+    echo "Error: Name must be specified"
+    exit 1
+  fi
+  updateIndex $2 ;;
+*)
+  printUsage ;;
 esac
 
 cd $OLD_WD

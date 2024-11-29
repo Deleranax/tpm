@@ -7,9 +7,5 @@
   "maintainers": [
     "Deleranax"
   ],
-  "dependencies": [],
-  "digest": "573426d702bdc5bb22377d80d949ea24147b87f1fb4e3797391cdb629ea33db1",
-  "files": [
-    "./packages/crypt/apis/sha256.lua"
-  ]
+  "dependencies": []
 }

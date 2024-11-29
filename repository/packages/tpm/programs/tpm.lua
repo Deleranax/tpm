@@ -1,4 +1,4 @@
-local tpm = require("/apis/tpm-api")
+local tpm = require("tpm")
 
 local function showUsage()
     print("Usage: ")
