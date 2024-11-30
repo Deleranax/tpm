@@ -42,9 +42,15 @@ end
 
 --- Construct Repository table.
 --- @param index table repository index
+--- @param driver? the driver to use
 --- @return table, string Repository table or nil, message (if there is an error)
-local function load(index)
-    local driver, message = getDriver(v.url);
+local function load(index, driver)
+    local driver = driver
+    local message
+
+    if driver == null then
+        driver, message = getDriver(index.url);
+    end
 
     if driver == nil then
         return nil, message
@@ -93,7 +99,7 @@ local function load(index)
             local content, message = driver.get(url.."/index.json")
 
             if content ~= nil then
-                local ni = textutils.unserialize(data)
+                local ni = textutils.unserializeJSON(data)
 
                 if ni == nil then
                     return false, "Unreadable index"
@@ -197,8 +203,8 @@ local function load(index)
 
                 --- @return table package data (shallow copy)
                 export = function()
-                    local temp = textutils.serialize(package)
-                    return textutils.unserialize(temp)
+                    local temp = textutils.serializeJSON(package)
+                    return textutils.unserializeJSON(temp)
                 end
             }
         end
@@ -209,7 +215,7 @@ end
 --- @param url string repository URL
 --- @return table, string repository table or nil (if there is an error), message (if there is an error)
 local function create(url)
-    local driver, message = getDriver(v.url);
+    local driver, message = getDriver(url);
 
     if driver == nil then
         return nil, message
@@ -229,9 +235,9 @@ local function create(url)
         if content == nil then
             return nil, message
         else
-            local index = textutils.unserialize(content)
+            local index = textutils.unserializeJSON(content)
             index.url = url
-            return loadInternal(driver, index)
+            return load(index, driver)
         end
     end
 end
@@ -240,7 +246,7 @@ end
 --- @param data string the serialized Repository tables
 --- @return table, string list of Repository table or nil, message (if there is an error)
 local function loadAll(data)
-    local list = textutils.unserialize(data)
+    local list = textutils.unserializeJSON(data)
     local rtn = {}
 
     if list == nil then

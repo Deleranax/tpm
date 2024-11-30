@@ -30,7 +30,7 @@ local function loadDatabase()
     end
 
     if not fs.exists(TPM_FOLDER) then
-        repositories = {}
+        repositories = repository.loadAll("{}")
         packages = {}
         return
     end
@@ -39,7 +39,7 @@ local function loadDatabase()
         local file = fs.open(REPOSITORIES_FILE, "r")
 
         if file == nil then
-            repositories = {}
+            repositories = repository.loadAll("{}")
         else
             local r, message = repository.loadAll(file.readAll())
             file.close()
@@ -51,7 +51,7 @@ local function loadDatabase()
             repositories = r
         end
     else
-        repositories = {}
+        repositories = repository.loadAll("{}")
     end
 
     if fs.exists(PACKAGES_FILE) then
@@ -61,7 +61,7 @@ local function loadDatabase()
             packages = {}
         else
             -- TODO: Add unserialization error handling (backup file)
-            packages = textutils.unserialize(file.readAll())
+            packages = textutils.unserializeJSON(file.readAll())
             file.close()
         end
     else
@@ -75,27 +75,27 @@ local function saveDatabase()
         fs.makeDir(TPM_FOLDER)
     end
 
-    local file = fs.open(REPOSITORIES_FILE, "r")
+    local file = fs.open(REPOSITORIES_FILE, "w")
 
     if file == nil then
         error("Unable to save repositories database ("..REPOSITORIES_FILE..")")
     else
-        file.write(textutils.serialize(repositories.exportAll()))
+        file.write(textutils.serializeJSON(repositories.exportAll()))
         file.close()
     end
 
-    local file = fs.open(PACKAGES_FILE, "r")
+    local file = fs.open(PACKAGES_FILE, "w")
 
     if file == nil then
         error("Unable to save packages database ("..PACKAGES_FILE..")")
     else
-        file.write(textutils.serialize(packages))
+        file.write(textutils.serializeJSON(packages))
         file.close()
     end
 end
 
 --- Add a repository.
---- @return boolean, string true if it is successful, the message (if there is an error)
+--- @return boolean, string true if the addition is successful, message (if there is an error)
 local function addRepository(url)
     local r, message = repository.create(url)
 
@@ -116,7 +116,12 @@ local function addRepository(url)
     saveDatabase()
 end
 
--- TODO: Remove repository
+--- Remove a repository.
+--- @return boolean, string true if the removal is successful, message (if there is an error)
+local function removeRepository(url)
+    -- TODO: Remove repository (verify that no packages were installed)
+end
+
 -- TODO: update repository (with timestamp/auto)
 -- TODO: compute dependency graph (only inside a repository)
 -- TODO: download package (with repository disambiguation, file collision detection)

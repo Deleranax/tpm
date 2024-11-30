@@ -26,7 +26,7 @@ end
 --- @return boolean, string true if reachable, the message (if there is an error)
 local function checkURL(url)
     local path = URLToPath(url)
-    if fs.exist() then
+    if fs.exists(path) then
         return true
     else
         return false, path + ": No such file"
