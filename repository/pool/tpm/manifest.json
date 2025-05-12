@@ -1,4 +1,5 @@
 {
+  "description": "Complete package manager for ComputerCraft.",
   "version": "1.0.0",
   "license": "GPL-2.0-or-later",
   "authors": [

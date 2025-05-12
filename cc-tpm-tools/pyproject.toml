@@ -1,0 +1,18 @@
+[project]
+name = "cc-tpm-tools"
+version = "0.1.0"
+description = "CLI and Python tools for CC-TPM."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["typer-slim>=0.15.0"]
+
+[project.urls]
+Homepage = "https://github.com/Deleranax/tpm"
+Issues = "https://github.com/Deleranax/tpm/issues"
+
+[project.scripts]
+cctpm = "main:app"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

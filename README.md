@@ -1,8 +1,10 @@
-# Temver Package Manager (TPM)
+# ComputerCraft Temver Package Manager (CC-TPM)
 
-TPM is a community driven package manager for ComputerCraft written in Lua, that can be hosted on GitHub (or any service that offers static file serving). The base package `tpm` is hosted in this repository, along with the `Default TPM Repository`.
+CC-TPM is a package manager for ComputerCraft written in Lua. It is designed to simplify the distribution of packages by providing tools to host and manage repositories.
 
-The `Default TPM Repository` is hosted in this GitHub repository, along with all TPM repositories tools. You can submit new packages by opening a pull request against the `main` branch (see [Compose and submit a package](#ComposeAndSubmitApackage)).
+A repository is a collection of packages, hosted on GitHub or any other service that offers static file serving. To host your own repository, see [Host a TPM Repository](#HostATPMRepository).
+
+The base package `tpm` is hosted in this repository, along with the `TPM-Default` repository. If you think that your package is an essential, you can submit it by opening a pull request against the `main` branch (see [Compose and submit a package](#ComposeAndSubmitApackage)).
 
 ## Host a TPM Repository
 

@@ -1,4 +1,5 @@
 {
+  "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).",
   "version": "0.1.0",
   "license": "MIT",
   "authors": [
