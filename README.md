@@ -33,8 +33,6 @@ your package is an essential, you can submit it by opening a pull request agains
 The `tpm` base package provides an easy-to-use API to integrate TPM in your programs. For example, you can use TPM as
 the base for your ComputerCraft OS installer.
 
-****
-
 ## Host a TPM Repository
 
 Hosting your TPM repository is the recommended method because it allows **you** to use *GitHub Actions* to automatically
@@ -68,14 +66,14 @@ required to comply with the naming conventions. You can add maintainers with `-m
    ```bash
    cctpm init "My repository" -m "Maintainer" -c "me/my-other-repository"
    ``` 
-   > [!NOTE]
-   > The effective name of a GitHub-hosted TPM repository is *GitHub username*/*repository name*. The "name" as specified
-   > in the manifest will only be used when the repository is hosted outside GitHub.
-   
-   > [!TIP]
-   > Companions are repositories that contain dependencies for this repository. They will be installed along with
-   > repository when installed by the user. To add a repository as a companion, use de `-c` argument with the identifier of
-   > the repository.
+> [!NOTE]
+> The effective name of a GitHub-hosted TPM repository is *GitHub username*/*repository name*. The "name" as specified
+> in the manifest will only be used when the repository is hosted outside GitHub.
+
+> [!TIP]
+> Companions are repositories that contain dependencies for this repository. They will be installed along with
+> repository when installed by the user. To add a repository as a companion, use de `-c` argument with the identifier of
+> the repository.
 
 5. *(Optional)* Set up GitHub Action to automatically rebuild the package index on every push. Create a file named
 `deploy.yml` in the directory `.github/workflows` at the root of your repository. Copy the content of the
@@ -103,7 +101,7 @@ When not using GitHub, your repository will be identified by its URL (e.g., `htt
 convention is to use a simple URL without any trailing `/`.
 
 > [!CAUTION]
-> TPM doesn't verify the unicity of the URL, which means that if the URLs `https://example.com/example` and
+> TPM does not enforce the unicity of the URL, which means that if the URLs `https://example.com/example` and
 > `https://example.example.com/` are considered as two different repositories even if they point to the same manifest.
 > Be careful to distribute it using the same URL format to all the users.
 
@@ -121,10 +119,10 @@ required to comply with the naming conventions. You can add maintainers with `-m
    cctpm init "My repository" -m "Maintainer" -c "me/my-other-repository"
    ```
    
-   > [!TIP]
-   > Companions are repositories that contain dependencies for this repository. They will be installed along with
-   > repository when installed by the user. To add a repository as a companion, use de `-c` argument with the identifier of
-   > the repository.
+> [!TIP]
+> Companions are repositories that contain dependencies for this repository. They will be installed along with
+> repository when installed by the user. To add a repository as a companion, use de `-c` argument with the identifier of
+> the repository.
 
 3. Create a package. See [Publish a package](#publish-a-package).
 
