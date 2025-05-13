@@ -1,10 +1,10 @@
 [project]
 name = "cc-tpm-tools"
-version = "0.1.0"
+version = "0.1.1"
 description = "CLI and Python tools for CC-TPM."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["typer-slim>=0.15.0"]
+dependencies = ["typer-slim>=0.15", "click<8.2"]
 
 [project.urls]
 Homepage = "https://github.com/Deleranax/tpm"

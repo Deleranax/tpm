@@ -8,6 +8,8 @@ on:
 jobs:
   build-tpm-repository:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -17,7 +19,7 @@ jobs:
       - name: Setup cc-tpm-tools
         run: pip install cc-tpm-tools
       - name: Build the index
-        run: |
-          cd repository
-          cctpm build
+        run: cctpm build
       - uses: actions4git/add-commit-push@v1
+        with:
+          commit-message: "Rebuilt repository index"

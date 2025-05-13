@@ -23,20 +23,23 @@ from pathlib import Path
 import typer
 from typing_extensions import List, Annotated
 
-app = typer.Typer(name="CC-TPM Repository Control Utility", rich_markup_mode=None)
+app = typer.Typer(rich_markup_mode=None, no_args_is_help=True)
 
 @app.command()
 def init(
         name: Annotated[str, typer.Argument(help="Name of the repository. Must contain only alphanumeric characters and dashes.")] = None,
         maintainers: Annotated[List[str], typer.Option("--maintainer", "-m", help="Add a maintainer to the repository.")] = [],
-        companions: Annotated[List[str], typer.Option("--companion", "-c", help="Add a companions to the repository. Companions are repositories that contain dependencies for this repository. However, they are not required to be installed when this repository is installed.")] = [],
+        companions: Annotated[List[str], typer.Option("--companion", "-c", help="Add a companions to the repository. Companions are repositories that contain dependencies for this repository.")] = [],
 ):
     """Initialize or modify the repository in the current directory."""
-    if not re.match(r"^[a-zA-Z0-9-]+$", name):
+    if name is not None and not re.match(r"^[a-zA-Z0-9-]+$", name):
         print("Error: Repository name must contain only alphanumeric characters and dashes.")
+
+    root = Path.cwd()
 
     # Load the repository if it exists
     if find_repository_root() is not None:
+        root = get_repository_root()
         manifest = read_repository_manifest()
 
         if name is None:
@@ -50,21 +53,22 @@ def init(
             raise typer.Exit(code=1)
         print(f"Created repository {name}.")
 
-    pool = Path.cwd() / "pool"
+    pool = root / "pool"
     pool.mkdir(exist_ok=True)
 
-    with open(Path.cwd() / "manifest.json", "w") as manifest_file:
+    with open(root / "manifest.json", "w") as manifest_file:
         manifest = {"name": name, "maintainers": maintainers, "companions": companions}
         json.dump(manifest, manifest_file)
 
 @app.command()
 def build():
     """Build the repository index. This command must be run after every change to the repository's content (e.g., packages manifests, packages files, ...)."""
+    manifest = read_repository_manifest()
     root = get_repository_root()
     pool = root / "pool"
     pool.mkdir(exist_ok=True)
 
-    index = {"timestamp": int(time.time()), "packages": []}
+    index = {"timestamp": int(time.time()), "companions": manifest["companions"], "packages": []}
 
     for package_dir in pool.glob("*"):
         if package_dir.is_dir():
@@ -186,3 +190,6 @@ def read_package_index():
     else:
         print("Error: Repository index not found. Have you built the repository? Try 'tpmctl build'.")
         raise typer.Exit(code=1)
+
+if __name__ == "__main__":
+    app()
