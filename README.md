@@ -9,17 +9,17 @@ installing, upgrading, configuring, and removing computer programs for a compute
 
 ***
 
-**Easy to use Command-Line Interface (CLI)**
+### Easy to use Command-Line Interface (CLI)
 
 TPM features a user-friendly CLI interface, inspired by Linux distributions package managers (such as `dnf` or `apt`). It
 is 
 
-**Advanced dependency management**
+### Advanced dependency management
 
 Repositories and packages can have dependencies, which are resolved at installation. The dependency tree is optimized at
 any time: TPM automatically removes unused dependencies (packages or repositories).
 
-**Multiple repositories support**
+### Multiple repositories support
 
 TPM is designed to allow anyone to host their own repository directly on GitHub
 (see [Host a TPM Repository](#host-a-tpm-repository)).
@@ -28,7 +28,7 @@ The base package `tpm` is hosted in this repository, within the `Official defaul
 your package is an essential, you can submit it by opening a pull request against the `main` branch (see
 [Submit a package to the `Official default TPM repository`](#submit-a-package-to-the-official-default-tpm-repository)).
 
-**Complete and documented API**
+### Complete and documented API
 
 The `tpm` base package provides an easy-to-use API to integrate TPM in your programs. For example, you can use TPM as
 the base for your ComputerCraft OS installer.
