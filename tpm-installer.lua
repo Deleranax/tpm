@@ -56,6 +56,8 @@ end
 -- Change require with our method
 _G.require = onlineRequire
 
+print()
+
 local tpm = onlineRequire("/apis/tpm")
 
 local future = tpm.addRepositories("Deleranax/tpm")
