@@ -37,8 +37,12 @@ function deptree.Resolver(initialNodes, getter, ignore, addInitialNodes)
     local new_deps = initialNodes -- Dependencies to be resolved
     local pool = {} -- Resolved dependencies
 
-    if addInitialNodes then
-        pool = initialNodes
+    for _, elem in ipairs(initialNodes) do
+        table.insert(new_deps, elem)
+
+        if addInitialNodes then
+            table.insert(pool, elem)
+        end
     end
 
     --- @return boolean Resolver state (true if complete, false otherwise).
