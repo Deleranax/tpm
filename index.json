@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747511408,
+  "timestamp": 1747511822,
   "name": "Official default TPM repository",
   "maintainers": [
     "Deleranax"
@@ -11,8 +11,12 @@
       "description": "An HTTP repository driver for TPM.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
-      "authors": [],
-      "maintainers": [],
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
       "dependencies": [],
       "files": {}
     },
@@ -21,8 +25,12 @@
       "description": "A file system repository driver for TPM.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
-      "authors": [],
-      "maintainers": [],
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
       "dependencies": [],
       "files": {}
     },
@@ -116,8 +124,12 @@
       "description": "A GitHub repository driver for TPM.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
-      "authors": [],
-      "maintainers": [],
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
       "dependencies": [],
       "files": {
         "apis/tpm/drivers/github.lua": "bc7bd22f23d5cfc67c41f0256b8677886d6a586b9ebe8c4fcfc8a1e8da4b365d"
@@ -143,7 +155,7 @@
         "tpm-driver-fs"
       ],
       "files": {
-        "apis/tpm.lua": "803c69f50bd349338dfb0a724e6f6a80571a61dde6eb1be5ca39627498da076e"
+        "apis/tpm.lua": "de14b21a4fee72172000a7f888c26e5d6446450a12b4a8b8c614458e55aaa337"
       }
     }
   ]
