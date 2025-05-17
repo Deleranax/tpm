@@ -37,7 +37,7 @@ local function onlineRequire(path)
     if cache[path] == nil then
         write("Downloading "..fs.getName(path).."... ")
 
-        local response, message = http.get(url)
+        local response, message = http.get(url, { ["Cache-Control"] = "no-cache" })
 
         if response == nil then
             error("Cannot download library"..message)
@@ -69,11 +69,22 @@ until future.isAvailable()
 
 print(" Done.")
 
-local trsact = future.result()
+local result = future.result()
 
+if next(result.errors) then
+    for _, err in ipairs(result.errors) do
+        print(err)
+    end
+
+    return
+end
+
+print()
 print("You are about to install the following repositories:")
 
-for data in trsact.actions() do
+local trsact = result.transaction
+
+for _, data in ipairs(trsact.actions()) do
     print("- "..data)
 end
 
@@ -83,6 +94,8 @@ print("Press any key to continue...")
 read()
 
 trsact.confirm()
+
+print("Done.")
 
 -- Change back require with original require
 _G.require = localRequire

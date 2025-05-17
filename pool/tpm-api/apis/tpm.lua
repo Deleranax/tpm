@@ -165,7 +165,7 @@ function tpm.addRepositories(...)
         local driver, index = fetchRepository(name)
 
         if driver == nil then
-            table.insert(errors, index)
+            table.insert(errors, name..": "..index)
             return {}
         else
             return index["companions"]
