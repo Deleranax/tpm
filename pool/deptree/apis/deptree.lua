@@ -34,7 +34,7 @@ function deptree.Resolver(initialNodes, getter, ignore, addInitialNodes)
     ignore = ignore or function(_) return false end
 
     local getter_cache = {} -- Getter function results
-    local new_deps = initialNodes -- Dependencies to be resolved
+    local new_deps = {} -- Dependencies to be resolved
     local pool = {} -- Resolved dependencies
 
     for _, elem in ipairs(initialNodes) do
