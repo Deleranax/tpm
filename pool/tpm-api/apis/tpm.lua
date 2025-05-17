@@ -27,7 +27,7 @@ local cache = {}
 
 -- Load the drivers
 for _, elem in ipairs(fs.find("/apis/tpm/drivers/*")) do
-    local name = string.sub(1, -4, fs.getName(elem))
+    local name = string.sub(1, -4, fs.name(elem))
     drivers[name] = require(elem)
 end
 
@@ -156,6 +156,8 @@ end
 --- @params List of repositories identifiers (GitHub identifier, URL...).
 --- @return table, string A FutureTransaction object (or nil), error message (or nil).
 function tpm.addRepositories(...)
+    load()
+
     local errors = {}
 
     local function getter(name)
@@ -230,7 +232,7 @@ function tpm.addRepositories(...)
         return true, {}, {}
     end
 
-    return tact.FutureTransaction(actionFactory)
+    return tact.FutureTransaction(actionFactory, { beforeAll = load, afterAll = flush })
 end
 
 return tpm

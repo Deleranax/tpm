@@ -37,11 +37,10 @@ end
 --- Create a new transaction object that stores a list of actions to be executed atomically.
 ---
 --- @param actions table Array of Actions.
+--- @param eventHandlers table Table of function to be executed when an event occurs.
 --- @return table Transaction object.
-function tact.Transaction(actions)
+function tact.Transaction(actions, eventHandlers)
     local Transaction = {}
-
-    local eventHandlers = {}
 
     --- Set the event handlers.
     ---
@@ -54,7 +53,7 @@ function tact.Transaction(actions)
     --- - after(cancel, i, action): Fired after action number i is confirmed or cancelled.
     ---
     --- @param handlers table Table of function to be executed when an event occurs.
-    function Transaction.setHandler(handlers)
+    function Transaction.setHandlers(handlers)
         eventHandlers.beforeAll = handlers.beforeAll or eventHandlers.beforeAll or function(_, _) end
         eventHandlers.afterAll = handlers.afterAll or eventHandlers.afterAll or function(_, _) end
         eventHandlers.before = handlers.before or eventHandlers.before or function(_, _, _) end
@@ -116,7 +115,8 @@ end
 --- Construct a future that will eventually return a transaction and a list of errors, with all the actions and errors that 'actionFactory' created.
 ---
 --- @param actionFactory function Action factory, accepting nothing and returning true, a list of Actions and a list of errors (string) (or false, nil and nil if no Action can be created anymore).
-function tact.FutureTransaction(actionFactory)
+--- @param eventHandlers table Table of function to be executed when an event occurs.
+function tact.FutureTransaction(actionFactory, eventHandlers)
     if actionFactory == nil then
         error("attempt to create a FutureTransaction with a nil factory")
     end
@@ -137,7 +137,7 @@ function tact.FutureTransaction(actionFactory)
 
             return false
         else
-            return true, { transaction = tact.Transaction(actions), errors = errors }
+            return true, { transaction = tact.Transaction(actions, eventHandlers), errors = errors }
         end
     end
 
