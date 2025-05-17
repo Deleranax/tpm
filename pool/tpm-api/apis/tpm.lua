@@ -175,7 +175,7 @@ function tpm.addRepositories(...)
         return store[name] ~= nil
     end
 
-    local resolver = deptree.Resolver(..., getter, ignore)
+    local resolver = deptree.Resolver({...}, getter, ignore)
 
     local result
     local completed = false
