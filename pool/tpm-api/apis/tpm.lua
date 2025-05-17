@@ -26,9 +26,14 @@ local store = {}
 local cache = {}
 
 -- Load the drivers
-for _, elem in ipairs(fs.find("/apis/tpm/drivers/*.lua")) do
+for _, elem in ipairs(fs.find("/apis/tpm/drivers/*")) do
     local name = string.sub(1, -4, fs.name(elem))
     drivers[name] = require(elem)
+end
+
+-- Added to make it compatible with onlineRequire
+if next(drivers) == nil then
+    drivers["github"] = require("/apis/tpm/drivers/github")
 end
 
 --- Read the storage files.
@@ -148,9 +153,9 @@ end
 
 --- Add a repository.
 ---
---- @param urls table List of repositories identifiers (GitHub identifier, URL...).
+--- @params List of repositories identifiers (GitHub identifier, URL...).
 --- @return table, string A FutureTransaction object (or nil), error message (or nil).
-function tpm.addRepositories(urls)
+function tpm.addRepositories(...)
     local errors = {}
 
     local function getter(name)
@@ -168,7 +173,7 @@ function tpm.addRepositories(urls)
         return store[name] ~= nil
     end
 
-    local resolver = deptree.Resolver(url, getter, ignore)
+    local resolver = deptree.Resolver(arg, getter, ignore)
 
     local result
     local completed = false
@@ -208,7 +213,7 @@ function tpm.addRepositories(urls)
 
                 return true, { action }, {}
             else
-                repository = table.remove(urls)
+                repository = table.remove(arg)
 
                 if repository ~= nil then
                     local action = tact.Action(repository, confirmUserInstalled)

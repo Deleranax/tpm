@@ -14,4 +14,51 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-loadstring("print('a')")
+local PATH_TABLE = {
+    ["/apis/tpm"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm.lua",
+    ["/apis/tpm/drivers/github"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-driver-github/apis/tpm/drivers/github.lua",
+    ["/apis/sha256"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/crypt/apis/sha256.lua",
+    ["/apis/deptree"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/deptree/apis/deptree.lua",
+    ["/apis/tact"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tact/apis/tact.lua",
+    ["/apis/future"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/future/apis/future.lua"
+}
+
+local cache = {}
+
+local localRequire = _G.require
+
+local function onlineRequire(path)
+    local url = PATH_TABLE[path]
+
+    if url == nil then
+        return localRequire(path)
+    end
+
+    if cache[path] == nil then
+        write("Downloading "..fs.name(path).."... ")
+
+        local response, message = http.get(url)
+
+        if response == nil then
+            error("Cannot download library"..message)
+        end
+
+        cache[path] = loadstring(response.readAll())
+
+        print("Done.")
+    else
+        print("Using cached library "..fs.name(path)..".")
+    end
+
+    return cache[path]()
+end
+
+-- Change require with our method
+_G.require = onlineRequire
+
+local tpm = require("/apis/tpm")
+
+tpm.addRepositories("Deleranax/tpm")
+
+-- Change back require with original require
+_G.require = localRequire
