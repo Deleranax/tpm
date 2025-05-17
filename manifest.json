@@ -1,1 +1,7 @@
-{"name": "Official default TPM repository", "maintainers": ["Deleranax"], "companions": []}
+{
+  "name": "Official default TPM repository",
+  "maintainers": [
+    "Deleranax"
+  ],
+  "companions": []
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A future framework library.",
+  "version": "0.1.0",
+  "licence": "GPL-2.0-or-later",
+  "authors": [
+    "Deleranax"
+  ],
+  "maintainers": [
+    "Deleranax"
+  ],
+  "dependencies": []
+}

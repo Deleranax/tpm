@@ -1,5 +1,5 @@
--- TPM HTTP Driver
--- Copyright (C) 2024 Deleranax
+-- TPM library
+-- Copyright (C) 2025 Deleranax
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -14,23 +14,4 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
---- Verify if the URL is valid (reachable)
---- @param url string the URL
---- @return boolean, string true if reachable, the message (if there is an error)
-local function checkURL(url)
-    return http.checkURL(url)
-end
-
---- Get the content of a file
---- @param url string the file URL
---- @return string the content of the file
-local function get(url)
-    local response, message = http.get(url)
-    if reponse ~= nil then
-        return reponse.readAll()
-    else
-        return nil, message
-    end
-end
-
-return {prefix = "http", checkURL = checkURL, get = get}
+loadstring("print('a')")

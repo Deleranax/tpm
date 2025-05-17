@@ -58,7 +58,7 @@ def init(
 
     with open(root / "manifest.json", "w") as manifest_file:
         manifest = {"name": name, "maintainers": maintainers, "companions": companions}
-        json.dump(manifest, manifest_file)
+        json.dump(manifest, manifest_file, indent=2)
 
 @app.command()
 def build():
@@ -68,7 +68,7 @@ def build():
     pool = root / "pool"
     pool.mkdir(exist_ok=True)
 
-    index = {"timestamp": int(time.time()), "companions": manifest["companions"], "packages": []}
+    index = {"timestamp": int(time.time()), **manifest, "packages": []}
 
     for package_dir in pool.glob("*"):
         if package_dir.is_dir():
@@ -98,7 +98,7 @@ def build():
             print(f"Warning: Garbage at '{package_dir.name}'")
 
     with open(root / "index.json", "w") as index_file:
-        json.dump(index, index_file)
+        json.dump(index, index_file, indent=2)
 
 @app.command()
 def package(
@@ -130,7 +130,7 @@ def package(
         raise typer.Exit(code=1)
     else:
         with open(package_manifest_path, "w") as manifest_file:
-            json.dump(package_manifest, manifest_file)
+            json.dump(package_manifest, manifest_file, indent=2)
         print(f"Created package {name}.")
 
 @app.command(name="list")

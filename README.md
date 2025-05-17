@@ -11,8 +11,8 @@ installing, upgrading, configuring, and removing computer programs for a compute
 
 ### Easy to use Command-Line Interface (CLI)
 
-TPM features a user-friendly CLI interface, inspired by Linux distributions package managers (such as `dnf` or `apt`). It
-is 
+TPM features a user-friendly CLI interface with autocompletion, inspired by Linux distributions package managers (such
+as `dnf` or `apt`).
 
 ### Advanced dependency management
 

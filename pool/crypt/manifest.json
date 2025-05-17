@@ -1,6 +1,6 @@
 {
   "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "authors": [
     "Anavrins"

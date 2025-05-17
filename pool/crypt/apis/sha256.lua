@@ -5,6 +5,8 @@
 -- Usage: https://pastebin.com/q2SQ7eRg
 -- Last updated: June 30 2024
 
+local sha256 = {}
+
 local band    = bit32 and bit32.band or bit.band
 local bnot    = bit32 and bit32.bnot or bit.bnot
 local bxor    = bit32 and bit32.bxor or bit.bxor
@@ -114,7 +116,7 @@ end
 --- The digest function is the core of this API, it simply hashes your data with the SHA256 algorithm.
 --- It's the function everybody is familiar with, and most likely what you're looking for.
 --- This function is mainly used for file integrity, however it is not suited for password storage by itself, use PBKDF2 instead.
-local function digest(data)
+function sha256.digest(data)
     local data = data or ""
     data = type(data) == "table" and {upack(data)} or {tostring(data):byte(1,-1)}
 
@@ -128,13 +130,13 @@ end
 --- to authenticate an encrypted message and ensuring that the data was not tampered with.
 --- The key may be a string or a byte array, with a size between 0 and 32 bytes (256-bits), having a key larger than 32 bytes will NOT increase security.
 --- This function *may* be used for password storage, if you choose to do so, you must pass the password as the key argument, and the salt as the data argument.
-local function hmac(data, key)
+function sha256.hmac(data, key)
     local data = type(data) == "table" and {upack(data)} or {tostring(data):byte(1,-1)}
     local key = type(key) == "table" and {upack(key)} or {tostring(key):byte(1,-1)}
 
     local blocksize = 64
 
-    key = #key > blocksize and digest(key) or key
+    key = #key > blocksize and sha256.digest(key) or key
 
     local ipad = {}
     local opad = {}
@@ -149,14 +151,14 @@ local function hmac(data, key)
         ipad[blocksize+i] = data[i]
     end
 
-    ipad = digest(ipad)
+    ipad = sha256.digest(ipad)
 
     for i = 1, blocksize do
         padded_key[i] = opad[i]
         padded_key[blocksize+i] = ipad[i]
     end
 
-    return digest(padded_key)
+    return sha256.digest(padded_key)
 end
 
 --- Password-based key derivation function, returns a "dklen" bytes long array for use in various networking protocol to generate secure cryptographic keys.
@@ -165,7 +167,7 @@ end
 --- You can adjust the number of "iter" to control the speed of the algorithm, higher "iter" means slower hashing, as well as slower cracking.
 --- DO NOT TOUCH "dklen" if you're using it for passwords, simply pass nil or nothing at all (defaults to 32).
 --- Passing a dklen higher than 32 will multiply the number of iterations and will slow the process further without any additional security whatsoever.
-local function pbkdf2(pass, salt, iter, dklen)
+function sha256.pbkdf2(pass, salt, iter, dklen)
     local salt = type(salt) == "table" and salt or {tostring(salt):byte(1,-1)}
     local hashlen = 32
     local dklen = dklen or 32
@@ -183,7 +185,7 @@ local function pbkdf2(pass, salt, iter, dklen)
         isalt[#isalt+1] = band(block, 0xFF)
 
         for j = 1, iter do
-            isalt = hmac(isalt, pass)
+            isalt = sha256.hmac(isalt, pass)
             for k = 1, clen do ikey[k] = bxor(isalt[k], ikey[k] or 0) end
             if j % 200 == 0 then os.queueEvent("PBKDF2", j) coroutine.yield("PBKDF2") end
         end
@@ -195,8 +197,4 @@ local function pbkdf2(pass, salt, iter, dklen)
     return setmetatable(out, mt)
 end
 
-return {
-    digest = digest,
-    hmac   = hmac,
-    pbkdf2 = pbkdf2,
-}
+return sha256

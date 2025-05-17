@@ -1,1 +1,55 @@
-{"timestamp": 1747119786, "packages": [{"name": "tpm", "description": "Complete package manager for ComputerCraft.", "version": "1.0.0", "license": "GPL-2.0-or-later", "authors": ["Deleranax"], "maintainers": ["Deleranax"], "dependencies": ["crypt"], "files": {"apis/tpm.lua": "cd306e10d28d5f9d440e48f1e88956f3a2cb988e364fd70ecc259fd0fc4b0263", "startup/tpm.lua": "8b949d66c02dfd588be741455a0a93f80944f3156291c116da39675734630b08", "programs/tpm.lua": "5bcec1f11ef0df3358b08cf56189a5444f0daad4aced1ec1f31b617f08cd7ac5", "apis/tpm/repository.lua": "bbd0c363b3b3fc911c825e2c10eb886dff65e9a9fbf483f9b062c9cd4f01998d", "apis/tpm/http-driver.lua": "d590edc3d96333ec1f9a6256cf7618e8f051c665bdabfdf32b10e704b067b0b3", "apis/tpm/fs-driver.lua": "85416df321e90c6518cb05fe4f53a741f69dc0fc56e024517bb7aa690c36e675"}}, {"name": "crypt", "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).", "version": "0.1.0", "license": "MIT", "authors": ["Anavrins"], "maintainers": ["Deleranax"], "dependencies": [], "files": {"apis/sha256.lua": "5b5c20a7e6d0336da636857dc161c14e4fee7d0df09d29edfca826a81152ec6d"}}]}
+{
+  "timestamp": 1747407878,
+  "companions": [],
+  "packages": [
+    {
+      "name": "crypt",
+      "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).",
+      "version": "0.1.0",
+      "license": "MIT",
+      "authors": [
+        "Anavrins"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "apis/sha256.lua": "5b5c20a7e6d0336da636857dc161c14e4fee7d0df09d29edfca826a81152ec6d"
+      }
+    },
+    {
+      "name": "tpm",
+      "description": "Complete package manager for ComputerCraft.",
+      "version": "1.0.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [
+        "crypt"
+      ],
+      "files": {
+        "apis/tpm.lua": "cd306e10d28d5f9d440e48f1e88956f3a2cb988e364fd70ecc259fd0fc4b0263",
+        "programs/tpm.lua": "5bcec1f11ef0df3358b08cf56189a5444f0daad4aced1ec1f31b617f08cd7ac5",
+        "startup/tpm.lua": "8b949d66c02dfd588be741455a0a93f80944f3156291c116da39675734630b08",
+        "apis/tpm/fs-driver.lua": "85416df321e90c6518cb05fe4f53a741f69dc0fc56e024517bb7aa690c36e675",
+        "apis/tpm/http-driver.lua": "d590edc3d96333ec1f9a6256cf7618e8f051c665bdabfdf32b10e704b067b0b3",
+        "apis/tpm/repository.lua": "bbd0c363b3b3fc911c825e2c10eb886dff65e9a9fbf483f9b062c9cd4f01998d"
+      }
+    },
+    {
+      "name": "deptree",
+      "description": "A TPM package.",
+      "version": "0.1.0",
+      "licence": "GPL-2.0-or-later",
+      "authors": [],
+      "maintainers": [],
+      "dependencies": [],
+      "files": {}
+    }
+  ]
+}
