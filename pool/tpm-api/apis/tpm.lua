@@ -158,6 +158,7 @@ end
 function tpm.addRepositories(...)
     load()
 
+    local initialRepos = {...}
     local errors = {}
 
     local function getter(name)
@@ -175,7 +176,7 @@ function tpm.addRepositories(...)
         return store[name] ~= nil
     end
 
-    local resolver = deptree.Resolver({...}, getter, ignore)
+    local resolver = deptree.Resolver(initialRepos, getter, ignore)
 
     local result
     local completed = false
@@ -215,7 +216,7 @@ function tpm.addRepositories(...)
 
                 return true, { action }, {}
             else
-                repository = table.remove(arg)
+                repository = table.remove(initialRepos)
 
                 if repository ~= nil then
                     local action = tact.Action(repository, confirmUserInstalled)
