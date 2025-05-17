@@ -60,6 +60,7 @@ local tpm = onlineRequire("/apis/tpm")
 
 local future = tpm.addRepositories("Deleranax/tpm")
 
+print()
 write("Resolving dependencies")
 
 repeat

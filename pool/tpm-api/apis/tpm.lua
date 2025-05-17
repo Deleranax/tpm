@@ -204,6 +204,7 @@ function tpm.addRepositories(...)
     end
 
     local function actionFactory()
+        write("f")
         if completed then
             if next(errors) ~= nil then
                 return true, {}, errors
@@ -217,6 +218,7 @@ function tpm.addRepositories(...)
                 return true, { action }, {}
             else
                 repository = table.remove(initialRepos)
+                write(repository)
 
                 if repository ~= nil then
                     local action = tact.Action(repository, confirmUserInstalled)
