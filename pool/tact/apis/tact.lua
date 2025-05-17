@@ -107,7 +107,7 @@ function tact.Transaction(actions, eventHandlers)
     end
 
     -- Set default handlers
-    Transaction.setHandler({})
+    Transaction.setHandlers({})
 
     return Transaction
 end
