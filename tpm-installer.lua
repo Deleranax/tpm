@@ -58,7 +58,31 @@ _G.require = onlineRequire
 
 local tpm = onlineRequire("/apis/tpm")
 
-tpm.addRepositories("Deleranax/tpm")
+local future = tpm.addRepositories("Deleranax/tpm")
+
+write("Resolving dependencies")
+
+repeat
+    future.poll()
+    write(".")
+until future.isAvailable()
+
+print(" Done.")
+
+local trsact = future.result()
+
+print("You are about to install the following repositories:")
+
+for data in trsact.actions() do
+    print("- "..data)
+end
+
+print()
+print("Press any key to continue...")
+
+read()
+
+trsact.confirm()
 
 -- Change back require with original require
 _G.require = localRequire
