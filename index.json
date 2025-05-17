@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747512262,
+  "timestamp": 1747513251,
   "name": "Official default TPM repository",
   "maintainers": [
     "Deleranax"
@@ -155,7 +155,7 @@
         "tpm-driver-fs"
       ],
       "files": {
-        "apis/tpm.lua": "27c22b10bde29d9a6027d6dae44fb2f1d3131e477953d6882c1e549f924ed300"
+        "apis/tpm.lua": "67eb3c69c186adccc46057c52021fe4c68602a66c5262d8ce4b7fbd06ba7230e"
       }
     }
   ]
