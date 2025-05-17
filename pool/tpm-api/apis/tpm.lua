@@ -27,7 +27,7 @@ local cache = {}
 
 -- Load the drivers
 for _, elem in ipairs(fs.find("/apis/tpm/drivers/*")) do
-    local name = string.sub(1, -4, fs.name(elem))
+    local name = string.sub(1, -4, fs.getName(elem))
     drivers[name] = require(elem)
 end
 

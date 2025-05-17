@@ -35,7 +35,7 @@ local function onlineRequire(path)
     end
 
     if cache[path] == nil then
-        write("Downloading "..fs.name(path).."... ")
+        write("Downloading "..fs.getName(path).."... ")
 
         local response, message = http.get(url)
 
@@ -47,7 +47,7 @@ local function onlineRequire(path)
 
         print("Done.")
     else
-        print("Using cached library "..fs.name(path)..".")
+        print("Using cached library "..fs.getName(path)..".")
     end
 
     return cache[path]()
@@ -56,7 +56,7 @@ end
 -- Change require with our method
 _G.require = onlineRequire
 
-local tpm = require("/apis/tpm")
+local tpm = onlineRequire("/apis/tpm")
 
 tpm.addRepositories("Deleranax/tpm")
 
