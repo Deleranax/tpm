@@ -26,7 +26,7 @@ local drivers = require("/apis/tpm/drivers")
 ---
 --- @param pattern string Package name pattern (Lua pattern).
 --- @param store boolean Search in store (true if it should, false or nil otherwise).
---- @return table Array of package manifests.
+--- @return table Table of arrays of package manifests for each repository where packages where found.
 function package.find(pattern, store)
     local result = {}
 
@@ -37,6 +37,9 @@ function package.find(pattern, store)
     end
 
     for repo_name, repo in pairs(storage.cache) do
+        local result_repo = {}
+        local found = false
+
         for pack_name, pack in pairs(repo.packages) do
             if string.find(pattern, pack_name) then
                 local manifest = {}
@@ -46,8 +49,13 @@ function package.find(pattern, store)
                     manifest[key] = val
                 end
 
-                table.insert(result, manifest)
+                table.insert(result_repo, manifest)
+                found = true
             end
+        end
+
+        if found then
+            table.insert(result, result_repo)
         end
     end
 
