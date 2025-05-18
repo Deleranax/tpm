@@ -28,8 +28,8 @@ function tact.Action(data, apply, rollback)
 
     return {
         data = data,
-        confirm = function() apply(data) end,
-        cancel = rollback or function() rollback(data) end
+        apply = function() apply(data) end,
+        rollback = rollback or function() rollback(data) end
     }
 end
 
