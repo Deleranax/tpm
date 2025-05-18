@@ -132,3 +132,5 @@ function tact.Transaction(actions, eventHandlers)
 
     return Transaction
 end
+
+return tact
