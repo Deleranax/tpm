@@ -17,6 +17,7 @@
 local PATH_TABLE = {
     ["/apis/tpm"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm.lua",
     ["/apis/tpm/repository"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm/repository.lua",
+    ["/apis/tpm/package"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm/package.lua",
     ["/apis/tpm/storage"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm/storage.lua",
     ["/apis/tpm/drivers"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm/drivers.lua",
     ["/apis/tpm/drivers/github"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-driver-github/apis/tpm/drivers/github.lua",

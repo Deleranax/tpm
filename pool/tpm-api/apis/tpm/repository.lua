@@ -91,6 +91,8 @@ function repository.fetchStore(url)
     localIndex.identifier = url
     localIndex.packages = {}
     localIndex.user_installed = false
+
+    return localIndex
 end
 
 --- (Internal) Add repository into the state. The dependencies are not checked.
