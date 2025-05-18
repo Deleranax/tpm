@@ -22,10 +22,34 @@ local turfu = require("/apis/turfu")
 local storage = require("/apis/tpm/storage")
 local drivers = require("/apis/tpm/drivers")
 
---- Retrieve all packages (from cache) that matches a certain name.
+--- Retrieve all packages (from cache or store) that matches a certain name.
 ---
---- @param name string Package name pattern (Lua pattern).
+--- @param pattern string Package name pattern (Lua pattern).
+--- @param store boolean Search in store (true if it should, false or nil otherwise).
 --- @return table Array of package manifests.
-function package.find(name)
+function package.find(pattern, store)
+    local result = {}
 
+    local pool = storage.cache
+
+    if store then
+        pool = storage.store
+    end
+
+    for repo_name, repo in pairs(storage.cache) do
+        for pack_name, pack in pairs(repo.packages) do
+            if string.find(pattern, pack_name) then
+                local manifest = {}
+
+                -- Copy table
+                for key, val in pairs(repo) do
+                    manifest[key] = val
+                end
+
+                table.insert(result, manifest)
+            end
+        end
+    end
+
+    return result
 end

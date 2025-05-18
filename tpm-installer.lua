@@ -27,51 +27,30 @@ local PATH_TABLE = {
     ["/apis/turfu"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/turfu/apis/turfu.lua"
 }
 
-local cache = {}
-
-local localRequire = _G.require
-
 local function onlineRequire(path)
     local url = PATH_TABLE[path]
 
     if url == nil then
-        return localRequire(path)
+        return nil, "no remote "..path
+    end
+    write("Downloading "..path.."... ")
+
+    local response, message = http.get(url, { ["Cache-Control"] = "no-cache" })
+
+    if response == nil then
+        error("Cannot download library: "..message)
     end
 
-    if cache[path] == nil then
-        write("Downloading "..path.."... ")
+    print("Done.")
 
-        local response, message = http.get(url, { ["Cache-Control"] = "no-cache" })
-
-        if response == nil then
-            error("Cannot download library: "..message)
-        end
-
-        print("Done.")
-
-        local fnc = loadstring("--[["..fs.getName(path).."]]-- "..response.readAll())
-
-        local ok, result = pcall(fnc)
-
-        if ok then
-            cache[path] = result
-        else
-            print()
-            error(path..":")
-        end
-    else
-        print("Cached "..path..".")
-    end
-
-    return cache[path]
+    return load(response.readAll(), path, "t", _ENV)
 end
 
--- Change require with our method
-_G.require = onlineRequire
+table.insert(package.loaders, 2, onlineRequire)
 
 print()
 
-local tpm = onlineRequire("/apis/tpm")
+local tpm = require("/apis/tpm")
 
 local future = tpm.addRepositories("Deleranax/tpm")
 
@@ -101,7 +80,7 @@ print("You are about to install the following repositories:")
 local trsact = result.transaction
 
 for _, data in ipairs(trsact.actions()) do
-    print("- "..data)
+    print("- "..data.identifier)
 end
 
 print()
@@ -116,15 +95,23 @@ local function before(rollback, _, repo)
     write("Installing "..repo.identifier.."...")
 end
 
-local function after(rollback, _, repo)
+local function after(_, _, _)
     print(" Done.")
 end
 
 trsact.setHandlers({ before = before, after = after })
-trsact.apply()
+
+local ok, errors = trsact.apply()
 
 print()
-print("Done.")
 
--- Change back require with original require
-_G.require = localRequire
+if not ok then
+    print("Errors:")
+    for _, err in ipairs(errors) do
+        print(err)
+    end
+
+    return
+end
+
+print("Done.")
