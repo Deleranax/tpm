@@ -49,7 +49,7 @@ local function onlineRequire(path)
 
         print("Done.")
 
-        local fnc = loadstring(response.readAll())
+        local fnc = loadstring("--"..path.."\n"..response.readAll())
 
         local ok, result = pcall(fnc)
 
