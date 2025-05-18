@@ -86,7 +86,7 @@ function tact.Transaction(actions, eventHandlers)
         eventHandlers.beforeAll(rollback, table.getn(actions))
 
         for i, action in ipairs(actions) do
-            print(action.identifier)
+            print("ac:"..action.identifier)
             eventHandlers.before(rollback, i, action)
 
             local fnc = action.apply
