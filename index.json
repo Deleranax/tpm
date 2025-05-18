@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747516530,
+  "timestamp": 1747568876,
   "name": "Official default TPM repository",
   "maintainers": [
     "Deleranax"
@@ -45,27 +45,9 @@
       "maintainers": [
         "Deleranax"
       ],
-      "dependencies": [
-        "future"
-      ],
-      "files": {
-        "apis/tact.lua": "b07152c15efe772e8db649af8577beedfe668d4cf36dba0a5c12c84c70073979"
-      }
-    },
-    {
-      "name": "future",
-      "description": "A future framework library.",
-      "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
       "dependencies": [],
       "files": {
-        "apis/future.lua": "0f7ebc84acf32da519eab1b62e4768a72121f36dbd08fbe56c5a58959ba2b79b"
+        "apis/tact.lua": "d9be21e11663068ecfe694255c753fe47251cdf3ffc74ec28bac270d0cd847e6"
       }
     },
     {
@@ -136,6 +118,22 @@
       }
     },
     {
+      "name": "turfu",
+      "description": "A future framework library.",
+      "version": "0.1.0",
+      "licence": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "apis/turfu.lua": "490cde2ce4dac0006a6d02dc6cbf0a5d649574400d4e4a4c5a8f505ef3f67445"
+      }
+    },
+    {
       "name": "tpm-api",
       "description": "A complete package manager API for ComputerCraft.",
       "version": "1.0.0",
@@ -149,13 +147,18 @@
       "dependencies": [
         "deptree",
         "tact",
+        "turfu",
         "crypt",
         "tpm-driver-github",
         "tpm-driver-http",
         "tpm-driver-fs"
       ],
       "files": {
-        "apis/tpm.lua": "87e08bc435db409b44623d3d61e845ccdf9502e365b32d1841583a0c31f9e1d4"
+        "apis/tpm.lua": "7ccd7c2467cb1606fd3853cfc29d1618b6b6e86945eb932a1e13c426f1cacc0b",
+        "apis/tpm/package.lua": "19302aa96bbabac6f54f7131794c69f71b3c35a84e099d42bf95f47b12ca58ee",
+        "apis/tpm/repository.lua": "47c4932c0edb319e4d82ed749a6e06504456a035249c51916b97cb7fa5c5b5c6",
+        "apis/tpm/drivers.lua": "2eb8b18e82fe5acd94059cd4bca0250b54b38bd6df7cb9294ae7f4df091bbc08",
+        "apis/tpm/storage.lua": "d536b05c33d6b9f051550bf0b1f66c20967937a40f6de71dc6d1969bf0824eef"
       }
     }
   ]
