@@ -49,11 +49,12 @@ function tact.Transaction(actions, eventHandlers)
     ---
     --- The 'handlers' table stores functions to be called when an event occurs. The functions must be stored with the
     --- key corresponding to the event name. It must accept the arguments as specified in the event list. The 'rollback'
-    --- argument is a boolean indicating if the actions are rolled back. The events are:
+    --- argument is a boolean indicating if the actions are rolled back, 'data' is the passed data for that action. The
+    --- events are:
     --- - beforeAll(rollback, n): Fired just before all n actions are applied or rolled back.
     --- - afterAll(rollback, n): Fired just after all n actions are applied or rolled back.
-    --- - before(rollback, i, action): Fired before action number i is applied or rolled back.
-    --- - after(rollback, i, action): Fired after action number i is applied or rolled back.
+    --- - before(rollback, i, data): Fired before action number i is applied or rolled back.
+    --- - after(rollback, i, data): Fired after action number i is applied or rolled back.
     ---
     --- @param handlers table Table of function to be executed when an event occurs.
     function Transaction.setHandlers(handlers)
