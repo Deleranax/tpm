@@ -13,3 +13,19 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+local package = {}
+
+local deptree = require("/apis/deptree")
+local tact = require("/apis/tact")
+local turfu = require("/apis/turfu")
+local storage = require("/apis/tpm/storage")
+local drivers = require("/apis/tpm/drivers")
+
+--- Retrieve all packages (from cache) that matches a certain name.
+---
+--- @param name string Package name pattern (Lua pattern).
+--- @return table Array of package manifests.
+function package.find(name)
+
+end

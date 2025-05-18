@@ -49,7 +49,16 @@ local function onlineRequire(path)
 
         print("Done.")
 
-        cache[path] = loadstring(response.readAll())()
+        local fnc = loadstring(response.readAll())
+
+        local ok, result = pcall(fnc)
+
+        if ok then
+            cache[path] = result
+        else
+            print()
+            error(path..":")
+        end
     else
         print("Cached "..path..".")
     end
