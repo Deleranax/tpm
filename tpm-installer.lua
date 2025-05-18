@@ -35,7 +35,7 @@ local function onlineRequire(path)
     end
     write("Downloading "..path.."... ")
 
-    local response, message = http.get(url, { ["Cache-Control"] = "no-cache" })
+    local response, message = http.get(url, { ["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"})
 
     if response == nil then
         error("Cannot download library: "..message)
@@ -89,6 +89,7 @@ print("Press any key to continue...")
 read()
 
 local function before(rollback, _, repo)
+    print(textutils.serialize(repo))
     if rollback then
         write("Removing "..repo.identifier.."...")
     end
