@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747576847,
+  "timestamp": 1747576941,
   "name": "Official default TPM repository",
   "maintainers": [
     "Deleranax"
@@ -47,7 +47,7 @@
       ],
       "dependencies": [],
       "files": {
-        "apis/tact.lua": "a5b7a77caf5520584713cdc5a3772fd022f6d6bb95b53b802f8cdd6690cd7b58"
+        "apis/tact.lua": "a344b7a77bbe92dfa159b0246ec2777a176a74e8e0399d7dc548cad619bca7c5"
       }
     },
     {
