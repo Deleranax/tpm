@@ -1,4 +1,4 @@
--- Future library
+-- Turfu library
 -- Copyright (C) 2025 Deleranax
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -14,15 +14,15 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-local future = {}
+local turfu = {}
 
 --- Construct a future object that need to be repeatedly polled until available.
 ---
 --- Future object represent a value that is not yet available, but will eventually become available (with a certainty of
---- 100%, as this is not an Optional).
+--- 100%, as this is not an Optional). The provided poll function will never be called after it has returned true.
 ---
 --- @param poll function Polling function, accepting nothing and returning the true and the result when available (false and nil otherwise).
-function future.Future(poll)
+function turfu.Future(poll)
     local Future = {}
     local available = false
     local result
@@ -48,10 +48,12 @@ function future.Future(poll)
 
     --- Poll the future.
     function Future.poll()
-        available, result = poll()
+        if not available then
+            available, result = poll()
+        end
     end
 
     return Future
 end
 
-return future
+return turfu

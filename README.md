@@ -16,8 +16,10 @@ as `dnf` or `apt`).
 
 ### Advanced dependency management
 
-Repositories and packages can have dependencies, which are resolved at installation. The dependency tree is optimized at
-any time: TPM automatically removes unused dependencies (packages or repositories).
+Repositories and packages both can have dependencies (which are referred as `companions` when talking about
+repositories). TPM will ensure that the dependency tree is coherent at any time with its transactional system.
+
+If there is an error in the transaction, TPM will automatically roll back the changes.
 
 ### Multiple repositories support
 

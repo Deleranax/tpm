@@ -16,11 +16,14 @@
 
 local PATH_TABLE = {
     ["/apis/tpm"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm.lua",
+    ["/apis/tpm/repository"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm/repository.lua",
+    ["/apis/tpm/storage"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm/storage.lua",
+    ["/apis/tpm/drivers"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-api/apis/tpm/drivers.lua",
     ["/apis/tpm/drivers/github"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tpm-driver-github/apis/tpm/drivers/github.lua",
     ["/apis/sha256"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/crypt/apis/sha256.lua",
     ["/apis/deptree"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/deptree/apis/deptree.lua",
     ["/apis/tact"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/tact/apis/tact.lua",
-    ["/apis/future"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/future/apis/future.lua"
+    ["/apis/turfu"] = "https://raw.githubusercontent.com/Deleranax/tpm/main/pool/turfu/apis/turfu.lua"
 }
 
 local cache = {}
@@ -35,22 +38,22 @@ local function onlineRequire(path)
     end
 
     if cache[path] == nil then
-        write("Downloading "..fs.getName(path).."... ")
+        write("Downloading "..path.."... ")
 
         local response, message = http.get(url, { ["Cache-Control"] = "no-cache" })
 
         if response == nil then
-            error("Cannot download library"..message)
+            error("Cannot download library: "..message)
         end
 
-        cache[path] = loadstring(response.readAll())
+        cache[path] = loadstring(response.readAll())()
 
         print("Done.")
     else
-        print("Using cached library "..fs.getName(path)..".")
+        print("Cached "..path..".")
     end
 
-    return cache[path]()
+    return cache[path]
 end
 
 -- Change require with our method
@@ -96,8 +99,21 @@ print("Press any key to continue...")
 
 read()
 
-trsact.confirm()
+local function before(rollback, _, repo)
+    if rollback then
+        write("Removing "..repo.identifier.."...")
+    end
+    write("Installing "..repo.identifier.."...")
+end
 
+local function after(rollback, _, repo)
+    print(" Done.")
+end
+
+trsact.setHandlers({ before = before, after = after })
+trsact.apply()
+
+print()
 print("Done.")
 
 -- Change back require with original require

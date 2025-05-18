@@ -15,26 +15,29 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 local tact = {}
-local future = require("/apis/future")
 
 --- Construct an Action object, that contains data, a confirm and cancel functions.
 ---
 --- @param data any Action data.
---- @param confirm function Confirmation function, accepting the data (any) and returning anything (will be discarded).
---- @param cancel function Confirmation function, accepting the data (any) and returning anything (will be discarded).
+--- @param apply function Application function, accepting the data (any) and returning anything (will be discarded).
+--- @param rollback function Rollback function, accepting the data (any) and returning anything (will be discarded).
 --- @return table Action object.
-function tact.Action(data, confirm, cancel)
-    confirm = confirm or function(_) end
-    cancel = cancel or function(_) end
+function tact.Action(data, apply, rollback)
+    apply = apply or function(_) end
+    rollback = rollback or function(_) end
 
     return {
         data = data,
-        confirm = function() confirm(data) end,
-        cancel = cancel or function() cancel(data) end
+        confirm = function() apply(data) end,
+        cancel = rollback or function() rollback(data) end
     }
 end
 
 --- Create a new transaction object that stores a list of actions to be executed atomically.
+---
+--- A transaction can be applied by calling apply (which call the apply function of each action). If errors are raised
+--- during the application, the transaction can be rolled back by calling rollback (which execute the rollback function
+--- of each action).
 ---
 --- @param actions table Array of Actions.
 --- @param eventHandlers table Table of function to be executed when an event occurs.
@@ -42,15 +45,17 @@ end
 function tact.Transaction(actions, eventHandlers)
     local Transaction = {}
 
+    local errors = {}
+
     --- Set the event handlers.
     ---
-    --- The 'handlers' table stores functions to be executed when an event occurs. The functions must be stored with the key
-    --- corresponding to the event name. It must accept the arguments as specified in the event list. The 'cancel' argument
-    --- is a boolean indicating if the actions are cancelled. The events are:
-    --- - beforeAll(cancel, n): Fired just before all n actions are confirmed or cancelled.
-    --- - afterAll(cancel, n): Fired just after all n actions are confirmed or cancelled.
-    --- - before(cancel, i, action): Fired before action number i is confirmed or cancelled.
-    --- - after(cancel, i, action): Fired after action number i is confirmed or cancelled.
+    --- The 'handlers' table stores functions to be called when an event occurs. The functions must be stored with the
+    --- key corresponding to the event name. It must accept the arguments as specified in the event list. The 'rollback'
+    --- argument is a boolean indicating if the actions are rolled back. The events are:
+    --- - beforeAll(rollback, n): Fired just before all n actions are applied or rolled back.
+    --- - afterAll(rollback, n): Fired just after all n actions are applied or rolled back.
+    --- - before(rollback, i, action): Fired before action number i is applied or rolled back.
+    --- - after(rollback, i, action): Fired after action number i is applied or rolled back.
     ---
     --- @param handlers table Table of function to be executed when an event occurs.
     function Transaction.setHandlers(handlers)
@@ -73,75 +78,59 @@ function tact.Transaction(actions, eventHandlers)
         return result
     end
 
-    --- Confirm all actions.
-    function Transaction.execute(cancel)
-        if cancel == nil then
-            cancel = false
+    --- Execute all actions.
+    ---
+    --- @param rollback boolean Roll back state (true if the action should be rolled back, false or nil otherwise).
+    function Transaction.execute(rollback)
+        if rollback == nil then
+            rollback = false
         end
 
-        eventHandlers.beforeAll(cancel, table.getn(actions))
+        eventHandlers.beforeAll(rollback, table.getn(actions))
 
         for i, action in ipairs(actions) do
-            eventHandlers.before(cancel, i, action)
+            eventHandlers.before(rollback, i, action)
 
-            if cancel then
-                action.cancel()
-            else
-                action.confirm()
+            local fnc = action.apply
+
+            if rollback then
+                fnc = action.rollback
             end
 
-            eventHandlers.after(cancel, i, action)
+            local ok, err = pcall(fnc)
+
+            if not ok then
+                table.insert(errors, { action = action, error = err })
+            end
+
+            eventHandlers.after(rollback, i, action)
         end
 
         eventHandlers.afterAll(false, table.getn(actions))
     end
 
-    --- Confirm transaction.
-    function Transaction.confirm()
+    --- Apply transaction.
+    ---
+    --- @return table Array of tables containing an action and the error that was raised during the application.
+    function Transaction.apply()
+        errors = {}
         Transaction.execute(false)
+        return errors
     end
 
-    --- Cancel transaction.
-    function Transaction.cancel()
+    --- Roll back transaction.
+    ---
+    --- @return table Array of tables containing an action and the error that was raised during the roll back.
+    function Transaction.rollback()
+        errors = {}
         Transaction.execute(true)
+        return errors
     end
 
     -- Set default handlers
     Transaction.setHandlers({})
 
     return Transaction
-end
-
---- Construct a future that will eventually return a transaction and a list of errors, with all the actions and errors that 'actionFactory' created.
----
---- @param actionFactory function Action factory, accepting nothing and returning true, a list of Actions and a list of errors (string) (or false, nil and nil if no Action can be created anymore).
---- @param eventHandlers table Table of function to be executed when an event occurs.
-function tact.FutureTransaction(actionFactory, eventHandlers)
-    if actionFactory == nil then
-        error("attempt to create a FutureTransaction with a nil factory")
-    end
-
-    local actions = {}
-    local errors = {}
-
-    local function poll()
-        local status, n_actions, n_errors = actionFactory()
-        if status then
-            for _, elem in ipairs(n_actions) do
-                table.insert(actions, elem)
-            end
-
-            for _, elem in ipairs(n_errors) do
-                table.insert(errors, elem)
-            end
-
-            return false
-        else
-            return true, { transaction = tact.Transaction(actions, eventHandlers), errors = errors }
-        end
-    end
-
-    return future.Future(poll)
 end
 
 return tact

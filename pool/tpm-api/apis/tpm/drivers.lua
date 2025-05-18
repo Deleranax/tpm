@@ -14,8 +14,17 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-local repository = require("/apis/tpm/repository")
+local drivers = {}
 
-return {
-    addRepositories = repository.add
-}
+-- Load the drivers
+for _, elem in ipairs(fs.find("/apis/tpm/drivers/*")) do
+    local name = string.sub(1, -4, fs.name(elem))
+    drivers[name] = require(elem)
+end
+
+-- Added to make it compatible with onlineRequire
+if next(drivers) == nil then
+    drivers.github = require("/apis/tpm/drivers/github")
+end
+
+return drivers
