@@ -46,9 +46,9 @@ local function onlineRequire(path)
             error("Cannot download library: "..message)
         end
 
-        cache[path] = loadstring(response.readAll())()
-
         print("Done.")
+
+        cache[path] = loadstring(response.readAll())()
     else
         print("Cached "..path..".")
     end
