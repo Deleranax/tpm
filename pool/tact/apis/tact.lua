@@ -51,6 +51,8 @@ function tact.Transaction(actions, eventHandlers)
     --- key corresponding to the event name. It must accept the arguments as specified in the event list. The 'rollback'
     --- argument is a boolean indicating if the actions are rolled back, 'data' is the passed data for that action,
     --- 'error' is a boolean indicating that there was at least one error. The events are:
+    --- - open(): Fired before starting the transaction.
+    --- - close(): Fired after finishing the transaction
     --- - beforeAll(rollback, n): Fired just before all n actions are applied or rolled back.
     --- - afterAll(rollback, n, error): Fired just after all n actions are applied or rolled back.
     --- - before(rollback, i, data): Fired before action number i is applied or rolled back.
@@ -58,6 +60,8 @@ function tact.Transaction(actions, eventHandlers)
     ---
     --- @param handlers table Table of function to be executed when an event occurs.
     function Transaction.setHandlers(handlers)
+        eventHandlers.open = handlers.open or eventHandlers.open or function() end
+        eventHandlers.close = handlers.close or eventHandlers.close or function() end
         eventHandlers.beforeAll = handlers.beforeAll or eventHandlers.beforeAll or function(_, _) end
         eventHandlers.afterAll = handlers.afterAll or eventHandlers.afterAll or function(_, _, _) end
         eventHandlers.before = handlers.before or eventHandlers.before or function(_, _, _) end
@@ -114,6 +118,8 @@ function tact.Transaction(actions, eventHandlers)
     ---
     --- @return boolean, table The application state (true if applied, false otherwise), array of tables (or nil) containing an action and the error that was raised during the application.
     function Transaction.apply()
+        eventHandlers.open()
+
         local errors = execute(false, actions)
 
         if next(errors) then
@@ -123,8 +129,12 @@ function tact.Transaction(actions, eventHandlers)
                 table.insert(errors, elem)
             end
 
+            eventHandlers.close()
+
             return false, errors
         end
+
+        eventHandlers.close()
 
         return true
     end

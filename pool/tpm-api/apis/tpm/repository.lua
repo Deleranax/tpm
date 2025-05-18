@@ -104,6 +104,10 @@ end
 
 --- Add repositories and their dependencies.
 ---
+--- IMPORTANT: Do not modify the open and close handlers of the transaction. They are used, respectively, to load and
+--- flush the store. Only do so if you know what you do, or if you want to do a 'dry run' (by removing the close handler
+--- responsible for flushing the store).
+---
 --- @params List of repositories identifiers (GitHub identifier, URL...).
 --- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
 function repository.add(...)
@@ -161,7 +165,7 @@ function repository.add(...)
                     table.insert(actions, tact.Action(repo, repository.addUnchecked, repository.removeUnchecked))
                 else
                     return true, {
-                        transaction = tact.Transaction(actions, { beforeAll = storage.load, afterAll = storage.flush }),
+                        transaction = tact.Transaction(actions, { open = storage.load, close = storage.flush }),
                         errors = errors
                     }
                 end
@@ -184,6 +188,10 @@ function repository.removeUnchecked(index)
 end
 
 --- Remove repositories and their unused dependencies.
+---
+--- IMPORTANT: Do not modify the open and close handlers of the transaction. They are used, respectively, to load and
+--- flush the store. Only do so if you know what you do, or if you want to do a 'dry run' (by removing the close handler
+--- responsible for flushing the store).
 ---
 --- @params List of repositories identifiers (GitHub identifier, URL...).
 --- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
@@ -240,7 +248,7 @@ function repository.remove(...)
                 table.insert(actions, tact.Action(repo, repository.removeUnchecked, repository.addUnchecked))
             else
                 return true, {
-                    transaction = tact.Transaction(actions, { beforeAll = storage.load, afterAll = storage.flush }),
+                    transaction = tact.Transaction(actions, { open = storage.load, close = storage.flush }),
                     errors = errors
                 }
             end
