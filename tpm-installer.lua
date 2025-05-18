@@ -89,11 +89,11 @@ print("Press any key to continue...")
 read()
 
 local function before(rollback, _, repo)
-    print(textutils.serialize(repo))
     if rollback then
         write("Removing "..repo.identifier.."...")
+    else
+        write("Installing "..repo.identifier.."...")
     end
-    write("Installing "..repo.identifier.."...")
 end
 
 local function after(_, _, _)
@@ -109,7 +109,7 @@ print()
 if not ok then
     print("Errors:")
     for _, err in ipairs(errors) do
-        print(err)
+        print(err.error)
     end
 
     return
