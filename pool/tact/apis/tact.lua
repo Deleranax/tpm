@@ -36,16 +36,14 @@ end
 --- Create a new transaction object that stores a list of actions to be executed atomically.
 ---
 --- A transaction can be applied by calling apply (which call the apply function of each action). If errors are raised
---- during the application, the transaction can be rolled back by calling rollback (which execute the rollback function
---- of each action).
+--- during the application, the transaction is rolled back (after the application is finished - an error does not stop
+--- the application process).
 ---
 --- @param actions table Array of Actions.
 --- @param eventHandlers table Table of function to be executed when an event occurs.
 --- @return table Transaction object.
 function tact.Transaction(actions, eventHandlers)
     local Transaction = {}
-
-    local errors = {}
 
     --- Set the event handlers.
     ---
@@ -80,11 +78,10 @@ function tact.Transaction(actions, eventHandlers)
 
     --- Execute all actions.
     ---
-    --- @param rollback boolean Roll back state (true if the action should be rolled back, false or nil otherwise).
-    function Transaction.execute(rollback)
-        if rollback == nil then
-            rollback = false
-        end
+    --- @param rollback boolean Roll back state (true if the action should be rolled back, false otherwise).
+    --- @return table Array of executed Actions, array of tables containing an action and the error that was raised during the application.
+    local function execute(rollback)
+        local errors = {}
 
         eventHandlers.beforeAll(rollback, table.getn(actions))
 
@@ -107,24 +104,27 @@ function tact.Transaction(actions, eventHandlers)
         end
 
         eventHandlers.afterAll(false, table.getn(actions))
+
+        return errors
     end
 
     --- Apply transaction.
     ---
-    --- @return table Array of tables containing an action and the error that was raised during the application.
+    --- @return boolean, table The application state (true if applied, false otherwise), array of tables (or nil) containing an action and the error that was raised during the application.
     function Transaction.apply()
-        errors = {}
-        Transaction.execute(false)
-        return errors
-    end
+        local errors = execute(false, actions)
 
-    --- Roll back transaction.
-    ---
-    --- @return table Array of tables containing an action and the error that was raised during the roll back.
-    function Transaction.rollback()
-        errors = {}
-        Transaction.execute(true)
-        return errors
+        if next(errors) then
+            local newErrors = execute(true, actions)
+
+            for _, elem in ipairs(newErrors) do
+                table.insert(errors, elem)
+            end
+
+            return false, errors
+        end
+
+        return true
     end
 
     -- Set default handlers
@@ -132,5 +132,3 @@ function tact.Transaction(actions, eventHandlers)
 
     return Transaction
 end
-
-return tact
