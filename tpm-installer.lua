@@ -35,7 +35,7 @@ local function onlineRequire(path)
     end
     write("Downloading "..path.."... ")
 
-    local response, message = http.get(url, { ["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"})
+    local response, message = http.get(url)
 
     if response == nil then
         error("Cannot download library: "..message)
@@ -88,6 +88,22 @@ print("Press any key to continue...")
 
 read()
 
+local function beforeAll(rollback, n)
+    if rollback then
+        print("Rolling back changes...")
+    else
+        print("Installing "..n.." repositories...")
+    end
+end
+
+local function afterAll(_, _, errors)
+    if errors then
+        print("Completed with errors!\n")
+    else
+       print("Completed!\n")
+    end
+end
+
 local function before(rollback, _, repo)
     if rollback then
         write("Removing "..repo.identifier.."...")
@@ -96,15 +112,17 @@ local function before(rollback, _, repo)
     end
 end
 
-local function after(_, _, _)
-    print(" Done.")
+local function after(_, _, _, error)
+    if error then
+        print("Error!")
+    else
+        print(" Done.")
+    end
 end
 
-trsact.setHandlers({ before = before, after = after })
+trsact.setHandlers({ beforeAll = beforeAll, before = before, afterAll = afterAll, after = after })
 
 local ok, errors = trsact.apply()
-
-print()
 
 if not ok then
     print("Errors:")

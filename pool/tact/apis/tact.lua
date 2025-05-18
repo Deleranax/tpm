@@ -49,19 +49,19 @@ function tact.Transaction(actions, eventHandlers)
     ---
     --- The 'handlers' table stores functions to be called when an event occurs. The functions must be stored with the
     --- key corresponding to the event name. It must accept the arguments as specified in the event list. The 'rollback'
-    --- argument is a boolean indicating if the actions are rolled back, 'data' is the passed data for that action. The
-    --- events are:
+    --- argument is a boolean indicating if the actions are rolled back, 'data' is the passed data for that action,
+    --- 'error' is a boolean indicating that there was at least one error. The events are:
     --- - beforeAll(rollback, n): Fired just before all n actions are applied or rolled back.
-    --- - afterAll(rollback, n): Fired just after all n actions are applied or rolled back.
+    --- - afterAll(rollback, n, error): Fired just after all n actions are applied or rolled back.
     --- - before(rollback, i, data): Fired before action number i is applied or rolled back.
-    --- - after(rollback, i, data): Fired after action number i is applied or rolled back.
+    --- - after(rollback, i, data, error): Fired after action number i is applied or rolled back.
     ---
     --- @param handlers table Table of function to be executed when an event occurs.
     function Transaction.setHandlers(handlers)
         eventHandlers.beforeAll = handlers.beforeAll or eventHandlers.beforeAll or function(_, _) end
-        eventHandlers.afterAll = handlers.afterAll or eventHandlers.afterAll or function(_, _) end
+        eventHandlers.afterAll = handlers.afterAll or eventHandlers.afterAll or function(_, _, _) end
         eventHandlers.before = handlers.before or eventHandlers.before or function(_, _, _) end
-        eventHandlers.after = handlers.after or eventHandlers.after or function(_, _, _) end
+        eventHandlers.after = handlers.after or eventHandlers.after or function(_, _, _, _) end
     end
 
     --- Get all actions data.
@@ -99,12 +99,13 @@ function tact.Transaction(actions, eventHandlers)
 
             if not ok then
                 table.insert(errors, { data = action.data, error = err })
+                eventHandlers.after(rollback, i, action.data, true)
+            else
+                eventHandlers.after(rollback, i, action.data, false)
             end
-
-            eventHandlers.after(rollback, i, action.data)
         end
 
-        eventHandlers.afterAll(false, table.getn(actions))
+        eventHandlers.afterAll(rollback, table.getn(actions), next(errors) ~= nil)
 
         return errors
     end
