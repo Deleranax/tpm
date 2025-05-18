@@ -14,7 +14,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-local repository
+local repository = {}
 
 local deptree = require("/apis/deptree")
 local tact = require("/apis/tact")
