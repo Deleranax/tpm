@@ -87,7 +87,7 @@ function tact.Transaction(actions, eventHandlers)
         eventHandlers.beforeAll(rollback, table.getn(actions))
 
         for i, action in ipairs(actions) do
-            eventHandlers.before(rollback, i, action)
+            eventHandlers.before(rollback, i, action.data)
 
             local fnc = action.apply
 
@@ -101,7 +101,7 @@ function tact.Transaction(actions, eventHandlers)
                 table.insert(errors, { data = action.data, error = err })
             end
 
-            eventHandlers.after(rollback, i, action)
+            eventHandlers.after(rollback, i, action.data)
         end
 
         eventHandlers.afterAll(false, table.getn(actions))
