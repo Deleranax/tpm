@@ -79,14 +79,13 @@ function tact.Transaction(actions, eventHandlers)
     --- Execute all actions.
     ---
     --- @param rollback boolean Roll back state (true if the action should be rolled back, false otherwise).
-    --- @return table Array of executed Actions, array of tables containing an action and the error that was raised during the application.
+    --- @return table Array of executed Actions, array of tables containing an action data and the error that was raised during the application of this action.
     local function execute(rollback)
         local errors = {}
 
         eventHandlers.beforeAll(rollback, table.getn(actions))
 
         for i, action in ipairs(actions) do
-            print(textutils.serialize(action))
             eventHandlers.before(rollback, i, action)
 
             local fnc = action.apply
@@ -98,7 +97,7 @@ function tact.Transaction(actions, eventHandlers)
             local ok, err = pcall(fnc)
 
             if not ok then
-                table.insert(errors, { action = action, error = err })
+                table.insert(errors, { data = action.data, error = err })
             end
 
             eventHandlers.after(rollback, i, action)
