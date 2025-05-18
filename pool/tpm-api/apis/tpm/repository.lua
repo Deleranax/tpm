@@ -158,6 +158,10 @@ function repository.add(...)
 
                     repo.user_installed = true
 
+                    print(actions)
+                    print(tact)
+                    print(repository)
+
                     table.insert(actions, tact.Action(repo, repository.addUnchecked, repository.removeUnchecked))
                 else
                     return true, {
