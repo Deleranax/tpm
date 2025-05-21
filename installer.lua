@@ -51,19 +51,23 @@ end
 
 table.insert(package.loaders, 2, onlineRequire)
 
+local function resolveFuture(future)
+    repeat
+        future.poll()
+        write(".")
+    until future.isAvailable()
+end
+
 print()
 
-local tpm = require("ccpm")
+local ccpm = require("ccpm")
 
-local future = tpm.addRepositories("Deleranax/ccpm")
+local future = ccpm.addRepositories("Deleranax/ccpm")
 
 print()
 write("Resolving dependencies")
 
-repeat
-    future.poll()
-    write(".")
-until future.isAvailable()
+resolveFuture(future)
 
 print(" Done.")
 

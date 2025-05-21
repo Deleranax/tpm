@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-tpm-repository:
+  build-ccpm-repository:
     runs-on: ubuntu-latest
     permissions:
       contents: write

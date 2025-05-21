@@ -23,7 +23,7 @@ local sha256 = require("crypt.sha256")
 local tamed = require("tamed")
 local storage = require("ccpm.storage")
 local drivers = require("ccpm.drivers")
-local repository = require("/apis/tpm/repository")
+local repository = require("ccpm.repository")
 
 --- Retrieve all packages (available of installed) that matches a certain name.
 ---
@@ -31,7 +31,7 @@ local repository = require("/apis/tpm/repository")
 --- followed by a repository identifier with wildcard at the end of the package name.
 ---
 --- For instance, if you want to match all CCPM drivers within all of Deleranax's repositories, you can use the following
---- pattern: "tpm-driver-*@Deleranax/*"
+--- pattern: "ccpm-driver-*@Deleranax/*"
 ---
 --- @param pattern string Package name with wildcards.
 --- @param installed boolean Installed packages (true if it only matches with installed packages, false or nil otherwise).

@@ -19,6 +19,6 @@ local repository = require("ccpm.repository")
 
 return {
     flush = storage.flush,
-    addRepos = repository.add,
-    removeRepos = repository.remove,
+    register = repository.add,
+    unregister = repository.remove,
 }

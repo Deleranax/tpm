@@ -9,6 +9,6 @@
     "Deleranax"
   ],
   "dependencies": [
-    "tpm-api"
+    "libccpm"
   ]
 }

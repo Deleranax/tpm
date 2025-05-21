@@ -45,13 +45,13 @@ will simplify the usage of GitHub-hosted repository by automatically figuring ou
 
 When using GitHub, your repository will be identified by its GitHub identifier (*GitHub username*/*repository name*).
 For instance, this repository (the `Official CCPM repository`) can be installed with the CCPM command
-`tpm repo add Deleranax/ccpm`.
+`ccpm register Deleranax/ccpm`.
 
 1. Install the Python package `ccpm-tools` which contains tools to simplify the deployment of new CCPM
 repositories (requires Python >= 3.12).
     ```bash
     pip install ccpm-tools
-    cctpm
+    ccpm-tools
     ```
 
 2. Create a new repository on GitHub. The naming convention for CCPM repository/packages is the *kebab-case* (all lower
@@ -66,7 +66,7 @@ case with hyphens).
 required to comply with the naming conventions. You can add maintainers with `-m` and companion repositories with
 `-c`.
    ```bash
-   cctpm init "My repository" -m "Maintainer" -c "me/my-other-repository"
+   ccpm-tools init "My repository" -m "Maintainer" -c "me/my-other-repository"
    ``` 
 > [!NOTE]
 > The effective name of a GitHub-hosted CCPM repository is *GitHub username*/*repository name*. The "name" as specified
@@ -86,7 +86,7 @@ required to comply with the naming conventions. You can add maintainers with `-m
 7. Update the repository index. When you modify something in the repository (a package file, a package manifest, or the
 repository manifest), you need to rebuild the package index. **You can skip this step if you did the optional step 5**.
    ```bash 
-   cctpm build
+   ccpm-tools build
    ```
 
 8. Commit and push to GitHub.
@@ -95,7 +95,7 @@ repository manifest), you need to rebuild the package index. **You can skip this
    git push
    ```
 
-9. Enjoy! You can install the repository using `tpm repo add *GitHub username*/*repository name*`.
+9. Enjoy! You can install the repository using `ccpm register *GitHub username*/*repository name*`.
 
 ### With any HTTPS-capable static file serving service
 
@@ -111,19 +111,19 @@ convention is to use a simple URL without any trailing `/`.
 repositories (requires Python >= 3.12). You can install it on your local machine or directly on your server.
     ```bash
     pip install ccpm-tools
-    cctpm
+    ccpm-tools
     ```
 
 2. Set up the CCPM repository. The name specified in the command is just a display name, which means that you are not
 required to comply with the naming conventions. You can add maintainers with `-m` and companion repositories with
 `-c`.
    ```bash
-   cctpm init "My repository" -m "Maintainer" -c "me/my-other-repository"
+   ccpm-tools init "My repository" -m "Maintainer" -c "me/my-other-repository"
    ```
    
 > [!TIP]
-> Companions are repositories that contain dependencies for this repository. They will be installed along with
-> repository when installed by the user. To add a repository as a companion, use de `-c` argument with the identifier of
+> Companions are repositories that contain dependencies for this repository. They will be added along with the
+> repository when added by the user. To add a repository as a companion, use de `-c` argument with the identifier of
 > the repository.
 
 3. Create a package. See [Publish a package](#publish-a-package).
@@ -135,7 +135,7 @@ repository manifest), you need to rebuild the package index.
    ```
 5. Upload/statically serve the directory in which you executed the commands.
 
-6. Enjoy! You can install the repository using `tpm repo add *URL*`.
+6. Enjoy! You can install the repository using `ccpm register *URL*`.
 
 ## Publish a package
 

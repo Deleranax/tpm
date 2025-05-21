@@ -14,8 +14,8 @@
     "turfu",
     "crypt",
     "commons",
-    "tpm-driver-github",
-    "tpm-driver-http",
-    "tpm-driver-fs"
+    "libccpm-driver-github",
+    "libccpm-driver-http",
+    "libccpm-driver-fs"
   ]
 }
