@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747849075,
+  "timestamp": 1747849392,
   "name": "Official CCPM repository",
   "maintainers": [
     "Deleranax"
@@ -60,7 +60,7 @@
       "files": {
         "lib/ccpm/package.lua": "2337207446d8eaa37de21da931e7df842ba28d28d708163c55ba468fc17be516",
         "lib/ccpm/repository.lua": "ed52d162c3e5a1a5c49e575f5edeeabbccd427a790415b0d092ce7a8d77c3df3",
-        "lib/ccpm/init.lua": "0ab9cf160ee864ba10db26c53ae36e224bdccbd0dd924a3ccce8924274754de4",
+        "lib/ccpm/init.lua": "bafa391ec78c3fe727fd42346f714e6aaf24af7dcb6592d8e292f99b9abd3461",
         "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
         "lib/ccpm/storage.lua": "13aa085b1acb23cc391ae43d11d5cf267a9379161b03ddbb1f884b0f1868a92a"
       }
