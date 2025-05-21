@@ -53,7 +53,7 @@ table.insert(package.loaders, 2, onlineRequire)
 
 print()
 
-local tpm = require("tpm")
+local tpm = require("ccpm")
 
 local future = tpm.addRepositories("Deleranax/ccpm")
 
