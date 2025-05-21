@@ -1,5 +1,5 @@
 {
-  "description": "A dependency tree related constraints resolution library.",
+  "description": "A wildcard library.",
   "version": "0.1.0",
   "licence": "GPL-2.0-or-later",
   "authors": [
@@ -8,8 +8,5 @@
   "maintainers": [
     "Deleranax"
   ],
-  "dependencies": [
-    "turfu",
-    "commons"
-  ]
+  "dependencies": []
 }

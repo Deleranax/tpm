@@ -1,6 +1,6 @@
 {
   "timestamp": 1747578553,
-  "name": "Official default TPM repository",
+  "name": "Official CCPM repository",
   "maintainers": [
     "Deleranax"
   ],
@@ -8,7 +8,7 @@
   "packages": [
     {
       "name": "tpm-driver-http",
-      "description": "An HTTP repository driver for TPM.",
+      "description": "An HTTP repository driver for CCPM.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
       "authors": [
@@ -22,7 +22,7 @@
     },
     {
       "name": "tpm-driver-fs",
-      "description": "A file system repository driver for TPM.",
+      "description": "A file system repository driver for CCPM.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
       "authors": [
@@ -103,7 +103,7 @@
     },
     {
       "name": "tpm-driver-github",
-      "description": "A GitHub repository driver for TPM.",
+      "description": "A GitHub repository driver for CCPM.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
       "authors": [

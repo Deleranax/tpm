@@ -1,6 +1,6 @@
-# ComputerCraft Temver Package Manager (CC-TPM)
+# ComputerCraft Package Manager (CCPM)
 
-TPM is a free and open-source package manager for ComputerCraft written in Lua. It is designed to simplify the distribution of packages by
+CCPM is a free and open-source package manager for ComputerCraft written in Lua. It is designed to simplify the distribution of packages by
 providing tools to host and manage repositories.
 
 A package manager or package management system is a collection of software tools that automates the process of
@@ -11,50 +11,50 @@ installing, upgrading, configuring, and removing computer programs for a compute
 
 ### Easy to use Command-Line Interface (CLI)
 
-TPM features a user-friendly CLI interface with autocompletion, inspired by Linux distributions package managers (such
+CCPM features a user-friendly CLI interface with autocompletion, inspired by Linux distributions package managers (such
 as `dnf` or `apt`).
 
 ### Advanced dependency management
 
 Repositories and packages both can have dependencies (which are referred as `companions` when talking about
-repositories). TPM will ensure that the dependency tree is coherent at any time with its transactional system.
+repositories). CCPM will ensure that the dependency tree is coherent at any time with its transactional system.
 
-If there is an error in the transaction, TPM will automatically roll back the changes.
+If there is an error in the transaction, CCPM will automatically roll back the changes.
 
 ### Multiple repositories support
 
-TPM is designed to allow anyone to host their own repository directly on GitHub
-(see [Host a TPM Repository](#host-a-tpm-repository)).
+CCPM is designed to allow anyone to host their own repository directly on GitHub
+(see [Host a CCPM Repository](#host-a-ccpm-repository)).
 
-The base package `tpm` is hosted in this repository, within the `Official default TPM repository`. If you think that
+The base package `ccpm` is hosted in this repository, within the `Official CCPM repository`. If you think that
 your package is an essential, you can submit it by opening a pull request against the `main` branch (see
-[Submit a package to the `Official default TPM repository`](#submit-a-package-to-the-official-default-tpm-repository)).
+[Submit a package to the `Official CCPM repository`](#submit-a-package-to-the-official-ccpm-repository)).
 
 ### Complete and documented API
 
-The `tpm` base package provides an easy-to-use API to integrate TPM in your programs. For example, you can use TPM as
+The `ccpm` base package provides an easy-to-use API to integrate CCPM in your programs. For example, you can use CCPM as
 the base for your ComputerCraft OS installer.
 
-## Host a TPM Repository
+## Host a CCPM Repository
 
-Hosting your TPM repository is the recommended method because it allows **you** to use *GitHub Actions* to automatically
-rebuild your repository index and **the users of your repository** to verify what they are downloading. In addition, TPM
+Hosting your CCPM repository is the recommended method because it allows **you** to use *GitHub Actions* to automatically
+rebuild your repository index and **the users of your repository** to verify what they are downloading. In addition, CCPM
 will simplify the usage of GitHub-hosted repository by automatically figuring out the repository URL.
 
 ### With GitHub (recommended)
 
 When using GitHub, your repository will be identified by its GitHub identifier (*GitHub username*/*repository name*).
-For instance, this repository (the `Official default TPM repository`) can be installed with the TPM command
-`tpm repo add Deleranax/tpm`.
+For instance, this repository (the `Official CCPM repository`) can be installed with the CCPM command
+`tpm repo add Deleranax/ccpm`.
 
-1. Install the Python package `cc-tpm-tools` which contains tools to simplify the deployment of new TPM
+1. Install the Python package `ccpm-tools` which contains tools to simplify the deployment of new CCPM
 repositories (requires Python >= 3.12).
     ```bash
-    pip install cc-tpm-tools
+    pip install ccpm-tools
     cctpm
     ```
 
-2. Create a new repository on GitHub. The naming convention for TPM repository/packages is the *kebab-case* (all lower
+2. Create a new repository on GitHub. The naming convention for CCPM repository/packages is the *kebab-case* (all lower
 case with hyphens).
 
 3. Clone your repository.
@@ -62,14 +62,14 @@ case with hyphens).
    git clone https://github.com/me/my-repository.git
    ```
 
-4. Set up the TPM repository. The name specified in the command is just a display name, which means that you are not
+4. Set up the CCPM repository. The name specified in the command is just a display name, which means that you are not
 required to comply with the naming conventions. You can add maintainers with `-m` and companion repositories with
 `-c`.
    ```bash
    cctpm init "My repository" -m "Maintainer" -c "me/my-other-repository"
    ``` 
 > [!NOTE]
-> The effective name of a GitHub-hosted TPM repository is *GitHub username*/*repository name*. The "name" as specified
+> The effective name of a GitHub-hosted CCPM repository is *GitHub username*/*repository name*. The "name" as specified
 > in the manifest will only be used when the repository is hosted outside GitHub.
 
 > [!TIP]
@@ -79,11 +79,11 @@ required to comply with the naming conventions. You can add maintainers with `-m
 
 5. *(Optional)* Set up GitHub Action to automatically rebuild the package index on every push. Create a file named
 `deploy.yml` in the directory `.github/workflows` at the root of your repository. Copy the content of the
-[GitHub action used on this repository](https://github.com/Deleranax/tpm/blob/main/.github/workflows/deploy.yml).
+[GitHub action used on this repository](https://github.com/Deleranax/ccpm/blob/main/.github/workflows/deploy.yml).
 
 6. Create a package. See [Publish a package](#publish-a-package).
 
-7. Update the repository index. When you modify something in the repository (a package file, a package manifest or the
+7. Update the repository index. When you modify something in the repository (a package file, a package manifest, or the
 repository manifest), you need to rebuild the package index. **You can skip this step if you did the optional step 5**.
    ```bash 
    cctpm build
@@ -103,18 +103,18 @@ When not using GitHub, your repository will be identified by its URL (e.g., `htt
 convention is to use a simple URL without any trailing `/`.
 
 > [!CAUTION]
-> TPM does not enforce the unicity of the URL, which means that if the URLs `https://example.com/example` and
+> CCPM does not enforce the unicity of the URL, which means that if the URLs `https://example.com/example` and
 > `https://example.example.com/` are considered as two different repositories even if they point to the same manifest.
 > Be careful to distribute it using the same URL format to all the users.
 
-1. Install the Python package `cc-tpm-tools` which contains tools to simplify the deployment of new TPM
+1. Install the Python package `ccpm-tools` which contains tools to simplify the deployment of new CCPM
 repositories (requires Python >= 3.12). You can install it on your local machine or directly on your server.
     ```bash
-    pip install cc-tpm-tools
+    pip install ccpm-tools
     cctpm
     ```
 
-2. Set up the TPM repository. The name specified in the command is just a display name, which means that you are not
+2. Set up the CCPM repository. The name specified in the command is just a display name, which means that you are not
 required to comply with the naming conventions. You can add maintainers with `-m` and companion repositories with
 `-c`.
    ```bash
@@ -128,10 +128,10 @@ required to comply with the naming conventions. You can add maintainers with `-m
 
 3. Create a package. See [Publish a package](#publish-a-package).
 
-4. Update the repository index. When you modify something in the repository (a package file, a package manifest or the
+4. Update the repository index. When you modify something in the repository (a package file, a package manifest, or the
 repository manifest), you need to rebuild the package index.
    ```bash 
-   cctpm build
+   ccpm-tools build
    ```
 5. Upload/statically serve the directory in which you executed the commands.
 
@@ -139,8 +139,8 @@ repository manifest), you need to rebuild the package index.
 
 ## Publish a package
 
-The following instructions describe the procedure to compose a valid `tpm` package to add it to a TPM repository, or
-submit a package to the `Official default TPM repository`.
+The following instructions describe the procedure to compose a valid `ccpm` package to add it to a CCPM repository, or
+submit a package to the `Official CCPM repository`.
 
 ### Regular package
 
@@ -150,6 +150,6 @@ submit a package to the `Official default TPM repository`.
 
 (TODO)
 
-## Submit a package to the `Official default TPM repository`
+## Submit a package to the `Official CCPM repository`
 
 (TODO)

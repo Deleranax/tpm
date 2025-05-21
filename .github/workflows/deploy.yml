@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: '3.13'
           cache: 'pip'
-      - name: Setup cc-tpm-tools
-        run: pip install cc-tpm-tools
+      - name: Setup ccpm-tools
+        run: pip install ccpm-tools
       - name: Build the index
         run: cctpm build
       - uses: actions4git/add-commit-push@v1

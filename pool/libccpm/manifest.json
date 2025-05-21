@@ -1,0 +1,21 @@
+{
+  "description": "A complete package manager API for ComputerCraft.",
+  "version": "1.0.0",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    "Deleranax"
+  ],
+  "maintainers": [
+    "Deleranax"
+  ],
+  "dependencies": [
+    "deptree",
+    "tact",
+    "turfu",
+    "crypt",
+    "commons",
+    "tpm-driver-github",
+    "tpm-driver-http",
+    "tpm-driver-fs"
+  ]
+}
