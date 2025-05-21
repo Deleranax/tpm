@@ -19,7 +19,7 @@ jobs:
       - name: Setup ccpm-tools
         run: pip install ccpm-tools
       - name: Build the index
-        run: ccpm build
+        run: ccpm-tools build
       - uses: actions4git/add-commit-push@v1
         with:
           commit-message: "Rebuilt repository index"
