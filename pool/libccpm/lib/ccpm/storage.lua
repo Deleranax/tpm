@@ -18,7 +18,7 @@ local storage = {}
 
 -- Number of seconds after which the cache is invalidated
 local CACHE_TTL = 300
-local BASE_PATH = "/share/tpm"
+local BASE_PATH = "/share/ccpm"
 local STORE_FILE_PATH = BASE_PATH.."/store.json"
 local INDEX_FILE_PATH = BASE_PATH.."/index.json"
 local POOL_FILE_PATH = BASE_PATH.."/pool.json"
@@ -119,7 +119,7 @@ function storage.flush()
         messages["index"] = message
     end
 
-    file, message = fs.open(POOL_FILE_PATH, "r")
+    file, message = fs.open(POOL_FILE_PATH, "w")
 
     if file then
         local ok, rtn = pcall(textutils.serialize, storage.pool)
