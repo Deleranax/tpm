@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747849392,
+  "timestamp": 1747849982,
   "name": "Official CCPM repository",
   "maintainers": [
     "Deleranax"
@@ -53,14 +53,14 @@
         "turfu",
         "crypt",
         "commons",
-        "tpm-driver-github",
-        "tpm-driver-http",
-        "tpm-driver-fs"
+        "libccpm-driver-github",
+        "libccpm-driver-http",
+        "libccpm-driver-fs"
       ],
       "files": {
-        "lib/ccpm/package.lua": "2337207446d8eaa37de21da931e7df842ba28d28d708163c55ba468fc17be516",
+        "lib/ccpm/package.lua": "e6cac43627802bee6cd90051148f9854aabfee6303456b204b2a9a52a6e44e03",
         "lib/ccpm/repository.lua": "ed52d162c3e5a1a5c49e575f5edeeabbccd427a790415b0d092ce7a8d77c3df3",
-        "lib/ccpm/init.lua": "bafa391ec78c3fe727fd42346f714e6aaf24af7dcb6592d8e292f99b9abd3461",
+        "lib/ccpm/init.lua": "1a9d3ba17468933b6054db5c7845b3046a9fbd2e479343b9abc1ee7d93dbf10f",
         "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
         "lib/ccpm/storage.lua": "13aa085b1acb23cc391ae43d11d5cf267a9379161b03ddbb1f884b0f1868a92a"
       }
@@ -129,7 +129,7 @@
         "Deleranax"
       ],
       "dependencies": [
-        "tpm-api"
+        "libccpm"
       ],
       "files": {
         "startup/tpm.lua": "8b949d66c02dfd588be741455a0a93f80944f3156291c116da39675734630b08",
