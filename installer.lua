@@ -137,3 +137,7 @@ if not ok then
 end
 
 print("Done.")
+
+ok, errors = ccpm.flush()
+
+print(textutils.serialize(errors))

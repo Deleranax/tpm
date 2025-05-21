@@ -14,8 +14,11 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+local storage = require("ccpm.storage")
 local repository = require("ccpm.repository")
 
 return {
-    addRepositories = repository.add
+    flush = storage.flush,
+    addRepos = repository.add,
+    removeRepos = repository.remove,
 }
