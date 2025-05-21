@@ -35,9 +35,7 @@ function repository.fetch(url)
     -- Return the cached version if available and not expired
     if cache[url] ~= nil then
         if not storage.isExpired(cache[url].update_timestamp) then
-            local driver_name = cache[url].driver
-
-            return drivers[driver_name], driver_name, cache[url]
+            return drivers[cache[url].driver], cache[url]
         end
     end
 
