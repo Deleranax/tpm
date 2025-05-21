@@ -1,14 +1,30 @@
 {
-  "timestamp": 1747580530,
-  "name": "Official default TPM repository",
+  "timestamp": 1747848344,
+  "name": "Official CCPM repository",
   "maintainers": [
     "Deleranax"
   ],
   "companions": [],
   "packages": [
     {
-      "name": "tpm-driver-http",
-      "description": "An HTTP repository driver for TPM.",
+      "name": "libccpm-driver-github",
+      "description": "A GitHub repository driver for CCPM.",
+      "version": "0.1.0",
+      "licence": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "lib/ccpm/drivers/github.lua": "132bdb0418d8c22a61990790e0cc179d8cd2ed6d2b4cd2da41ba8eac5a03563b"
+      }
+    },
+    {
+      "name": "libccpm-driver-fs",
+      "description": "A file system repository driver for CCPM.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
       "authors": [
@@ -21,18 +37,33 @@
       "files": {}
     },
     {
-      "name": "tpm-driver-fs",
-      "description": "A file system repository driver for TPM.",
-      "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "name": "libccpm",
+      "description": "A complete package manager API for ComputerCraft.",
+      "version": "1.0.0",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],
       "maintainers": [
         "Deleranax"
       ],
-      "dependencies": [],
-      "files": {}
+      "dependencies": [
+        "deptree",
+        "tact",
+        "turfu",
+        "crypt",
+        "commons",
+        "tpm-driver-github",
+        "tpm-driver-http",
+        "tpm-driver-fs"
+      ],
+      "files": {
+        "lib/ccpm/package.lua": "2337207446d8eaa37de21da931e7df842ba28d28d708163c55ba468fc17be516",
+        "lib/ccpm/repository.lua": "ef237e6fbc496d329043abcef47e6209d59f3a562d3d757990c0060e0ddb315b",
+        "lib/ccpm/init.lua": "0ab9cf160ee864ba10db26c53ae36e224bdccbd0dd924a3ccce8924274754de4",
+        "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
+        "lib/ccpm/storage.lua": "21dfe79a926355f2ba730092e57f75666b4441da691a7a9e91f9cae689cd4bde"
+      }
     },
     {
       "name": "tact",
@@ -47,7 +78,7 @@
       ],
       "dependencies": [],
       "files": {
-        "apis/tact.lua": "566cb04accc1e8cf65ac0c4a92cf96f6819356af1058890ce03ef5e233ee93a2"
+        "lib/tact.lua": "fc3e46fe7bc9663a84289bc21c2c12cbc5eb26a869586774878c22ddbe588154"
       }
     },
     {
@@ -63,11 +94,31 @@
       ],
       "dependencies": [],
       "files": {
-        "apis/sha256.lua": "048aeaa4b7de5dc92ca1ba24d0655a0194cf5bfc0a21c81f6f40a1d9d3bf20a7"
+        "lib/crypt/sha256.lua": "048aeaa4b7de5dc92ca1ba24d0655a0194cf5bfc0a21c81f6f40a1d9d3bf20a7",
+        "lib/crypt/init.lua": "3103526652c7ca358fc5b455ade1339276b41f532dabd051e0a33bf3666a4d1c"
       }
     },
     {
-      "name": "tpm",
+      "name": "deptree",
+      "description": "A dependency tree related constraints resolution library.",
+      "version": "0.1.0",
+      "licence": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [
+        "turfu",
+        "commons"
+      ],
+      "files": {
+        "lib/deptree.lua": "30d9acbb10604c8c7aee903195d69fa44f399c2fbbffc00eb441b9ecbc32f502"
+      }
+    },
+    {
+      "name": "ccpm",
       "description": "A complete package manager for ComputerCraft.",
       "version": "1.0.0",
       "license": "GPL-2.0-or-later",
@@ -82,12 +133,40 @@
       ],
       "files": {
         "startup/tpm.lua": "8b949d66c02dfd588be741455a0a93f80944f3156291c116da39675734630b08",
-        "programs/tpm.lua": "5bcec1f11ef0df3358b08cf56189a5444f0daad4aced1ec1f31b617f08cd7ac5"
+        "programs/tpm.lua": "e62eaefead1a83f56bca5eee1bb82e71f916831a97381766acac4cd163afaeb0"
       }
     },
     {
-      "name": "deptree",
-      "description": "A dependency tree resolution library.",
+      "name": "commons",
+      "description": "A CCPM package.",
+      "version": "0.1.0",
+      "licence": "GPL-2.0-or-later",
+      "authors": [],
+      "maintainers": [],
+      "dependencies": [],
+      "files": {
+        "lib/commons/table.lua": "a00c8a3a6c2afc1fec0a23ddd356e43b4df0871d81351206f491a6cf9e7950a3",
+        "lib/commons/init.lua": "f7a5e5cc358d0c860eb31ed63317d6b76c905db5c9cdc81f6e0dc1325c1b5bc9",
+        "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
+      }
+    },
+    {
+      "name": "libccpm-driver-http",
+      "description": "An HTTP repository driver for CCPM.",
+      "version": "0.1.0",
+      "licence": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {}
+    },
+    {
+      "name": "tamed",
+      "description": "A wildcard library.",
       "version": "0.1.0",
       "licence": "GPL-2.0-or-later",
       "authors": [
@@ -98,23 +177,7 @@
       ],
       "dependencies": [],
       "files": {
-        "apis/deptree.lua": "c2e2afa6d209463490a6aed2f5b274bf0a90082019c394e67d6e6f36e3de9da8"
-      }
-    },
-    {
-      "name": "tpm-driver-github",
-      "description": "A GitHub repository driver for TPM.",
-      "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [],
-      "files": {
-        "apis/tpm/drivers/github.lua": "bc7bd22f23d5cfc67c41f0256b8677886d6a586b9ebe8c4fcfc8a1e8da4b365d"
+        "lib/tamed.lua": "8b9e23599ed18213a5bcf1c4460d541d8ea14ef783682b548538008866f56f5a"
       }
     },
     {
@@ -130,35 +193,7 @@
       ],
       "dependencies": [],
       "files": {
-        "apis/turfu.lua": "490cde2ce4dac0006a6d02dc6cbf0a5d649574400d4e4a4c5a8f505ef3f67445"
-      }
-    },
-    {
-      "name": "tpm-api",
-      "description": "A complete package manager API for ComputerCraft.",
-      "version": "1.0.0",
-      "license": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [
-        "deptree",
-        "tact",
-        "turfu",
-        "crypt",
-        "tpm-driver-github",
-        "tpm-driver-http",
-        "tpm-driver-fs"
-      ],
-      "files": {
-        "apis/tpm.lua": "7ccd7c2467cb1606fd3853cfc29d1618b6b6e86945eb932a1e13c426f1cacc0b",
-        "apis/tpm/package.lua": "99afbab7ed9a1cb150cd55cdbc092d7bd9220accb8f0b5c67eaf645172a3a937",
-        "apis/tpm/repository.lua": "4238e7d493b12c39a8ea29eeaa90bb00ea592efb497be3aaf91a739a93ae273f",
-        "apis/tpm/drivers.lua": "2eb8b18e82fe5acd94059cd4bca0250b54b38bd6df7cb9294ae7f4df091bbc08",
-        "apis/tpm/storage.lua": "158349f64a825001c8c9d7a94bc962c0db177de56d94bb7668111d9a2fae3723"
+        "lib/turfu.lua": "4dfd337f550004fd5ad7b32891d03acd18d9233d9fb36b9e871192a9be4b905d"
       }
     }
   ]
