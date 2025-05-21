@@ -46,9 +46,9 @@ function storage.load()
             pcall(fs.move, STORE_FILE_PATH, STORE_FILE_PATH..".backup."..os.epoch())
             storage.store = {}
         end
-    else
-        messages["store"] = message
     end
+
+    messages["store"] = message
 
     file, message = fs.open(INDEX_FILE_PATH, "r")
 
@@ -61,9 +61,9 @@ function storage.load()
         if storage.index == nil then
             storage.index = {}
         end
-    else
-        messages["index"] = message
     end
+
+    messages["index"] = message
 
     file, message = fs.open(POOL_FILE_PATH, "r")
 
@@ -76,9 +76,9 @@ function storage.load()
         if storage.pool == nil then
             storage.pool = {}
         end
-    else
-        messages["pool"] = message
     end
+
+    messages["pool"] = message
 
     return next(messages) == nil, messages
 end
@@ -92,8 +92,12 @@ function storage.flush()
     local file, message = fs.open(STORE_FILE_PATH, "w")
 
     if file then
+
+        for k,v in pairs(storage.store) do
+            print(k..":"..textutils.serialize(v))
+        end
+
         local ok, rtn = pcall(textutils.serialize, storage.store)
-        print(rtn)
 
         if ok then
             file.write(rtn)
@@ -101,9 +105,9 @@ function storage.flush()
         else
             message = rtn
         end
-    else
-        messages["store"] = message
     end
+
+    messages["store"] = message
 
     file, message = fs.open(INDEX_FILE_PATH, "w")
 
@@ -116,9 +120,9 @@ function storage.flush()
         else
             message = rtn
         end
-    else
-        messages["index"] = message
     end
+
+    messages["index"] = message
 
     file, message = fs.open(POOL_FILE_PATH, "w")
 
@@ -131,9 +135,9 @@ function storage.flush()
         else
             message = rtn
         end
-    else
-        messages["pool"] = message
     end
+
+    messages["pool"] = message
 
     return next(messages) == nil, messages
 end
