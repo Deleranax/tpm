@@ -62,7 +62,7 @@ print()
 
 local ccpm = require("ccpm")
 
-local future = ccpm.addRepositories("Deleranax/ccpm")
+local future = ccpm.register("Deleranax/ccpm")
 
 print()
 write("Resolving dependencies")

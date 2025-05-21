@@ -93,6 +93,7 @@ function storage.flush()
 
     if file then
         local ok, rtn = pcall(textutils.serialize, storage.store)
+        print(rtn)
 
         if ok then
             file.write(rtn)
