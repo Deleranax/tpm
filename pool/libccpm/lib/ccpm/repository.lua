@@ -104,7 +104,7 @@ end
 --- @param index table Local repository index.
 function repository.addUnchecked(index)
     for k, v in pairs(index) do
-        print("["..k.."] = "..textutils.serialize(v))
+        print("["..k.."] = "..tostring(pcall(textutils.serialize(v))))
     end
     storage.store[index.identifier] = index
 end
