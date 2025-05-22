@@ -10,7 +10,7 @@
       "name": "libccpm-driver-github",
       "description": "A GitHub repository driver for CCPM.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],
@@ -26,7 +26,7 @@
       "name": "libccpm-driver-fs",
       "description": "A file system repository driver for CCPM.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],
@@ -69,7 +69,7 @@
       "name": "tact",
       "description": "A transaction framework library.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],
@@ -102,7 +102,7 @@
       "name": "deptree",
       "description": "A dependency tree related constraints resolution library.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],
@@ -140,7 +140,7 @@
       "name": "commons",
       "description": "A CCPM package.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [],
       "maintainers": [],
       "dependencies": [],
@@ -154,7 +154,7 @@
       "name": "libccpm-driver-http",
       "description": "An HTTP repository driver for CCPM.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],
@@ -168,7 +168,7 @@
       "name": "tamed",
       "description": "A wildcard library.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],
@@ -184,7 +184,7 @@
       "name": "turfu",
       "description": "A future framework library.",
       "version": "0.1.0",
-      "licence": "GPL-2.0-or-later",
+      "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
       ],

@@ -105,7 +105,7 @@ end
 function repository.addUnchecked(index)
     if (index ~= nil and index.identifier ~= nil) then
         for k, v in pairs(index.packages) do
-            print("["..k.."] = "..tostring(v))
+            print("["..k.."] = "..textutils.serialize(v))
         end
         storage.store[index.identifier] = index
     end

@@ -105,7 +105,7 @@ def package(
         name: Annotated[str, typer.Argument(help="Name of the package. Must contain only lower case alphanumeric characters and dashes.")],
         description: Annotated[str, typer.Option("--description", "-d", help="Description of the package.")] = "A CCPM package.",
         version: Annotated[str, typer.Option("--version", "-v", help="Version of the package.")] = "0.1.0",
-        licence: Annotated[str, typer.Option("--licence", "-l", help="Licence of the package.")] = "GPL-2.0-or-later",
+        license: Annotated[str, typer.Option("--license", "-l", help="license of the package.")] = "GPL-2.0-or-later",
         author: Annotated[List[str], typer.Option("--author", "-a", help="Add an author to the package.")] = [],
         maintainer: Annotated[List[str], typer.Option("--maintainer", "-m", help="Add a maintainer to the package.")] = [],
         dependency: Annotated[List[str], typer.Option("--dependency", "-c", help="Add a dependency to the package.")] = [],
@@ -123,7 +123,7 @@ def package(
     if not re.match(r"^[a-z0-9-]+$", name):
         print("Error: Package name must contain only lower case alphanumeric characters and dashes.")
 
-    package_manifest = {"description": description, "version": version, "licence": licence, "authors": author, "maintainers": maintainer, "dependencies": dependency}
+    package_manifest = {"description": description, "version": version, "license": license, "authors": author, "maintainers": maintainer, "dependencies": dependency}
 
     if not force and package_manifest_path.exists():
         print(f"Error: Package {name} already exists.")

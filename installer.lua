@@ -16,7 +16,7 @@
 
 local PATH_TABLE = {
     ["ccpm"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/init.lua",
-    ["ccpm.repository"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/repository.lua",
+    --["ccpm.repository"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/repository.lua",
     ["ccpm.package"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/package.lua",
     ["ccpm.storage"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/storage.lua",
     ["ccpm.drivers"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/drivers.lua",
@@ -49,7 +49,7 @@ local function onlineRequire(path)
     return load(response.readAll(), path, "t", _ENV)
 end
 
-table.insert(package.loaders, 2, onlineRequire)
+table.insert(package.loaders, onlineRequire)
 
 local function resolveFuture(future)
     repeat
