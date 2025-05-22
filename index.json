@@ -1,12 +1,12 @@
 {
-  "timestamp": 1747947087,
+  "timestamp": 1747948494,
   "name": "Official CCPM repository",
   "maintainers": [
     "Deleranax"
   ],
   "companions": [],
-  "packages": [
-    {
+  "packages": {
+    "libccpm-driver-github": {
       "name": "libccpm-driver-github",
       "description": "A GitHub repository driver for CCPM.",
       "version": "0.1.0",
@@ -22,7 +22,7 @@
         "lib/ccpm/drivers/github.lua": "132bdb0418d8c22a61990790e0cc179d8cd2ed6d2b4cd2da41ba8eac5a03563b"
       }
     },
-    {
+    "libccpm-driver-fs": {
       "name": "libccpm-driver-fs",
       "description": "A file system repository driver for CCPM.",
       "version": "0.1.0",
@@ -36,7 +36,7 @@
       "dependencies": [],
       "files": {}
     },
-    {
+    "libccpm": {
       "name": "libccpm",
       "description": "A complete package manager API for ComputerCraft.",
       "version": "1.0.0",
@@ -59,13 +59,13 @@
       ],
       "files": {
         "lib/ccpm/package.lua": "e6cac43627802bee6cd90051148f9854aabfee6303456b204b2a9a52a6e44e03",
-        "lib/ccpm/repository.lua": "55c13c7a20a264f05f7ebe6a2181c084f97dbbc5ef5b85cdb546a7fa78b6c9e1",
+        "lib/ccpm/repository.lua": "92e89d775469d93169127ba6a24c2f117b72dc65655da3e464a61826a8312bab",
         "lib/ccpm/init.lua": "1a9d3ba17468933b6054db5c7845b3046a9fbd2e479343b9abc1ee7d93dbf10f",
         "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
         "lib/ccpm/storage.lua": "031da108742c201d2f274ff07c1daafa659a7d9437659fd132eec0fb68cd123d"
       }
     },
-    {
+    "tact": {
       "name": "tact",
       "description": "A transaction framework library.",
       "version": "0.1.0",
@@ -81,7 +81,7 @@
         "lib/tact.lua": "fc3e46fe7bc9663a84289bc21c2c12cbc5eb26a869586774878c22ddbe588154"
       }
     },
-    {
+    "crypt": {
       "name": "crypt",
       "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).",
       "version": "0.2.0",
@@ -98,7 +98,7 @@
         "lib/crypt/init.lua": "3103526652c7ca358fc5b455ade1339276b41f532dabd051e0a33bf3666a4d1c"
       }
     },
-    {
+    "deptree": {
       "name": "deptree",
       "description": "A dependency tree related constraints resolution library.",
       "version": "0.1.0",
@@ -117,7 +117,7 @@
         "lib/deptree.lua": "30d9acbb10604c8c7aee903195d69fa44f399c2fbbffc00eb441b9ecbc32f502"
       }
     },
-    {
+    "ccpm": {
       "name": "ccpm",
       "description": "A complete package manager for ComputerCraft.",
       "version": "1.0.0",
@@ -136,7 +136,7 @@
         "programs/tpm.lua": "e62eaefead1a83f56bca5eee1bb82e71f916831a97381766acac4cd163afaeb0"
       }
     },
-    {
+    "commons": {
       "name": "commons",
       "description": "A CCPM package.",
       "version": "0.1.0",
@@ -150,7 +150,7 @@
         "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
       }
     },
-    {
+    "libccpm-driver-http": {
       "name": "libccpm-driver-http",
       "description": "An HTTP repository driver for CCPM.",
       "version": "0.1.0",
@@ -164,7 +164,7 @@
       "dependencies": [],
       "files": {}
     },
-    {
+    "tamed": {
       "name": "tamed",
       "description": "A wildcard library.",
       "version": "0.1.0",
@@ -180,7 +180,7 @@
         "lib/tamed.lua": "8b9e23599ed18213a5bcf1c4460d541d8ea14ef783682b548538008866f56f5a"
       }
     },
-    {
+    "turfu": {
       "name": "turfu",
       "description": "A future framework library.",
       "version": "0.1.0",
@@ -196,5 +196,5 @@
         "lib/turfu.lua": "4dfd337f550004fd5ad7b32891d03acd18d9233d9fb36b9e871192a9be4b905d"
       }
     }
-  ]
+  }
 }
