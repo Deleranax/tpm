@@ -91,7 +91,7 @@ def build():
                         files[str(file.relative_to(package_dir))] = file_hash
                         print("- " + str(file.relative_to(package_dir)) + " (" + file_hash + ")")
 
-                index["packages"][package_dir.name]({"name": package_dir.name, **manifest, "files": files})
+                index["packages"][package_dir.name] = {"name": package_dir.name, **manifest, "files": files}
             else:
                 print(f"Warning: Package {package_dir.name} has no manifest.")
         else:
