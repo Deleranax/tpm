@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747948494,
+  "timestamp": 1747948821,
   "name": "Official CCPM repository",
   "maintainers": [
     "Deleranax"
@@ -141,8 +141,12 @@
       "description": "A CCPM package.",
       "version": "0.1.0",
       "license": "GPL-2.0-or-later",
-      "authors": [],
-      "maintainers": [],
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
       "dependencies": [],
       "files": {
         "lib/commons/table.lua": "a00c8a3a6c2afc1fec0a23ddd356e43b4df0871d81351206f491a6cf9e7950a3",
