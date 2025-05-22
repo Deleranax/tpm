@@ -40,7 +40,7 @@ function storage.load()
         local content = file.readAll()
         file.close()
 
-        storage.store, message = textutils.unserialize(content)
+        storage.store, message = textutils.unserializeJSON(content)
 
         if storage.store == nil then
             pcall(fs.move, STORE_FILE_PATH, STORE_FILE_PATH..".backup."..os.epoch())
@@ -56,7 +56,7 @@ function storage.load()
         local content = file.readAll()
         file.close()
 
-        storage.index, message = textutils.unserialize(content)
+        storage.index, message = textutils.unserializeJSON(content)
 
         if storage.index == nil then
             storage.index = {}
@@ -71,7 +71,7 @@ function storage.load()
         local content = file.readAll()
         file.close()
 
-        storage.pool, message = textutils.unserialize(content)
+        storage.pool, message = textutils.unserializeJSON(content)
 
         if storage.pool == nil then
             storage.pool = {}
@@ -93,11 +93,7 @@ function storage.flush()
 
     if file then
 
-        for k,v in pairs(storage.store) do
-            print(k..":"..textutils.serialize(v))
-        end
-
-        local ok, rtn = pcall(textutils.serialize, storage.store)
+        local ok, rtn = pcall(textutils.serializeJSON, storage.store)
 
         if ok then
             file.write(rtn)
@@ -112,7 +108,7 @@ function storage.flush()
     file, message = fs.open(INDEX_FILE_PATH, "w")
 
     if file then
-        local ok, rtn = pcall(textutils.serialize, storage.index)
+        local ok, rtn = pcall(textutils.serializeJSON, storage.index)
 
         if ok then
             file.write(rtn)
@@ -127,7 +123,7 @@ function storage.flush()
     file, message = fs.open(POOL_FILE_PATH, "w")
 
     if file then
-        local ok, rtn = pcall(textutils.serialize, storage.pool)
+        local ok, rtn = pcall(textutils.serializeJSON, storage.pool)
 
         if ok then
             file.write(rtn)
