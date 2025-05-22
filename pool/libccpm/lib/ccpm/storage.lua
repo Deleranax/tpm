@@ -45,9 +45,9 @@ function storage.load()
         if storage.store == nil then
             pcall(fs.move, STORE_FILE_PATH, STORE_FILE_PATH..".backup."..os.epoch())
             storage.store = {}
-        else
-            setmetatable(storage.store, { __newindex = function(table, key, value) print("["..key.."] = "..textutils.serialize(value)) table[key] = value end })
         end
+
+        setmetatable(storage.store, { __newindex = function(table, key, value) print("["..key.."] = "..textutils.serialize(value)) table[key] = value end })
     end
 
     messages["store"] = message
