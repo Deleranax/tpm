@@ -103,10 +103,12 @@ end
 ---
 --- @param index table Local repository index.
 function repository.addUnchecked(index)
-    for k, v in pairs(index) do
-        print("["..k.."] = "..tostring(pcall(textutils.serialize, v)))
+    if (index ~= nil and index.identifier ~= nil) then
+        for k, v in pairs(index) do
+            print("["..k.."] = "..tostring(pcall(textutils.serialize, v)))
+        end
+        storage.store[index.identifier] = index
     end
-    storage.store[index.identifier] = index
 end
 
 --- Add repositories and their dependencies.
@@ -190,7 +192,9 @@ end
 ---
 --- @param index table Local repository index.
 function repository.removeUnchecked(index)
-    storage.store[index.identifier] = nil
+    if (index ~= nil and index.identifier ~= nil) then
+        storage.store[index.identifier] = nil
+    end
 end
 
 --- Remove repositories and their unused dependencies.
