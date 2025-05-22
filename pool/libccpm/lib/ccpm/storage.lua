@@ -46,8 +46,6 @@ function storage.load()
             pcall(fs.move, STORE_FILE_PATH, STORE_FILE_PATH..".backup."..os.epoch())
             storage.store = {}
         end
-
-        setmetatable(storage.store, { __newindex = function(table, key, value) print("["..key.."] = "..textutils.serialize(value)) table[key] = value end })
     end
 
     messages["store"] = message
