@@ -104,9 +104,6 @@ end
 --- @param index table Local repository index.
 function repository.addUnchecked(index)
     if (index ~= nil and index.identifier ~= nil) then
-        for k, v in pairs(index.packages) do
-            print("["..k.."] = "..textutils.serialize(v))
-        end
         storage.store[index.identifier] = index
     end
 end

@@ -68,7 +68,7 @@ def build():
     pool = root / "pool"
     pool.mkdir(exist_ok=True)
 
-    index = {"timestamp": int(time.time()), **manifest, "packages": []}
+    index = {"timestamp": int(time.time()), **manifest, "packages": {}}
 
     for package_dir in pool.glob("*"):
         if package_dir.is_dir():
@@ -91,7 +91,7 @@ def build():
                         files[str(file.relative_to(package_dir))] = file_hash
                         print("- " + str(file.relative_to(package_dir)) + " (" + file_hash + ")")
 
-                index["packages"].append({"name": package_dir.name, **manifest, "files": files})
+                index["packages"][package_dir.name]({"name": package_dir.name, **manifest, "files": files})
             else:
                 print(f"Warning: Package {package_dir.name} has no manifest.")
         else:
