@@ -77,6 +77,7 @@ function package.buildIndex()
 
     local function collect(_, repo)
         ctable.insertUniqueAll(packs, ctable.keys(repo))
+        print(textutils.serialize(packs))
     end
 
     -- Comparison function: Highest Priority -> Lowest Priority (fallback: Alphabetic order)
@@ -89,6 +90,7 @@ function package.buildIndex()
     end
 
     local function insert(_, pack)
+        print(pack)
         local first = true
 
         local result = package.find("pack@*")
