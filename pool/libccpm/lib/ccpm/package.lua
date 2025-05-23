@@ -76,7 +76,7 @@ function package.buildIndex()
     storage.index = {}
 
     local function collect(_, repo)
-        ctable.insertUniqueAll(packs, ctable.keys(repo))
+        ctable.insertUniqueAll(packs, ctable.keys(repo.local_packages))
         print(textutils.serialize(packs))
     end
 
@@ -150,6 +150,8 @@ end
 function package.downloadFiles(repo_name, pack_name)
     storage.unprotectedLoad()
 
+    -- TODO: Rewrite
+
     local repo = storage.store[repo_name]
 
     if repo == nil then
@@ -192,14 +194,6 @@ function package.downloadFiles(repo_name, pack_name)
         file.close()
     end
 
-    repo.local_packages[pack_name] = {}
-
-    local localPack = repo.local_packages[pack_name]
-
-    for key, val in pairs(pack) do
-        localPack[key] = val
-    end
-
     return true
 end
 
@@ -210,6 +204,8 @@ end
 --- @return boolean True if successful (false otherwise), error message (or nil).
 function package.deleteFiles(repo_name, pack_name)
     storage.unprotectedLoad()
+
+    -- TODO: Rewrite
 
     local repo = storage.store[repo_name]
 
