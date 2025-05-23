@@ -14,9 +14,9 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-local storage = require("storage")
-local repository = require("repository")
-local package = require("package")
+local storage = require("ccpm.storage")
+local repository = require("ccpm.repository")
+local package = require("ccpm.package")
 
 return {
     load = storage.load,

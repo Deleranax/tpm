@@ -19,12 +19,12 @@ local drivers = {}
 -- Load the drivers
 for _, elem in ipairs(fs.find("/usr/lib/ccpm/drivers/*")) do
     local name = string.sub(1, -4, fs.name(elem))
-    drivers[name] = require("drivers."..name)
+    drivers[name] = require("ccpm.drivers."..name)
 end
 
 -- Added to make it compatible with onlineRequire
 if next(drivers) == nil then
-    drivers.github = require("drivers.github")
+    drivers.github = require("ccpm.drivers.github")
 end
 
 return drivers

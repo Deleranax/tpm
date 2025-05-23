@@ -21,8 +21,8 @@ local tact = require("tact")
 local turfu = require("turfu")
 local tamed = require("tamed")
 local ctable = require("commons.table")
-local storage = require("storage")
-local drivers = require("drivers")
+local storage = require("ccpm.storage")
+local drivers = require("ccpm.drivers")
 
 local cache = {}
 

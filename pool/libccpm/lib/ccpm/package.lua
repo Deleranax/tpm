@@ -22,9 +22,9 @@ local turfu = require("turfu")
 local sha256 = require("crypt.sha256")
 local tamed = require("tamed")
 local ctable = require("commons.table")
-local storage = require("storage")
-local drivers = require("drivers")
-local repository = require("repository")
+local storage = require("ccpm.storage")
+local drivers = require("ccpm.drivers")
+local repository = require("ccpm.repository")
 
 --- Retrieve all packages that matches a certain name.
 ---
