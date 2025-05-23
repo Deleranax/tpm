@@ -1,5 +1,5 @@
 {
-  "timestamp": 1747949626,
+  "timestamp": 1748009552,
   "name": "Official CCPM repository",
   "maintainers": [
     "Deleranax"
@@ -58,11 +58,11 @@
         "libccpm-driver-fs"
       ],
       "files": {
-        "lib/ccpm/package.lua": "e6cac43627802bee6cd90051148f9854aabfee6303456b204b2a9a52a6e44e03",
-        "lib/ccpm/repository.lua": "92e89d775469d93169127ba6a24c2f117b72dc65655da3e464a61826a8312bab",
-        "lib/ccpm/init.lua": "1a9d3ba17468933b6054db5c7845b3046a9fbd2e479343b9abc1ee7d93dbf10f",
-        "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
-        "lib/ccpm/storage.lua": "5ab50e4567f39c0410cc283ee6afdc03c9ec654232fdf38dda8d94f2d4a9adc2"
+        "lib/ccpm/package.lua": "b5e41699866cb8efca6b3d03bde4b90c1090306685ae01696f2cdc404a39acd7",
+        "lib/ccpm/repository.lua": "999353d21b081ac8dd3da8ce2646b8847138199c41d924fa2e02fc732e20414a",
+        "lib/ccpm/init.lua": "2b821a39c37522d911356c60f725ecf201aa24df7c6c4a2a782561c8c8c3904e",
+        "lib/ccpm/drivers.lua": "ebdaef31581a18eb0d739750d3b0ca3673ba539264634a0530236fd5e4bcde48",
+        "lib/ccpm/storage.lua": "08d6a0190b5cc5b3a5ebe392c674bc6018f7c7ef2ab667ebbd2702c67b5fe830"
       }
     },
     "tact": {
@@ -78,7 +78,7 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/tact.lua": "fc3e46fe7bc9663a84289bc21c2c12cbc5eb26a869586774878c22ddbe588154"
+        "lib/tact.lua": "908e3911ebe4807fb9c84cf6e75e140a14155efa752826481539ad4b48cb26e8"
       }
     },
     "crypt": {
@@ -133,7 +133,7 @@
       ],
       "files": {
         "startup/tpm.lua": "8b949d66c02dfd588be741455a0a93f80944f3156291c116da39675734630b08",
-        "programs/tpm.lua": "e62eaefead1a83f56bca5eee1bb82e71f916831a97381766acac4cd163afaeb0"
+        "programs/tpm.lua": "83cd379cbf8ea050c09fa75f15257c117f9d167cfe9b3dc5471aeca6feea2ffe"
       }
     },
     "commons": {
@@ -149,7 +149,7 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/commons/table.lua": "a00c8a3a6c2afc1fec0a23ddd356e43b4df0871d81351206f491a6cf9e7950a3",
+        "lib/commons/table.lua": "5ff265babeca745e62dd46143909efd4ca3499789b60f2c77fd9ee1763899ab8",
         "lib/commons/init.lua": "f7a5e5cc358d0c860eb31ed63317d6b76c905db5c9cdc81f6e0dc1325c1b5bc9",
         "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
       }
@@ -181,7 +181,7 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/tamed.lua": "8b9e23599ed18213a5bcf1c4460d541d8ea14ef783682b548538008866f56f5a"
+        "lib/tamed.lua": "8f4623a08aacb8cfdbdf9941199ab3052dc662e0d2caa1464c424dde810b9973"
       }
     },
     "turfu": {
@@ -195,9 +195,11 @@
       "maintainers": [
         "Deleranax"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "commons"
+      ],
       "files": {
-        "lib/turfu.lua": "4dfd337f550004fd5ad7b32891d03acd18d9233d9fb36b9e871192a9be4b905d"
+        "lib/turfu.lua": "5adf1c683843bd3d7cd1e3718ce1638281e78306da7f036fcda02bf1280beb51"
       }
     }
   }
