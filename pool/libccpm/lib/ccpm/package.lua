@@ -110,7 +110,7 @@ function package.buildIndex()
 
     return turfu.merge(
         finish,
-        turfu.foreach(collect, pairs(storage.index)),
+        turfu.foreach(collect, pairs(storage.store)),
         turfu.sort(storage.store, comp),
         turfu.foreach(insert, ipairs(packs))
     )
