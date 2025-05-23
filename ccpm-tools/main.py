@@ -58,7 +58,7 @@ def init(
     pool.mkdir(exist_ok=True)
 
     with open(root / "manifest.json", "w") as manifest_file:
-        manifest = {"name": name, "maintainers": maintainers, "companions": companions}
+        manifest = {"name": name, "priority": priority, "maintainers": maintainers, "companions": companions}
         json.dump(manifest, manifest_file, indent=2)
 
 @app.command()
