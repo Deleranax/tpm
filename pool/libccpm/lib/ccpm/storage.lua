@@ -37,7 +37,7 @@ function storage.load()
 
     -- Return if the storage is not expired
     if not storage.storageIsExpired(timestamp) then
-        return
+        return true
     end
 
     local messages = {}
@@ -90,7 +90,7 @@ function storage.load()
 
     local ok = next(messages) == nil
 
-    if not ok then
+    if ok then
         timestamp = storage.epoch()
     end
 
@@ -167,7 +167,7 @@ function storage.flush()
 
     local ok = next(messages) == nil
 
-    if not ok then
+    if ok then
         timestamp = storage.epoch()
     end
 
