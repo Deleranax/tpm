@@ -65,14 +65,14 @@ end
 --- Transform a for-each loop into a future object.
 ---
 --- This function is designed to be used with pairs/ipairs. (e.g., by replace the three first argument with the result
---- of pairs or ipairs: map(ipairs(list), fnc)).
+--- of pairs or ipairs: foreach(fnc, ipairs(list))).
 ---
+--- @param fnc function Loop body, accepting an index and a value, returning a value.
 --- @param iter function Iterator, accepting the list and an index and returning a value and the next index (e.g. next).
 --- @param list table List to iterate on.
 --- @param initial any Initial index (e.g. 0 or nil).
---- @param fnc function Loop body, accepting an index and a value, returning a value.
 --- @return table A Future object, eventually returning a table of the result (indexed with the iterator's provided index).
-function turfu.foreach(iter, list, initial, fnc)
+function turfu.foreach(fnc, iter, list, initial)
 
     local index = initial
     local results = {}

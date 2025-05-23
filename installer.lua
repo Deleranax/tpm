@@ -143,7 +143,7 @@ end
 print("Done.")
 
 print()
-print("Building index")
+write("Building index")
 
 resolveFuture(ccpm.buildIndex())
 
