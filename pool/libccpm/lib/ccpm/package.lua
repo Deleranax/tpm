@@ -112,8 +112,8 @@ function package.buildIndex()
 
     return turfu.merge(
         finish,
-        turfu.foreach(collect, pairs(storage.store)),
         turfu.sort(storage.store, comp),
+        turfu.foreach(collect, pairs(storage.store)),
         turfu.foreach(insert, ipairs(packs))
     )
 end
