@@ -1,5 +1,6 @@
 {
   "name": "Official CCPM repository",
+  "priority": 0,
   "maintainers": [
     "Deleranax"
   ],
