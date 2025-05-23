@@ -21,8 +21,8 @@ local tact = require("tact")
 local turfu = require("turfu")
 local tamed = require("tamed")
 local ctable = require("commons.table")
-local storage = require("ccpm.storage")
-local drivers = require("ccpm.drivers")
+local storage = require("storage")
+local drivers = require("drivers")
 
 local cache = {}
 
@@ -34,7 +34,7 @@ function repository.fetch(url)
 
     -- Return the cached version if available and not expired
     if cache[url] ~= nil then
-        if not storage.isExpired(cache[url].update_timestamp) then
+        if not storage.cacheIsExpired(cache[url].update_timestamp) then
             return drivers[cache[url].driver], cache[url]
         end
     end
@@ -76,6 +76,8 @@ end
 --- @param url string Repository identifier (GitHub identifier, URL...).
 --- @return table, string Local repository index (or nil), error message (or nil).
 function repository.fetchAndStore(url)
+    storage.unprotectedLoad()
+
     if storage.store[url] ~= nil then
         return storage.store[url]
     end
@@ -103,6 +105,8 @@ end
 ---
 --- @param index table Local repository index.
 function repository.addUnchecked(index)
+    storage.unprotectedLoad()
+
     if (index ~= nil and index.identifier ~= nil) then
         storage.store[index.identifier] = index
     end
@@ -114,10 +118,10 @@ end
 --- flush the store. Only do so if you know what you do, or if you want to do a "dry run" (by removing the close handler
 --- responsible for flushing the store).
 ---
---- @params List of repositories identifiers (GitHub identifier, URL...).
+--- @vararg string List of repositories identifiers (GitHub identifier, URL...).
 --- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
 function repository.add(...)
-    storage.load()
+    storage.unprotectedLoad()
 
     local addedRepos = {...}
     local pool = repository.find()
@@ -142,8 +146,7 @@ function repository.add(...)
 
     local function poll()
         if future.isPending() then
-            future.poll()
-            result = future.result()
+            _, result = future.poll()
         else
             local name = table.remove(result)
 
@@ -172,7 +175,7 @@ function repository.add(...)
                     table.insert(actions, tact.Action(repo, repository.addUnchecked, repository.removeUnchecked))
                 else
                     return true, {
-                        transaction = tact.Transaction(actions, { open = storage.load, close = storage.flush }),
+                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
                         errors = errors
                     }
                 end
@@ -189,6 +192,8 @@ end
 ---
 --- @param index table Local repository index.
 function repository.removeUnchecked(index)
+    storage.unprotectedLoad()
+
     if (index ~= nil and index.identifier ~= nil) then
         storage.store[index.identifier] = nil
     end
@@ -200,10 +205,10 @@ end
 --- flush the store. Only do so if you know what you do, or if you want to do a "dry run" (by removing the close handler
 --- responsible for flushing the store).
 ---
---- @params List of repositories identifiers (GitHub identifier, URL...).
+--- @vararg string List of repositories identifiers (GitHub identifier, URL...).
 --- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
 function repository.remove(...)
-    storage.load()
+    storage.unprotectedLoad()
 
     local removedRepos = {...}
     local pool = repository.find()
@@ -225,8 +230,7 @@ function repository.remove(...)
 
     local function poll()
         if future.isPending() then
-            future.poll()
-            result = future.result()
+            _, result = future.poll()
         else
             local name = table.remove(result)
 
@@ -253,7 +257,7 @@ function repository.remove(...)
                     table.insert(actions, tact.Action(repo, repository.removeUnchecked, repository.addUnchecked))
                 else
                     return true, {
-                        transaction = tact.Transaction(actions, { open = storage.load, close = storage.flush }),
+                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
                         errors = errors
                     }
                 end
@@ -271,6 +275,8 @@ end
 --- @param pattern string Repository identifier with wildcard.
 --- @return table Array of repository identifiers.
 function repository.find(pattern)
+    storage.unprotectedLoad()
+
     local result = {}
 
     local wildcard = tamed.Wildcard(pattern)

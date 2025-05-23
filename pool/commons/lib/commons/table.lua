@@ -69,6 +69,22 @@ function ctable.insertUnique(list, value, pos)
     return true
 end
 
+--- Insert all elements of a list (if not present) into another list.
+---
+--- @param list table List to update.
+--- @param values table List of elements to insert.
+--- @return number Number of insertions.
+function ctable.insertUniqueAll(list, values)
+    local rtn = 0
+
+    for _, elem in ipairs(values) do
+        ctable.insertUnique(list, elem)
+        rtn = rtn + 1
+    end
+
+    return rtn
+end
+
 --- Remove all occurrences of a value from a list.
 ---
 --- @param list table List to update.
@@ -101,6 +117,36 @@ function ctable.find(list, value)
     end
 
     return nil
+end
+
+--- List all keys in a table.
+---
+--- @param t table Table to search in.
+--- @return table List of all the keys in the table.
+function ctable.keys(t)
+    local rtn = {}
+
+    for key, _ in pairs(t) do
+        table.insert(rtn, key)
+    end
+
+    return rtn
+end
+
+--- Copy all entries from a table into another.
+---
+--- @param t table Table to update.
+--- @param values table Table of values to copy.
+--- @return number Number of values.
+function ctable.copy(t, values)
+    local rtn = 0
+
+    for key, value in pairs(values) do
+        t[key] = values
+        rtn = rtn + 1
+    end
+
+    return rtn
 end
 
 return ctable

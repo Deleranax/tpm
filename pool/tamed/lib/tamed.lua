@@ -39,6 +39,8 @@ function tamed.Wildcard(pattern, separators)
        pattern = string.gsub(pattern, "%*", "[^"..separators.."]+")
     end
 
+    pattern = "^"..pattern.."$"
+
     --- Check if a string matches the wildcard pattern.
     ---
     --- @param s string String to match against.

@@ -1,6 +1,6 @@
 [project]
 name = "ccpm-tools"
-version = "0.1.5"
+version = "0.1.6"
 description = "CLI Python tools for CCPM."
 readme = "README.md"
 requires-python = ">=3.12"

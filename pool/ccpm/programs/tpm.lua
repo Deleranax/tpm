@@ -44,7 +44,7 @@ end
 
 local args = { ... }
 
-if table.getn(args) >= 1 then
+if #args >= 1 then
     if args[1] == "help" then
         showUsage()
     elseif args[1] == "update" then
@@ -135,7 +135,7 @@ if table.getn(args) >= 1 then
         print("CCPM-Source: " .. pack.url)
 
         if pack.dependencies then
-            if table.getn(pack.dependencies) ~= 0 then
+            if #(pack.dependencies) ~= 0 then
                 print("Dependencies:")
                 print(table.concat(pack.dependencies, ", "))
             end

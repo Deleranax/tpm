@@ -16,14 +16,16 @@
 
 local storage = {}
 
--- Number of seconds after which the cache is invalidated
-local CACHE_TTL = 300
+local CACHE_TTL = 300 -- Number of seconds after which the cache is invalidated
+local STORAGE_TTL = 5 -- Number of seconds after which the storage is invalidated
 local BASE_PATH = "/share/ccpm"
 local STORE_FILE_PATH = BASE_PATH.."/store.json"
 local INDEX_FILE_PATH = BASE_PATH.."/index.json"
 local POOL_FILE_PATH = BASE_PATH.."/pool.json"
 
 -- Storage
+local timestamp = 0
+
 storage.store = {}
 storage.index = {}
 storage.pool = {}
@@ -32,6 +34,12 @@ storage.pool = {}
 ---
 --- @return boolean, string False if there is an error (true otherwise), array of error messages.
 function storage.load()
+
+    -- Return if the storage is not expired
+    if not storage.storageIsExpired(timestamp) then
+        return
+    end
+
     local messages = {}
 
     local file, message = fs.open(STORE_FILE_PATH, "r")
@@ -80,7 +88,29 @@ function storage.load()
 
     messages["pool"] = message
 
-    return next(messages) == nil, messages
+    local ok = next(messages) == nil
+
+    if not ok then
+        timestamp = storage.epoch()
+    end
+
+    return ok, messages
+end
+
+
+--- Read the storage files (can raise error).
+function storage.unprotectedLoad()
+    local ok, messages = storage.load()
+
+    if not ok then
+        local msg = ""
+
+        for k, v in pairs(messages) do
+            msg = msg ..k..": "..v.."\n"
+        end
+
+        error(msg)
+    end
 end
 
 --- Write the storage files.
@@ -135,7 +165,28 @@ function storage.flush()
 
     messages["pool"] = message
 
-    return next(messages) == nil, messages
+    local ok = next(messages) == nil
+
+    if not ok then
+        timestamp = storage.epoch()
+    end
+
+    return ok, messages
+end
+
+--- Write the storage files (can raise error).
+function storage.unprotectedFlush()
+    local ok, messages = storage.flush()
+
+    if not ok then
+        local msg = ""
+
+        for k, v in pairs(messages) do
+            msg = msg ..k..": "..v.."\n"
+        end
+
+        error(msg)
+    end
 end
 
 --- @return number Number of seconds since epoch.
@@ -145,10 +196,18 @@ end
 
 --- Check if a cache timestamp describes an expired cache.
 ---
---- @param timestamp number Cache timestamp (seconds since epoch).
+--- @param time number Cache timestamp (seconds since epoch).
 --- @return boolean True if expired (false otherwise).
-function storage.isExpired(timestamp)
-    return (timestamp - storage.epoch()) > CACHE_TTL
+function storage.cacheIsExpired(time)
+    return (time - storage.epoch()) > CACHE_TTL
+end
+
+--- Check if a storage timestamp describes an expired storage.
+---
+--- @param time number Storage timestamp (seconds since epoch).
+--- @return boolean True if expired (false otherwise).
+function storage.storageIsExpired(time)
+    return (time - storage.epoch()) > STORAGE_TTL
 end
 
 return storage

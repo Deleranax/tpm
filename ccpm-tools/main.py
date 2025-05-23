@@ -28,6 +28,7 @@ app = typer.Typer(rich_markup_mode=None, no_args_is_help=True)
 @app.command()
 def init(
         name: Annotated[str, typer.Argument(help="Name of the repository. Must contain only alphanumeric characters and dashes.")] = None,
+        priority: Annotated[int, typer.Option("--priority", "-p", help="Priority of the repository. The repository with the highest priority will have its packages chosen over the others.")] = 0,
         maintainers: Annotated[List[str], typer.Option("--maintainer", "-m", help="Add a maintainer to the repository.")] = [],
         companions: Annotated[List[str], typer.Option("--companion", "-c", help="Add a companions to the repository. Companions are repositories that contain dependencies for this repository.")] = [],
 ):

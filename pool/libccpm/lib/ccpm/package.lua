@@ -21,11 +21,12 @@ local tact = require("tact")
 local turfu = require("turfu")
 local sha256 = require("crypt.sha256")
 local tamed = require("tamed")
-local storage = require("ccpm.storage")
-local drivers = require("ccpm.drivers")
-local repository = require("ccpm.repository")
+local ctable = require("commons.table")
+local storage = require("storage")
+local drivers = require("drivers")
+local repository = require("repository")
 
---- Retrieve all packages (available of installed) that matches a certain name.
+--- Retrieve all packages that matches a certain name.
 ---
 --- The package can be repository constrained (i.e. restricting the research in specific repositories) by adding a "@"
 --- followed by a repository identifier with wildcard at the end of the package name.
@@ -34,10 +35,8 @@ local repository = require("ccpm.repository")
 --- pattern: "ccpm-driver-*@Deleranax/*"
 ---
 --- @param pattern string Package name with wildcards.
---- @param installed boolean Installed packages (true if it only matches with installed packages, false or nil otherwise).
---- @param first boolean Find first (true if it returns when the first package is found, false otherwise).
---- @return table Table of arrays of package manifests for each repository where packages where found (or just a manifest).
-function package.find(pattern, installed, first)
+--- @return table Table of arrays of package manifests for each repository where packages where found.
+function package.find(pattern)
     local result = {}
 
     local wildcard = tamed.Wildcard(pattern)
@@ -46,24 +45,13 @@ function package.find(pattern, installed, first)
         local result_repo = {}
         local found = false
 
-        local pool = repo.packages
+        local packages = repo.packages
 
-        if installed then
-            pool = repo.local_packages
-        end
-
-        for pack_name, _ in pairs(pool) do
-            if wildcard.matches(pack_name) then
+        for pack_name, pack in pairs(packages) do
+            if wildcard.matches(pack_name.."@"..repo_name) then
                 local manifest = {}
 
-                -- Copy table
-                for key, val in pairs(repo) do
-                    manifest[key] = val
-                end
-
-                if first then
-                    return { [repo_name] = { manifest } }
-                end
+                ctable.copy(manifest, pack)
 
                 table.insert(result_repo, manifest)
                 found = true
@@ -78,9 +66,77 @@ function package.find(pattern, installed, first)
     return result
 end
 
---- Build the package index
+--- Build the package index. The package index needs to be rebuilt every time a repository index changes.
+---
+--- @return table A turfu.Future object, eventually returning a deduplicated list of all packages.
 function package.buildIndex()
+    storage.unprotectedLoad()
 
+    local packs = {}
+    storage.index = {}
+
+    for _, repo in pairs(storage.index) do
+        ctable.insertUniqueAll(packs, ctable.keys(repo))
+    end
+
+    -- Comparison function: Highest Priority -> Lowest Priority (fallback: Alphabetic order)
+    local function comp(a, b)
+        if a.priority == b.priority then
+            return a.identifier < b.identifier
+        else
+            return a.priority > b.priority
+        end
+    end
+
+    local function insert(_, pack)
+        local first = true
+
+        local result = package.find("pack@*")
+
+        for repo_name, repo_packs in pairs(result) do
+            if first then
+                storage.index[pack] = repo_packs[1]
+                first = false
+            else
+                storage.index[pack.."@"..repo_name] = repo_packs[1]
+            end
+        end
+    end
+
+    local function finish(_)
+        storage.unprotectedFlush()
+        return packs
+    end
+
+    return turfu.merge(
+        finish,
+        turfu.sort(storage.index, comp),
+        turfu.foreach(ipairs(packs), insert)
+    )
+end
+
+
+--- Get the first (in the repository priority order) package that matches a certain name.
+---
+--- The package can be repository constrained (i.e. restricting the research in specific repositories) by adding a "@"
+--- followed by a repository identifier with wildcard at the end of the package name.
+--- For instance, if you want to match all CCPM drivers within all of Deleranax's repositories, you can use the following
+--- pattern: "ccpm-driver-*@Deleranax/*"
+---
+--- @param pattern string Package name with wildcards.
+--- @return table Package manifest (or nil), package identifier (or nil).
+function package.select(pattern)
+    storage.unprotectedLoad()
+
+    local wildcard = tamed.Wildcard(pattern, "@")
+
+    for identifier, manifest in pairs(storage.index) do
+        if wildcard.matches(identifier) then
+            return manifest, identifier
+        end
+    end
+
+    return nil
 end
 
 --- Download package files. The dependencies are not checked.
@@ -89,6 +145,8 @@ end
 --- @param pack_name string Package name.
 --- @return boolean True if successful (false otherwise), error message (or nil).
 function package.downloadFiles(repo_name, pack_name)
+    storage.unprotectedLoad()
+
     local repo = storage.store[repo_name]
 
     if repo == nil then
@@ -148,6 +206,8 @@ end
 --- @param pack_name string Package name.
 --- @return boolean True if successful (false otherwise), error message (or nil).
 function package.deleteFiles(repo_name, pack_name)
+    storage.unprotectedLoad()
+
     local repo = storage.store[repo_name]
 
     if repo == nil then
@@ -184,10 +244,10 @@ end
 --- responsible for flushing the store).
 ---
 --- @param repos table Array of allowed repositories identifiers (where to resolve the dependencies).
---- @params List of package names.
+--- @vararg string List of package names.
 --- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
 function package.add(repos, ...)
-    storage.load()
+    storage.unprotectedLoad()
 
     local initialPackages = {}
     local errors = {}

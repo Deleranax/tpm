@@ -8,5 +8,7 @@
   "maintainers": [
     "Deleranax"
   ],
-  "dependencies": []
+  "dependencies": [
+    "commons"
+  ]
 }
