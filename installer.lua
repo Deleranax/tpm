@@ -143,10 +143,16 @@ end
 print("Done.")
 
 print()
+print("The package index needs to be rebuilt.")
+
+print()
+print("Press any key to continue...")
+
+read()
+
+print()
 write("Building index")
 
 resolveFuture(ccpm.buildIndex())
 
 print(" Done.")
-
-print(textutils.serialize(errors))

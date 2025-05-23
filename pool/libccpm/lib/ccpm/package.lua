@@ -75,7 +75,7 @@ function package.buildIndex()
     local packs = {}
     storage.index = {}
 
-    for _, repo in pairs(storage.index) do
+    local function collect(_, repo)
         ctable.insertUniqueAll(packs, ctable.keys(repo))
     end
 
@@ -110,8 +110,9 @@ function package.buildIndex()
 
     return turfu.merge(
         finish,
-        turfu.sort(storage.index, comp),
-        turfu.foreach(ipairs(packs), insert)
+        turfu.foreach(collect, pairs(storage.index)),
+        turfu.sort(storage.store, comp),
+        turfu.foreach(insert, ipairs(packs))
     )
 end
 

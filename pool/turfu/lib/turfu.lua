@@ -215,13 +215,13 @@ function turfu.sort(list, comp, limit)
 
     return turfu.merge(
         finish,
-        turfu.foreach(ipairs(list), divide),
+        turfu.foreach(divide, ipairs(list)),
         turfu.sort(listA, comp, limit),
         turfu.sort(listB, comp, limit),
-        turfu.foreach(ipairs(list), clear),
-        turfu.foreach(ipairs(listA), merge),
+        turfu.foreach(clear, ipairs(list)),
+        turfu.foreach(merge, ipairs(listA)),
         turfu.Future(insertPivot),
-        turfu.foreach(ipairs(listB), merge)
+        turfu.foreach(merge, ipairs(listB))
     )
 end
 
