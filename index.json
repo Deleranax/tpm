@@ -1,5 +1,5 @@
 {
-  "timestamp": 1748010759,
+  "timestamp": 1748010935,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -59,7 +59,7 @@
         "libccpm-driver-fs"
       ],
       "files": {
-        "lib/ccpm/package.lua": "3e88babb0fd7ff19a083a50b911b4bafb9b0be8c97f73ec270efc5abd338e26e",
+        "lib/ccpm/package.lua": "0ecf49724a35f36400f81205eca07343b3f73d7faa1694c730516f34ca7b0b3f",
         "lib/ccpm/repository.lua": "172bd44f917391df7680638e202d8b9dfc4b593d7a06404a604a032a78ea3bd3",
         "lib/ccpm/init.lua": "5a6a397430c88d9134fb83d81a266177e7a151de00b77ba1d1d2c0e2412148b5",
         "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
