@@ -21,7 +21,7 @@ local PATH_TABLE = {
     ["ccpm.storage"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/storage.lua",
     ["ccpm.drivers"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/drivers.lua",
     ["ccpm.drivers.github"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm-driver-github/lib/ccpm/drivers/github.lua",
-    ["crypt.sha256"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/crypt/lib/sha256.lua",
+    ["crypt.sha256"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/crypt/lib/crypt/sha256.lua",
     ["deptree"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/deptree/lib/deptree.lua",
     ["tact"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/tact/lib/tact.lua",
     ["turfu"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/turfu/lib/turfu.lua",
@@ -41,7 +41,7 @@ local function onlineRequire(path)
     local response, message = http.get(url)
 
     if response == nil then
-        error("Cannot download library: "..message)
+        error("Cannot download "..path..": "..message)
     end
 
     print("Done.")

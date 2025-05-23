@@ -254,3 +254,5 @@ function package.add(repos, ...)
 
     -- TODO: Build a local index
 end
+
+return package
