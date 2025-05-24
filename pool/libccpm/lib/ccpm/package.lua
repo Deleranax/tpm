@@ -76,7 +76,7 @@ function package.buildIndex()
     storage.index = {}
 
     local function collect(_, repo)
-        ctable.insertUniqueAll(packs, ctable.keys(repo.local_packages))
+        ctable.insertUniqueAll(packs, ctable.keys(repo.packages))
         print(textutils.serialize(packs))
     end
 
