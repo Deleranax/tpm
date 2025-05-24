@@ -80,11 +80,18 @@ local function resolveDeps(future)
     return result
 end
 
-local function install(type, result)
-    print()
-    print("You are about to install the following "..type..":")
-
+local function install(single, multiple, result)
     local trsact = result.transaction
+
+    print()
+
+    write("You are about to install the following ")
+    if #trsact.actions() > 1 then
+        write(multiple)
+    else
+        write(single)
+    end
+    print(":")
 
     for _, data in ipairs(trsact.actions()) do
         print("- "..data.identifier)
@@ -99,7 +106,13 @@ local function install(type, result)
         if rollback then
             print("Rolling back changes...")
         else
-            print("Installing "..n.." "..type.."...")
+            write("Installing "..n)
+            if n > 1 then
+                write(multiple)
+            else
+                write(single)
+            end
+            print("...")
         end
     end
 
