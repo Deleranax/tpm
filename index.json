@@ -1,5 +1,5 @@
 {
-  "timestamp": 1748119652,
+  "timestamp": 1748122579,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -59,9 +59,9 @@
         "libccpm-driver-fs"
       ],
       "files": {
-        "lib/ccpm/package.lua": "f7f6ac0dd7fdf205e611d82fea446ed142b15c4397873aabd7d38ea1e4631970",
+        "lib/ccpm/package.lua": "a501dc29d277c9ca4aef7f103f6caf8a184c9800ef1cf3190753af4a0a3e33eb",
         "lib/ccpm/repository.lua": "172bd44f917391df7680638e202d8b9dfc4b593d7a06404a604a032a78ea3bd3",
-        "lib/ccpm/init.lua": "5a6a397430c88d9134fb83d81a266177e7a151de00b77ba1d1d2c0e2412148b5",
+        "lib/ccpm/init.lua": "23079f9825af3315fb8035eec5aba767acea4da9f83672b213eec47dc9fd820a",
         "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
         "lib/ccpm/storage.lua": "e165e2c64bea2015d861bbf9e647cb131b35b6d226f55e25bce282c5ed2b22e3"
       }
@@ -150,7 +150,7 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/commons/table.lua": "fac176e4799c63f8a448536e0ec0fbb11650be863174f72dab9b14c76a7e9778",
+        "lib/commons/table.lua": "18fb1738f7c96e772c27e1720a4bda0947ef5ec31e4cff16bcbadf4f01c35d12",
         "lib/commons/init.lua": "f7a5e5cc358d0c860eb31ed63317d6b76c905db5c9cdc81f6e0dc1325c1b5bc9",
         "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
       }
