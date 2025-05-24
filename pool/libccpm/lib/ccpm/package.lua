@@ -259,14 +259,18 @@ function package.add(...)
     ctable.insertAll(pool, addedPacks)
 
     local function getDeps(name)
-        local pack = package.select(name)
+        local pack = storage.index[name]
 
         if pack == nil then
-            table.insert(errors, "package not found: "..name)
-            return {}
-        else
-            return pack.dependencies
+            pack = package.select(name)
+
+            if pack == nil then
+                table.insert(errors, "package not found: "..name)
+                return {}
+            end
         end
+
+        return pack.dependencies
     end
 
     local future = deptree.expand(pool, getDeps)
@@ -306,6 +310,92 @@ function package.add(...)
                         errors = errors
                     }
                 end
+            end
+        end
+
+        return false
+    end
+
+    return turfu.Future(poll)
+end
+
+--- Remove packages and their unused dependencies.
+---
+--- IMPORTANT: Do not modify the open and close handlers of the transaction. They are used, respectively, to load and
+--- flush the store. Only do so if you know what you do, or if you want to do a "dry run" (by replacing the close
+--- handler responsible for flushing the store by a load).
+---
+--- @vararg string List of package names.
+--- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
+function package.remove(...)
+    storage.unprotectedLoad()
+
+    local pool = ctable.keys(storage.pool)
+    local errors = {}
+    local actions = {}
+    local result
+
+    local wildcards = {}
+
+    for i, pack in ipairs({...}) do
+        if not string.find(pack, "@") then
+            pack = pack.."@*"
+        end
+        wildcards[i] = tamed.Wildcard(pack, "@")
+    end
+
+    local function predicate(name)
+        local rtn = true
+
+        for _, wildcard in ipairs(wildcards) do
+            rtn = rtn and not wildcard.matches(name)
+        end
+
+        return rtn
+    end
+
+    ctable.removeAll(pool, predicate)
+
+    local function getDeps(name)
+        local pack = storage.index[name]
+
+        if pack == nil then
+            table.insert(errors, "package not found: "..name)
+            return {}
+        end
+
+        return pack.dependencies
+    end
+
+    local function isPinned(name)
+        if storage.index[name] == nil then
+            return false
+        end
+        return storage.index[name].user_installed
+    end
+
+    local future = deptree.shrink(pool, getDeps, isPinned)
+
+    local function poll()
+        if future.isPending() then
+            _, result = future.poll()
+        else
+            local name = table.remove(result)
+
+            if name ~= nil then
+                local pack = storage.index[name]
+
+                if pack == nil then
+                    table.insert(errors, "package not found: "..name)
+                    return false
+                end
+                -- TODO: Change the rollback/delete to something else (to avoid redownloading)
+                table.insert(actions, tact.Action(pack, package.deleteFiles, package.downloadFiles))
+            else
+                return true, {
+                    transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
+                    errors = errors
+                }
             end
         end
 

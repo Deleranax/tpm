@@ -223,6 +223,9 @@ function repository.remove(...)
     end
 
     local function isPinned(name)
+        if storage.store[name] == nil then
+            return false
+        end
         return storage.store[name].user_installed
     end
 

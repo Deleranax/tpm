@@ -154,4 +154,32 @@ function ctable.copy(t, values)
     return rtn
 end
 
+--- Retain (in place) only the entries specified by the predicate.
+---
+--- @param t table Table to update.
+--- @param predicate function Predicate, accepting an index and a value, returning a true if the entry should be retained (false otherwise).
+function ctable.retain(t, predicate)
+    local remove
+
+    for key, value in pairs(t) do
+
+        -- Remove the previous entry
+        if remove ~= nil then
+            t[remove] = nil
+        end
+
+        -- Check if this entry needs to be removed
+        if predicate(key, value) then
+            remove = key
+        else
+            remove = nil
+        end
+    end
+
+    -- Remove last entry
+    if remove ~= nil then
+        t[remove] = nil
+    end
+end
+
 return ctable

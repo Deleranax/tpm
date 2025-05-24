@@ -80,12 +80,19 @@ local function resolveDeps(future)
     return result
 end
 
-local function install(single, multiple, result)
+local function doTrsact(installing, single, multiple, result)
+
     local trsact = result.transaction
 
     print()
 
-    write("You are about to install the following ")
+    write("You are about to ")
+    if installing then
+        write("install")
+    else
+        write("remove")
+    end
+    write(" the following ")
     if #trsact.actions() > 1 then
         write(multiple)
     else
@@ -106,7 +113,7 @@ local function install(single, multiple, result)
         if rollback then
             print("Rolling back changes...")
         else
-            write("Installing "..n)
+            write(action.."Installing "..n)
             if n > 1 then
                 write(multiple)
             else
@@ -125,7 +132,7 @@ local function install(single, multiple, result)
     end
 
     local function before(rollback, _, repo)
-        if rollback then
+        if rollback ~= installing then
             write("Removing "..repo.identifier.."...")
         else
             write("Installing "..repo.identifier.."...")
@@ -159,11 +166,11 @@ print()
 
 local ccpm = require("ccpm")
 
-local future = ccpm.register("Deleranax/ccpm")
+local future = ccpm.repository.add("Deleranax/ccpm")
 
 local result = resolveDeps(future)
 
-install("repositories", result)
+doTrsact(true, "repository", "repositories", result)
 
 print()
 print("The package index needs to be rebuilt.")
@@ -176,12 +183,18 @@ read()
 print()
 write("Building index")
 
-resolveFuture(ccpm.buildIndex())
+resolveFuture(ccpm.package.buildIndex())
 
 print(" Done.")
 
-future = ccpm.install("ccpm")
+future = ccpm.package.add("ccpm")
 
 result = resolveDeps(future)
 
-install("packages", result)
+doTrsact(true, "package", "packages", result)
+
+future = ccpm.package.remove("tamed")
+
+result = resolveDeps(future)
+
+doTrsact(false, "package", "packages", result)
