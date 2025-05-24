@@ -45,9 +45,7 @@ function package.find(pattern)
         local result_repo = {}
         local found = false
 
-        local packages = repo.packages
-
-        for pack_name, pack in pairs(packages) do
+        for pack_name, pack in pairs(repo.packages) do
             if wildcard.matches(pack_name.."@"..repo_name) then
                 local manifest = {}
 

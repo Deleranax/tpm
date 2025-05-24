@@ -138,10 +138,6 @@ function storage.flush()
     file, message = fs.open(INDEX_FILE_PATH, "w")
 
     if file then
-        for k, v in storage.index do
-            print(k.." -> "..textutils.serializeJSON(v))
-        end
-
         local ok, rtn = pcall(textutils.serializeJSON, storage.index)
 
         if ok then

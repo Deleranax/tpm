@@ -142,7 +142,7 @@ function ctable.copy(t, values)
     local rtn = 0
 
     for key, value in pairs(values) do
-        t[key] = values
+        t[key] = value
         rtn = rtn + 1
     end
 
