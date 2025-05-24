@@ -148,7 +148,6 @@ end
 --- Download package files. The dependencies are not checked.
 ---
 --- @param pack table Package manifest.
---- @return boolean True if successful (false otherwise), error message (or nil).
 function package.downloadFiles(pack)
     storage.unprotectedLoad()
 
@@ -157,33 +156,33 @@ function package.downloadFiles(pack)
     local repo = storage.store[repo_name]
 
     if repo == nil then
-        return nil, "repository not found: "..repo_name
+        error("repository not found: "..repo_name)
     end
 
     local driver = drivers[repo.driver]
 
     if driver == nil then
-        return nil, "driver not found: "..repo.driver
+        error("driver not found: "..repo.driver)
     end
 
     local files = pack.files
 
     for path, digest in ipairs(files) do
-        local content, message = driver.fetchPackageFile(repo_name, pack_name, path)
+        local content, message = driver.fetchPackageFile(repo_name, pack.identifier, path)
 
         if content == nil then
-            return nil, path..": "..message
+            error(path..": "..message)
         end
 
         if digest ~= sha256.digest(content) then
-            return nil, path..": mismatched digests"
+            error(path..": mismatched digests")
         end
 
         local file
         file, message = fs.open(path, "w")
 
         if file == nil then
-            return nil, path..": "..message
+            error(path..": "..message)
         end
 
         file.write(content)
@@ -199,7 +198,6 @@ end
 --- Delete package files. The dependencies are not checked.
 ---
 --- @param pack table Package manifest.
---- @return boolean True if successful (false otherwise), error message (or nil).
 function package.deleteFiles(pack)
     storage.unprotectedLoad()
 
@@ -208,13 +206,13 @@ function package.deleteFiles(pack)
     local repo = storage.store[repo_name]
 
     if repo == nil then
-        return nil, "repository not found: "..repo_name
+        error("repository not found: "..repo_name)
     end
 
     local driver = drivers[repo.driver]
 
     if driver == nil then
-        return nil, "driver not found: "..repo.driver
+        error("driver not found: "..repo.driver)
     end
 
     local files = pack.files
