@@ -113,7 +113,7 @@ local function doTrsact(installing, single, multiple, result)
         if rollback then
             print("Rolling back changes...")
         else
-            write(action.."Installing "..n)
+            write("Installing "..n.." ")
             if n > 1 then
                 write(multiple)
             else
@@ -132,7 +132,7 @@ local function doTrsact(installing, single, multiple, result)
     end
 
     local function before(rollback, _, repo)
-        if rollback ~= installing then
+        if rollback == installing then
             write("Removing "..repo.identifier.."...")
         else
             write("Installing "..repo.identifier.."...")

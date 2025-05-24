@@ -354,7 +354,7 @@ function package.remove(...)
         return rtn
     end
 
-    ctable.removeAll(pool, predicate)
+    ctable.retain(pool, predicate)
 
     local function getDeps(name)
         local pack = storage.index[name]
