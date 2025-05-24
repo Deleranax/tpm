@@ -1,5 +1,5 @@
 {
-  "timestamp": 1748118173,
+  "timestamp": 1748118656,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -63,7 +63,7 @@
         "lib/ccpm/repository.lua": "172bd44f917391df7680638e202d8b9dfc4b593d7a06404a604a032a78ea3bd3",
         "lib/ccpm/init.lua": "5a6a397430c88d9134fb83d81a266177e7a151de00b77ba1d1d2c0e2412148b5",
         "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
-        "lib/ccpm/storage.lua": "bb34c21829677630c921d5abf33ab1bbedfbb1581618934d36175966aa983543"
+        "lib/ccpm/storage.lua": "7940f3ce928ca4f2324382df1d0e2ae5c99e0061ba91f292776f2fb8f83fd87b"
       }
     },
     "tact": {
