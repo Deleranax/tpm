@@ -92,11 +92,18 @@ function package.buildIndex()
         local result = package.find(pack.."@*")
 
         for repo_name, repo_packs in pairs(result) do
-            if first then
-                storage.index[pack] = repo_packs[1]
-                first = false
-            else
-                storage.index[pack.."@"..repo_name] = repo_packs[1]
+            local _pack = repo_packs[1]
+
+            if _pack ~= nil then
+                _pack["repository"] = repo_name
+                _pack["identifier"] = pack
+
+                if first then
+                    storage.index[pack] = repo_packs[1]
+                    first = false
+                else
+                    storage.index[pack.."@"..repo_name] = repo_packs[1]
+                end
             end
         end
     end
@@ -123,7 +130,7 @@ end
 --- pattern: "ccpm-driver-*@Deleranax/*"
 ---
 --- @param pattern string Package name with wildcards.
---- @return table Package manifest (or nil), package identifier (or nil).
+--- @return table Package manifest (or nil).
 function package.select(pattern)
     storage.unprotectedLoad()
 
@@ -131,7 +138,7 @@ function package.select(pattern)
 
     for identifier, manifest in pairs(storage.index) do
         if wildcard.matches(identifier) then
-            return manifest, identifier
+            return manifest
         end
     end
 
@@ -140,13 +147,12 @@ end
 
 --- Download package files. The dependencies are not checked.
 ---
---- @param repo_name string Repository identifier.
---- @param pack_name string Package name.
+--- @param pack table Package manifest.
 --- @return boolean True if successful (false otherwise), error message (or nil).
-function package.downloadFiles(repo_name, pack_name)
+function package.downloadFiles(pack)
     storage.unprotectedLoad()
 
-    -- TODO: Rewrite
+    local repo_name = pack.repository
 
     local repo = storage.store[repo_name]
 
@@ -158,12 +164,6 @@ function package.downloadFiles(repo_name, pack_name)
 
     if driver == nil then
         return nil, "driver not found: "..repo.driver
-    end
-
-    local pack = repo.packages[pack_name]
-
-    if pack == nil then
-        return nil, "package not found: "..pack_name
     end
 
     local files = pack.files
@@ -190,18 +190,20 @@ function package.downloadFiles(repo_name, pack_name)
         file.close()
     end
 
+    storage.pool[pack.name.."@"..pack.repository] = {}
+    ctable.copy(storage.pool[pack.name.."@"..pack.repository], pack)
+
     return true
 end
 
 --- Delete package files. The dependencies are not checked.
 ---
---- @param repo_name string Repository identifier.
---- @param pack_name string Package name.
+--- @param pack table Package manifest.
 --- @return boolean True if successful (false otherwise), error message (or nil).
-function package.deleteFiles(repo_name, pack_name)
+function package.deleteFiles(pack)
     storage.unprotectedLoad()
 
-    -- TODO: Rewrite
+    local repo_name = pack.repository
 
     local repo = storage.store[repo_name]
 
@@ -209,10 +211,10 @@ function package.deleteFiles(repo_name, pack_name)
         return nil, "repository not found: "..repo_name
     end
 
-    local pack = repo.local_packages[pack_name]
+    local driver = drivers[repo.driver]
 
-    if pack == nil then
-        return nil, "package not found: "..pack_name
+    if driver == nil then
+        return nil, "driver not found: "..repo.driver
     end
 
     local files = pack.files
@@ -227,7 +229,7 @@ function package.deleteFiles(repo_name, pack_name)
         end
     end
 
-    repo.local_packages[pack_name] = nil
+    storage.pool[pack.name.."@"..pack.repository] = nil
 
     return true
 end
@@ -235,19 +237,77 @@ end
 --- Add packages and their dependencies.
 ---
 --- IMPORTANT: Do not modify the open and close handlers of the transaction. They are used, respectively, to load and
---- flush the store. Only do so if you know what you do, or if you want to do a "dry run" (by removing the close handler
---- responsible for flushing the store).
+--- flush the store. Only do so if you know what you do, or if you want to do a "dry run" (by replacing the close
+--- handler responsible for flushing the store by a load).
 ---
---- @param repos table Array of allowed repositories identifiers (where to resolve the dependencies).
 --- @vararg string List of package names.
 --- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
-function package.add(repos, ...)
+function package.add(...)
     storage.unprotectedLoad()
 
-    local initialPackages = {}
+    local addedPacks = { ...}
+    local pool = ctable.keys(storage.pool)
     local errors = {}
+    local actions = {}
+    local result
 
-    -- TODO: Build a local index
+    ctable.insertAll(pool, addedPacks)
+
+    local function getDeps(name)
+        local pack = package.select(name)
+
+        if pack == nil then
+            table.insert(errors, "package not found: "..name)
+            return {}
+        else
+            return pack.dependencies
+        end
+    end
+
+    local future = deptree.expand(pool, getDeps)
+
+    local function poll()
+        if future.isPending() then
+            _, result = future.poll()
+        else
+            local name = table.remove(result)
+
+            if name ~= nil then
+                local pack = package.select(name)
+
+                if pack == nil then
+                    table.insert(errors, "package not found: "..name)
+                    return false
+                end
+
+                table.insert(actions, tact.Action(pack, package.downloadFiles, package.deleteFiles))
+            else
+                name = table.remove(addedPacks)
+
+                if name ~= nil then
+                    local pack = package.select(name)
+
+                    if pack == nil then
+                        table.insert(errors, "package not found: "..name)
+                        return false
+                    end
+
+                    pack.user_installed = true
+
+                    table.insert(actions, tact.Action(pack, package.downloadFiles, package.deleteFiles))
+                else
+                    return true, {
+                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
+                        errors = errors
+                    }
+                end
+            end
+        end
+
+        return false
+    end
+
+    return turfu.Future(poll)
 end
 
 return package

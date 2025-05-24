@@ -67,10 +67,7 @@ required to comply with the naming conventions. You can add maintainers with `-m
 `-c`.
    ```bash
    ccpm-tools init "My repository" -m "Maintainer" -c "me/my-other-repository"
-   ``` 
-> [!NOTE]
-> The effective name of a GitHub-hosted CCPM repository is *GitHub username*/*repository name*. The "name" as specified
-> in the manifest will only be used when the repository is hosted outside GitHub.
+   ```
 
 > [!TIP]
 > Companions are repositories that contain dependencies for this repository. They will be installed along with
@@ -101,6 +98,9 @@ repository manifest), you need to rebuild the package index. **You can skip this
 
 When not using GitHub, your repository will be identified by its URL (e.g., `https://example.com/example`). The
 convention is to use a simple URL without any trailing `/`.
+
+> [!IMPORTANT]
+> The URL **MUST NOT** contain any `@` character.
 
 > [!CAUTION]
 > CCPM does not enforce the unicity of the URL, which means that if the URLs `https://example.com/example` and

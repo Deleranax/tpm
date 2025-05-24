@@ -23,5 +23,6 @@ return {
     flush = storage.flush,
     register = repository.add,
     unregister = repository.remove,
-    buildIndex = package.buildIndex
+    buildIndex = package.buildIndex,
+    install = package.add,
 }

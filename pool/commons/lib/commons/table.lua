@@ -133,7 +133,7 @@ function ctable.keys(t)
     return rtn
 end
 
---- Copy all entries from a table into another.
+--- Copy (recursively) all entries from a table into another.
 ---
 --- @param t table Table to update.
 --- @param values table Table of values to copy.
@@ -142,7 +142,12 @@ function ctable.copy(t, values)
     local rtn = 0
 
     for key, value in pairs(values) do
-        t[key] = value
+        if type(value) == "table" then
+            t[key] = {}
+            ctable.copy(t[key], value)
+        else
+            t[key] = value
+        end
         rtn = rtn + 1
     end
 

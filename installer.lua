@@ -58,89 +58,97 @@ local function resolveFuture(future)
     until future.isAvailable()
 end
 
+local function resolveDeps(future)
+    print()
+    write("Resolving dependencies")
+
+    resolveFuture(future)
+
+    print(" Done.")
+
+    local result = future.result()
+
+    if next(result.errors) then
+        for _, err in ipairs(result.errors) do
+            print(err)
+        end
+
+        error()
+    end
+
+    return result
+end
+
+local function install(type, result)
+    print()
+    print("You are about to install the following "..type..":")
+
+    local trsact = result.transaction
+
+    for _, data in ipairs(trsact.actions()) do
+        print("- "..data.identifier)
+    end
+
+    print()
+    print("Press any key to continue...")
+
+    read()
+
+    local function beforeAll(rollback, n)
+        if rollback then
+            print("Rolling back changes...")
+        else
+            print("Installing "..n.." "..type.."...")
+        end
+    end
+
+    local function afterAll(_, _, errors)
+        if errors then
+            print("Completed with errors!\n")
+        else
+           print("Completed!\n")
+        end
+    end
+
+    local function before(rollback, _, repo)
+        if rollback then
+            write("Removing "..repo.identifier.."...")
+        else
+            write("Installing "..repo.identifier.."...")
+        end
+    end
+
+    local function after(_, _, _, error)
+        if error then
+            print(" Error!")
+        else
+            print(" Done.")
+        end
+    end
+
+    trsact.setHandlers({ beforeAll = beforeAll, before = before, afterAll = afterAll, after = after })
+
+    local ok, errors = trsact.apply()
+
+    if not ok then
+        print("Errors:")
+        for _, err in ipairs(errors) do
+            print(err.error)
+        end
+
+        error()
+    end
+end
+
 print()
 
 local ccpm = require("ccpm")
 
 local future = ccpm.register("Deleranax/ccpm")
 
-print()
-write("Resolving dependencies")
+local result = resolveDeps(future)
 
-resolveFuture(future)
-
-print(" Done.")
-
-local result = future.result()
-
-if next(result.errors) then
-    for _, err in ipairs(result.errors) do
-        print(err)
-    end
-
-    return
-end
-
-print()
-print("You are about to install the following repositories:")
-
-local trsact = result.transaction
-
-for _, data in ipairs(trsact.actions()) do
-    print("- "..data.identifier)
-end
-
-print()
-print("Press any key to continue...")
-
-read()
-
-local function beforeAll(rollback, n)
-    if rollback then
-        print("Rolling back changes...")
-    else
-        print("Installing "..n.." repositories...")
-    end
-end
-
-local function afterAll(_, _, errors)
-    if errors then
-        print("Completed with errors!\n")
-    else
-       print("Completed!\n")
-    end
-end
-
-local function before(rollback, _, repo)
-    if rollback then
-        write("Removing "..repo.identifier.."...")
-    else
-        write("Installing "..repo.identifier.."...")
-    end
-end
-
-local function after(_, _, _, error)
-    if error then
-        print(" Error!")
-    else
-        print(" Done.")
-    end
-end
-
-trsact.setHandlers({ beforeAll = beforeAll, before = before, afterAll = afterAll, after = after })
-
-local ok, errors = trsact.apply()
-
-if not ok then
-    print("Errors:")
-    for _, err in ipairs(errors) do
-        print(err.error)
-    end
-
-    return
-end
-
-print("Done.")
+install("repositories", result)
 
 print()
 print("The package index needs to be rebuilt.")
@@ -156,3 +164,9 @@ write("Building index")
 resolveFuture(ccpm.buildIndex())
 
 print(" Done.")
+
+future = ccpm.install("ccpm")
+
+result = resolveDeps(future)
+
+install("packages", result)
