@@ -164,24 +164,22 @@ function package.downloadFiles(pack)
         error("driver not found: "..repo.driver)
     end
 
-    print(textutils.serialize(pack.files))
-
     for path, digest in pairs(pack.files) do
         local content, message = driver.fetchPackageFile(repo_name, pack.identifier, path)
 
         if content == nil then
-            error(path..": "..message)
+            error(pack.identifier.."/"..path..": "..message)
         end
 
         if digest ~= sha256.digest(content) then
-            error(path..": mismatched digests")
+            error(pack.identifier.."/"..path..": mismatched digests")
         end
 
         local file
-        file, message = fs.open(path, "w")
+        file, message = fs.open("/test/"..path, "w")
 
         if file == nil then
-            error(path..": "..message)
+            error(pack.identifier.."/"..path..": "..message)
         end
 
         file.write(content)
@@ -199,6 +197,10 @@ end
 --- @param pack table Package manifest.
 function package.deleteFiles(pack)
     storage.unprotectedLoad()
+
+    if pack == nil then
+        return
+    end
 
     local repo_name = pack.repository
 

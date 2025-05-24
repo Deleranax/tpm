@@ -71,7 +71,7 @@ end
 --- @param path, string, File path.
 --- @return string, string Package file content (or nil), the error message.
 function github.fetchPackageFile(url, package, path)
-    local request, message = http.get(get_file_url(url, package.."/"..path))
+    local request, message = http.get(get_file_url(url, "pool/"..package.."/"..path))
 
     if request == nil then
         return nil, message
