@@ -103,10 +103,10 @@ function storage.unprotectedLoad()
     local ok, messages = storage.load()
 
     if not ok then
-        local msg = ""
+        local msg = "Errors during load: "
 
         for k, v in pairs(messages) do
-            msg = msg ..k..": "..v.."\n"
+            msg = "\n"..msg..k..": "..v
         end
 
         error(msg)
@@ -138,6 +138,10 @@ function storage.flush()
     file, message = fs.open(INDEX_FILE_PATH, "w")
 
     if file then
+        for k, v in storage.index do
+            print(k.." -> "..textutils.serializeJSON(v))
+        end
+
         local ok, rtn = pcall(textutils.serializeJSON, storage.index)
 
         if ok then
@@ -179,10 +183,10 @@ function storage.unprotectedFlush()
     local ok, messages = storage.flush()
 
     if not ok then
-        local msg = ""
+        local msg = "Errors during flush: "
 
         for k, v in pairs(messages) do
-            msg = msg ..k..": "..v.."\n"
+            msg = "\n"..msg..k..": "..v
         end
 
         error(msg)
