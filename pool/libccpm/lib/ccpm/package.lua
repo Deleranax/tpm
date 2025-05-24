@@ -24,7 +24,6 @@ local tamed = require("tamed")
 local ctable = require("commons.table")
 local storage = require("ccpm.storage")
 local drivers = require("ccpm.drivers")
-local repository = require("ccpm.repository")
 
 --- Retrieve all packages that matches a certain name.
 ---
@@ -165,9 +164,9 @@ function package.downloadFiles(pack)
         error("driver not found: "..repo.driver)
     end
 
-    local files = pack.files
+    print(textutils.serialize(pack.files))
 
-    for path, digest in ipairs(files) do
+    for path, digest in pairs(pack.files) do
         local content, message = driver.fetchPackageFile(repo_name, pack.identifier, path)
 
         if content == nil then

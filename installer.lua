@@ -55,6 +55,7 @@ local function resolveFuture(future)
     repeat
         future.poll()
         write(".")
+        sleep(0.1)
     until future.isAvailable()
 end
 
@@ -116,6 +117,7 @@ local function install(type, result)
         else
             write("Installing "..repo.identifier.."...")
         end
+        sleep(0.1)
     end
 
     local function after(_, _, _, error)
