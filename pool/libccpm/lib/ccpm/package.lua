@@ -171,8 +171,10 @@ function package.downloadFiles(pack)
             error(pack.identifier.."/"..path..": "..message)
         end
 
-        if digest ~= sha256.digest(content) then
-            error(pack.identifier.."/"..path..": mismatched digests")
+        local localDigest = tostring(sha256.digest(content))
+
+        if digest ~= localDigest then
+            error(pack.identifier.."/"..path..": mismatched digests ("..localDigest..")")
         end
 
         local file
@@ -190,6 +192,16 @@ function package.downloadFiles(pack)
     ctable.copy(storage.pool[pack.name.."@"..pack.repository], pack)
 
     return true
+end
+
+local function deleteWithParent(path)
+    fs.delete(path)
+
+    local dir = fs.getDir(path)
+
+    if next(fs.find(dir.."/*")) == nil then
+        deleteWithParent(dir)
+    end
 end
 
 --- Delete package files. The dependencies are not checked.
@@ -219,13 +231,7 @@ function package.deleteFiles(pack)
     local files = pack.files
 
     for path, _ in ipairs(files) do
-        fs.delete(path)
-
-        local dir = fs.getDir(path)
-
-        if next(fs.find(dir.."/*")) == nil then
-            fs.delete(dir)
-        end
+        deleteWithParent(path)
     end
 
     storage.pool[pack.name.."@"..pack.repository] = nil
