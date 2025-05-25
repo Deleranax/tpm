@@ -100,8 +100,9 @@ local function doTrsact(installing, single, multiple, result)
     end
     print(":")
 
-    for _, data in ipairs(trsact.actions()) do
-        print("- "..data.identifier)
+    for _, item in ipairs(trsact.actions()) do
+        local name = item.identifier or item.name
+        print("- "..name)
     end
 
     print()
@@ -111,16 +112,22 @@ local function doTrsact(installing, single, multiple, result)
 
     local function beforeAll(rollback, n)
         if rollback then
-            print("Rolling back changes...")
+            print("There was errors during transaction. Roll backing...")
+            print()
+        end
+
+        if rollback == installing then
+            write("Deleting "..n.." ")
         else
             write("Installing "..n.." ")
-            if n > 1 then
-                write(multiple)
-            else
-                write(single)
-            end
-            print("...")
         end
+
+        if n > 1 then
+            write(multiple)
+        else
+            write(single)
+        end
+        print("...")
     end
 
     local function afterAll(_, _, errors)
@@ -131,11 +138,13 @@ local function doTrsact(installing, single, multiple, result)
         end
     end
 
-    local function before(rollback, _, repo)
+    local function before(rollback, _, item)
+        local name = item.identifier or item.name
+
         if rollback == installing then
-            write("Removing "..repo.identifier.."...")
+            write("Removing "..name.."...")
         else
-            write("Installing "..repo.identifier.."...")
+            write("Installing "..name.."...")
         end
         sleep(0.1)
     end
@@ -162,8 +171,6 @@ local function doTrsact(installing, single, multiple, result)
     end
 end
 
-print()
-
 local ccpm = require("ccpm")
 
 local future = ccpm.repository.add("Deleranax/ccpm")
@@ -172,15 +179,6 @@ local result = resolveDeps(future)
 
 doTrsact(true, "repository", "repositories", result)
 
-print()
-print("The package index needs to be rebuilt.")
-
-print()
-print("Press any key to continue...")
-
-read()
-
-print()
 write("Building index")
 
 resolveFuture(ccpm.package.buildIndex())

@@ -194,7 +194,7 @@ function deptree.shrink(brokenPool, getDependencies, isPinned)
     local function poll()
         local node
 
-        if index < 1 then
+        if index ~= nil and index < 1 then
             index = nil
         end
 

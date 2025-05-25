@@ -25,7 +25,7 @@ local ctable = require("commons.table")
 local storage = require("ccpm.storage")
 local drivers = require("ccpm.drivers")
 
---- Retrieve all packages that matches a certain name.
+--- Retrieve all packages that matches a certain name. The same package can appear in multiple repositories.
 ---
 --- The package can be repository constrained (i.e. restricting the research in specific repositories) by adding a "@"
 --- followed by a repository identifier with wildcard at the end of the package name.
@@ -35,7 +35,7 @@ local drivers = require("ccpm.drivers")
 ---
 --- @param pattern string Package name with wildcards.
 --- @return table Table of arrays of package manifests for each repository where packages where found.
-function package.find(pattern)
+function package.findInRepositories(pattern)
     local result = {}
 
     local wildcard = tamed.Wildcard(pattern)
@@ -79,30 +79,22 @@ function package.buildIndex()
     -- Comparison function: Highest Priority -> Lowest Priority (fallback: Alphabetic order)
     local function comp(a, b)
         if a.priority == b.priority then
-            return a.identifier < b.identifier
+            return a.name < b.name
         else
             return a.priority > b.priority
         end
     end
 
     local function insert(_, pack)
-        local first = true
-
-        local result = package.find(pack.."@*")
+        local result = package.findInRepositories(pack.."@*")
 
         for repo_name, repo_packs in pairs(result) do
-            local _pack = repo_packs[1]
+            local _pack = repo_packs[1] -- Should always be only one package per repository
 
             if _pack ~= nil then
                 _pack["repository"] = repo_name
-                _pack["identifier"] = pack
 
-                if first then
-                    storage.index[pack] = repo_packs[1]
-                    first = false
-                else
-                    storage.index[pack.."@"..repo_name] = repo_packs[1]
-                end
+                storage.index[pack.."@"..repo_name] = repo_packs[1]
             end
         end
     end
@@ -121,27 +113,45 @@ function package.buildIndex()
 end
 
 
---- Get the first (in the repository priority order) package that matches a certain name.
+--- Retrieve all packages that matches a certain name. Each package only appears once (the first candidate in the
+--- repository priority order is picked).
 ---
 --- The package can be repository constrained (i.e. restricting the research in specific repositories) by adding a "@"
 --- followed by a repository identifier with wildcard at the end of the package name.
+---
 --- For instance, if you want to match all CCPM drivers within all of Deleranax's repositories, you can use the following
 --- pattern: "ccpm-driver-*@Deleranax/*"
 ---
---- @param pattern string Package name with wildcards.
---- @return table Package manifest (or nil).
-function package.select(pattern)
+--- @param pattern string Package name with wildcards (identifier).
+--- @param installedOnly boolean True to search in the installed packages (false otherwise).
+--- @return table Package identifier list.
+function package.find(pattern, installedOnly)
     storage.unprotectedLoad()
+
+    local packs = {}
+    local rtn = {}
+    local pool = storage.index
+
+    if installedOnly then
+        pool = storage.pool
+    end
+
+    if not string.find(pattern, "@") then
+        pattern = pattern.."@*"
+    end
 
     local wildcard = tamed.Wildcard(pattern, "@")
 
-    for identifier, manifest in pairs(storage.index) do
-        if wildcard.matches(identifier) then
-            return manifest
+    for identifier, manifest in pairs(pool) do
+        if not ctable.find(packs, manifest.name) then
+            if wildcard.matches(identifier) then
+                table.insert(packs, manifest.name)
+                table.insert(rtn, identifier)
+            end
         end
     end
 
-    return nil
+    return rtn
 end
 
 --- Download package files. The dependencies are not checked.
@@ -165,23 +175,23 @@ function package.downloadFiles(pack)
     end
 
     for path, digest in pairs(pack.files) do
-        local content, message = driver.fetchPackageFile(repo_name, pack.identifier, path)
+        local content, message = driver.fetchPackageFile(repo_name, pack.name, path)
 
         if content == nil then
-            error(pack.identifier.."/"..path..": "..message)
+            error(pack.name.."/"..path..": "..message)
         end
 
         local localDigest = tostring(sha256.digest(content))
 
         if digest ~= localDigest then
-            error(pack.identifier.."/"..path..": mismatched digests ("..localDigest..")")
+            error(pack.name.."/"..path..": mismatched digests ("..localDigest..")")
         end
 
         local file
         file, message = fs.open(path, "w")
 
         if file == nil then
-            error(pack.identifier.."/"..path..": "..message)
+            error(pack.name.."/"..path..": "..message)
         end
 
         file.write(content)
@@ -288,6 +298,10 @@ function package.restoreFiles(pack)
     return true
 end
 
+function package.getDependencies()
+
+end
+
 --- Add packages and their dependencies.
 ---
 --- IMPORTANT: Do not modify the open and close handlers of the transaction. They are used, respectively, to load and
@@ -299,11 +313,17 @@ end
 function package.add(...)
     storage.unprotectedLoad()
 
-    local addedPacks = { ...}
+    local addedPacks = {}
     local pool = ctable.keys(storage.pool)
     local errors = {}
     local actions = {}
     local result
+
+    for _, pack in ipairs({...}) do
+        local results = package.find(pack)
+
+        ctable.insertUniqueAll(addedPacks, results)
+    end
 
     ctable.insertAll(pool, addedPacks)
 
@@ -311,15 +331,23 @@ function package.add(...)
         local pack = storage.index[name]
 
         if pack == nil then
-            pack = package.select(name)
+            ctable.insertUnique(errors, "package not found: "..name)
+            return {}
+        end
 
-            if pack == nil then
-                table.insert(errors, "package not found: "..name)
-                return {}
+        local deps = {}
+
+        for _, dep_name in ipairs(pack.dependencies) do
+            local results = package.find(dep_name)
+
+            if #results == 0 then
+                ctable.insertUnique(errors, "package not found: "..dep_name)
+            else
+               ctable.insertUniqueAll(deps, results)
             end
         end
 
-        return pack.dependencies
+        return deps
     end
 
     local future = deptree.expand(pool, getDeps)
@@ -331,10 +359,10 @@ function package.add(...)
             local name = table.remove(result)
 
             if name ~= nil then
-                local pack = package.select(name)
+                local pack = storage.index[name]
 
                 if pack == nil then
-                    table.insert(errors, "package not found: "..name)
+                    ctable.insertUnique(errors, "package not found: "..name)
                     return false
                 end
 
@@ -343,10 +371,10 @@ function package.add(...)
                 name = table.remove(addedPacks)
 
                 if name ~= nil then
-                    local pack = package.select(name)
+                    local pack = storage.index[name]
 
                     if pack == nil then
-                        table.insert(errors, "package not found: "..name)
+                        ctable.insertUnique(errors, "package not found: "..name)
                         return false
                     end
 
@@ -379,48 +407,50 @@ end
 function package.remove(...)
     storage.unprotectedLoad()
 
+    local removedPacks = {}
     local pool = ctable.keys(storage.pool)
     local errors = {}
     local actions = {}
     local result
 
-    local wildcards = {}
+    for _, pack in ipairs({...}) do
+        local results = package.find(pack, true)
 
-    for i, pack in ipairs({...}) do
-        if not string.find(pack, "@") then
-            pack = pack.."@*"
-        end
-        wildcards[i] = tamed.Wildcard(pack, "@")
+        ctable.insertUniqueAll(removedPacks, results)
     end
 
-    local function predicate(name)
-        local rtn = true
+    print(textutils.serialize(removedPacks))
 
-        for _, wildcard in ipairs(wildcards) do
-            rtn = rtn and not wildcard.matches(name)
-        end
-
-        return rtn
-    end
-
-    ctable.retain(pool, predicate)
+    ctable.removeAll(pool, removedPacks)
 
     local function getDeps(name)
-        local pack = storage.index[name]
+        local pack = storage.pool[name]
 
         if pack == nil then
-            table.insert(errors, "package not found: "..name)
+            ctable.insertUnique(errors, "package not found: "..name)
             return {}
         end
 
-        return pack.dependencies
+        local deps = {}
+
+        for _, dep_name in ipairs(pack.dependencies) do
+            local results = package.find(dep_name, true)
+
+            if #results == 0 then
+                ctable.insertUnique(errors, "package not found: "..dep_name)
+            else
+               ctable.insertUniqueAll(deps, results)
+            end
+        end
+
+        return deps
     end
 
     local function isPinned(name)
-        if storage.index[name] == nil then
+        if storage.pool[name] == nil then
             return false
         end
-        return storage.index[name].user_installed
+        return storage.pool[name].user_installed
     end
 
     local future = deptree.shrink(pool, getDeps, isPinned)
@@ -432,18 +462,30 @@ function package.remove(...)
             local name = table.remove(result)
 
             if name ~= nil then
-                local pack = storage.index[name]
+                local pack = storage.pool[name]
 
                 if pack == nil then
-                    table.insert(errors, "package not found: "..name)
+                    ctable.insertUnique(errors, "package not found: "..name)
                     return false
                 end
                 table.insert(actions, tact.Action(pack, package.moveFiles, package.restoreFiles))
             else
-                return true, {
-                    transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
-                    errors = errors
-                }
+                name = table.remove(removedPacks)
+
+                if name ~= nil then
+                    local pack = storage.pool[name]
+
+                    if pack == nil then
+                        ctable.insertUnique(errors, "package not found: "..name)
+                        return false
+                    end
+                    table.insert(actions, tact.Action(pack, package.moveFiles, package.restoreFiles))
+                else
+                    return true, {
+                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
+                        errors = errors
+                    }
+                end
             end
         end
 

@@ -135,7 +135,7 @@ function repository.add(...)
         local driver, index = repository.fetch(name)
 
         if driver == nil then
-            table.insert(errors, name..": "..index)
+            ctable.insertUnique(errors, name..": "..index)
             return {}
         else
             return index.companions
@@ -154,7 +154,7 @@ function repository.add(...)
                 local repo, message = repository.fetchAndStore(name)
 
                 if repo == nil then
-                    table.insert(errors, name..": "..message)
+                    ctable.insertUnique(errors, name..": "..message)
                     return false
                 end
 
@@ -166,7 +166,7 @@ function repository.add(...)
                     local repo, message = repository.fetchAndStore(name)
 
                     if repo == nil then
-                        table.insert(errors, name..": "..message)
+                        ctable.insertUnique(errors, name..": "..message)
                         return false
                     end
 
@@ -219,10 +219,20 @@ function repository.remove(...)
     ctable.removeAll(pool, removedRepos)
 
     local function getDeps(name)
+        if storage.store[name] == nil then
+            ctable.insertUnique(errors, "repository not found: "..name)
+            return {}
+        end
+
         return storage.store[name].companions
     end
 
     local function isPinned(name)
+        if storage.store[name] == nil then
+            ctable.insertUnique(errors, "repository not found: "..name)
+            return false
+        end
+
         if storage.store[name] == nil then
             return false
         end
@@ -238,10 +248,10 @@ function repository.remove(...)
             local name = table.remove(result)
 
             if name ~= nil then
-                local repo, message = repository.fetchAndStore(name)
+                local repo = storage.store[name]
 
                 if repo == nil then
-                    table.insert(errors, name..": "..message)
+                    ctable.insertUnique(errors, "repository not found: "..name)
                     return false
                 end
 
@@ -250,10 +260,10 @@ function repository.remove(...)
                 name = table.remove(removedRepos)
 
                 if name ~= nil then
-                    local repo, message = repository.fetchAndStore(name)
+                    local repo = storage.store[name]
 
                     if repo == nil then
-                        table.insert(errors, name..": "..message)
+                        ctable.insertUnique(errors, "repository not found: "..name)
                         return false
                     end
 

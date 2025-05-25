@@ -169,7 +169,7 @@ function ctable.retain(t, predicate)
         end
 
         -- Check if this entry needs to be removed
-        if predicate(key, value) then
+        if not predicate(key, value) then
             remove = key
         else
             remove = nil
