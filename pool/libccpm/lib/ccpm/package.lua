@@ -178,7 +178,7 @@ function package.downloadFiles(pack)
         end
 
         local file
-        file, message = fs.open("/test/"..path, "w")
+        file, message = fs.open(path, "w")
 
         if file == nil then
             error(pack.identifier.."/"..path..": "..message)
@@ -214,27 +214,76 @@ function package.deleteFiles(pack)
         return
     end
 
-    local repo_name = pack.repository
-
-    local repo = storage.store[repo_name]
-
-    if repo == nil then
-        error("repository not found: "..repo_name)
-    end
-
-    local driver = drivers[repo.driver]
-
-    if driver == nil then
-        error("driver not found: "..repo.driver)
-    end
-
-    local files = pack.files
-
-    for path, _ in ipairs(files) do
+    for path, _ in ipairs(pack.files) do
         deleteWithParent(path)
     end
 
     storage.pool[pack.name.."@"..pack.repository] = nil
+
+    return true
+end
+
+local function moveWithParent(path)
+    if fs.isDir(path) then
+        fs.delete(path)
+    else
+        fs.delete(".trash/"..path)
+        fs.move(path, ".trash/"..path)
+    end
+
+    local dir = fs.getDir(path)
+
+    if next(fs.find(dir.."/*")) == nil then
+        moveWithParent(dir)
+    end
+end
+
+--- Move package files to trash. The dependencies are not checked.
+---
+--- @param pack table Package manifest.
+function package.moveFiles(pack)
+    storage.unprotectedLoad()
+
+    if pack == nil then
+        return
+    end
+
+    for path, _ in ipairs(pack.files) do
+        moveWithParent(path)
+    end
+
+    storage.pool[pack.name.."@"..pack.repository] = nil
+
+    return true
+end
+
+--- Retore package files from trash. The dependencies are not checked.
+---
+--- @param pack table Package manifest.
+function package.restoreFiles(pack)
+    storage.unprotectedLoad()
+
+    for path, digest in pairs(pack.files) do
+        local file, message = fs.open(path, "r")
+
+        if file == nil then
+            error(pack.identifier.."/"..path..": "..message)
+        end
+
+        local content = file.readAll()
+        file.close()
+
+        local localDigest = tostring(sha256.digest(content))
+
+        if digest ~= localDigest then
+            error(pack.identifier.."/"..path..": mismatched digests ("..localDigest..")")
+        end
+
+        fs.move(".trash/"..path, path)
+    end
+
+    storage.pool[pack.name.."@"..pack.repository] = {}
+    ctable.copy(storage.pool[pack.name.."@"..pack.repository], pack)
 
     return true
 end
@@ -389,8 +438,7 @@ function package.remove(...)
                     table.insert(errors, "package not found: "..name)
                     return false
                 end
-                -- TODO: Change the rollback/delete to something else (to avoid redownloading)
-                table.insert(actions, tact.Action(pack, package.deleteFiles, package.downloadFiles))
+                table.insert(actions, tact.Action(pack, package.moveFiles, package.restoreFiles))
             else
                 return true, {
                     transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
