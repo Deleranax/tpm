@@ -1,5 +1,5 @@
 {
-  "timestamp": 1748182048,
+  "timestamp": 1748187639,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -54,13 +54,14 @@
         "turfu",
         "crypt",
         "commons",
+        "tamed",
         "libccpm-driver-github",
         "libccpm-driver-http",
         "libccpm-driver-fs"
       ],
       "files": {
-        "lib/ccpm/package.lua": "aa5d7e762eb7785cb71859f06cf8ada6dd29bc8241fff8c77a863e834c2fd172",
-        "lib/ccpm/repository.lua": "687f018debc54b1d72651f2802ad844ea38b13a466fd9400e2f32aa27895068b",
+        "lib/ccpm/package.lua": "897cdb6959cebca673715fea4f5c2559e6e02c58c327c8ff802284d7b911469d",
+        "lib/ccpm/repository.lua": "16198f680503ebe718096296e76a0ba5e6ede83b52680d59e8c6090af4be8c4d",
         "lib/ccpm/init.lua": "fb094cc8d875f0d772b2ba697c31e889b73d36c16c5c51b4b35d4c04bfc07477",
         "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
         "lib/ccpm/storage.lua": "e165e2c64bea2015d861bbf9e647cb131b35b6d226f55e25bce282c5ed2b22e3"
@@ -115,7 +116,7 @@
         "commons"
       ],
       "files": {
-        "lib/deptree.lua": "30d9acbb10604c8c7aee903195d69fa44f399c2fbbffc00eb441b9ecbc32f502"
+        "lib/deptree.lua": "ed1929bbfabc9cc90a33bafc738ad1955d63db18ef739fcf9092ae01734f3a45"
       }
     },
     "ccpm": {
@@ -150,7 +151,7 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/commons/table.lua": "173d27eb29a27ef864468869dbda65ab2bc73a367731a0adb1b953034f7d29aa",
+        "lib/commons/table.lua": "4b26cfdf81238a401ab429ab251587c379dc468817fee0f83c35ff49386ff2d2",
         "lib/commons/init.lua": "f7a5e5cc358d0c860eb31ed63317d6b76c905db5c9cdc81f6e0dc1325c1b5bc9",
         "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
       }
