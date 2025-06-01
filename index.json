@@ -1,5 +1,5 @@
 {
-  "timestamp": 1748187639,
+  "timestamp": 1748782581,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -23,19 +23,22 @@
         "lib/ccpm/drivers/github.lua": "1f40dec0a90464033e90ee471538c8d9e5e58928f4ebbc7b1adf04cab4189732"
       }
     },
-    "libccpm-driver-fs": {
-      "name": "libccpm-driver-fs",
-      "description": "A file system repository driver for CCPM.",
-      "version": "0.1.0",
-      "license": "GPL-2.0-or-later",
+    "crypt": {
+      "name": "crypt",
+      "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).",
+      "version": "0.2.0",
+      "license": "MIT",
       "authors": [
-        "Deleranax"
+        "Anavrins"
       ],
       "maintainers": [
         "Deleranax"
       ],
       "dependencies": [],
-      "files": {}
+      "files": {
+        "lib/crypt/sha256.lua": "048aeaa4b7de5dc92ca1ba24d0655a0194cf5bfc0a21c81f6f40a1d9d3bf20a7",
+        "lib/crypt/init.lua": "d6de1a6d5026d68911e3e2dfd98967366f8bcd454794c83c02c2018ba24fc60a"
+      }
     },
     "libccpm": {
       "name": "libccpm",
@@ -60,11 +63,78 @@
         "libccpm-driver-fs"
       ],
       "files": {
-        "lib/ccpm/package.lua": "897cdb6959cebca673715fea4f5c2559e6e02c58c327c8ff802284d7b911469d",
-        "lib/ccpm/repository.lua": "16198f680503ebe718096296e76a0ba5e6ede83b52680d59e8c6090af4be8c4d",
-        "lib/ccpm/init.lua": "fb094cc8d875f0d772b2ba697c31e889b73d36c16c5c51b4b35d4c04bfc07477",
-        "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
-        "lib/ccpm/storage.lua": "e165e2c64bea2015d861bbf9e647cb131b35b6d226f55e25bce282c5ed2b22e3"
+        "lib/ccpm/drivers.lua": "35e8f0046f5b709215bcf10b491886f140819c949bd7c2553520bdbe530d8370",
+        "lib/ccpm/storage.lua": "e165e2c64bea2015d861bbf9e647cb131b35b6d226f55e25bce282c5ed2b22e3",
+        "lib/ccpm/package.lua": "82cee51a814f29586a7ad243bd318fc14dc2b0179b52b897f19dfb738809d7cd",
+        "lib/ccpm/init.lua": "4655f6699d7716cd699142c9cb8030c982c3376cf085a43674f086f5f42de195",
+        "lib/ccpm/repository.lua": "96b4014e774146f56a44f922648c283bc5e65751fd82494947774fd754d28098"
+      }
+    },
+    "libccpm-driver-http": {
+      "name": "libccpm-driver-http",
+      "description": "An HTTP repository driver for CCPM.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {}
+    },
+    "deptree": {
+      "name": "deptree",
+      "description": "A dependency tree related constraints resolution library.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [
+        "turfu",
+        "commons"
+      ],
+      "files": {
+        "lib/deptree.lua": "03ccce4eb5418e3642ca9eaefd49f76aaf1f14bef24ae66ce9276b5fc553f62f"
+      }
+    },
+    "tamed": {
+      "name": "tamed",
+      "description": "A wildcard library.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [
+        "commons"
+      ],
+      "files": {
+        "lib/tamed.lua": "8f4623a08aacb8cfdbdf9941199ab3052dc662e0d2caa1464c424dde810b9973"
+      }
+    },
+    "spinny": {
+      "name": "spinny",
+      "description": "Spinner library.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "lib/spinny.lua": "42e87ea37bd5890adfe44e15c5e855a8916ba2d8514a3005b04276fd6f4335e3"
       }
     },
     "tact": {
@@ -83,42 +153,6 @@
         "lib/tact.lua": "908e3911ebe4807fb9c84cf6e75e140a14155efa752826481539ad4b48cb26e8"
       }
     },
-    "crypt": {
-      "name": "crypt",
-      "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).",
-      "version": "0.2.0",
-      "license": "MIT",
-      "authors": [
-        "Anavrins"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [],
-      "files": {
-        "lib/crypt/sha256.lua": "048aeaa4b7de5dc92ca1ba24d0655a0194cf5bfc0a21c81f6f40a1d9d3bf20a7",
-        "lib/crypt/init.lua": "3103526652c7ca358fc5b455ade1339276b41f532dabd051e0a33bf3666a4d1c"
-      }
-    },
-    "deptree": {
-      "name": "deptree",
-      "description": "A dependency tree related constraints resolution library.",
-      "version": "0.1.0",
-      "license": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [
-        "turfu",
-        "commons"
-      ],
-      "files": {
-        "lib/deptree.lua": "ed1929bbfabc9cc90a33bafc738ad1955d63db18ef739fcf9092ae01734f3a45"
-      }
-    },
     "ccpm": {
       "name": "ccpm",
       "description": "A complete package manager for ComputerCraft.",
@@ -134,9 +168,23 @@
         "libccpm"
       ],
       "files": {
-        "startup/tpm.lua": "8b949d66c02dfd588be741455a0a93f80944f3156291c116da39675734630b08",
-        "programs/tpm.lua": "83cd379cbf8ea050c09fa75f15257c117f9d167cfe9b3dc5471aeca6feea2ffe"
+        "startup/tpm.lua": "bd08df92e8ef904167f45bb7176e3726dc0e816281e5cd5b347c3c2dcea4bd56",
+        "bin/tpm.lua": "05d5b9f93f6858afc3a5428acf92adad050acf18f482483073701afbe865055a"
       }
+    },
+    "libccpm-driver-fs": {
+      "name": "libccpm-driver-fs",
+      "description": "A file system repository driver for CCPM.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {}
     },
     "commons": {
       "name": "commons",
@@ -151,39 +199,9 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/commons/table.lua": "4b26cfdf81238a401ab429ab251587c379dc468817fee0f83c35ff49386ff2d2",
-        "lib/commons/init.lua": "f7a5e5cc358d0c860eb31ed63317d6b76c905db5c9cdc81f6e0dc1325c1b5bc9",
-        "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
-      }
-    },
-    "libccpm-driver-http": {
-      "name": "libccpm-driver-http",
-      "description": "An HTTP repository driver for CCPM.",
-      "version": "0.1.0",
-      "license": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [],
-      "files": {}
-    },
-    "tamed": {
-      "name": "tamed",
-      "description": "A wildcard library.",
-      "version": "0.1.0",
-      "license": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [],
-      "files": {
-        "lib/tamed.lua": "8f4623a08aacb8cfdbdf9941199ab3052dc662e0d2caa1464c424dde810b9973"
+        "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07",
+        "lib/commons/table.lua": "caa77eb11890fb64f15900a04fd84daa8f906b827e379adb080a06c34ee2c59c",
+        "lib/commons/init.lua": "5e000b729cbe1d8501bf1706adc9bce667b2e005d28284ef344fca30e3121c8a"
       }
     },
     "turfu": {
@@ -201,7 +219,7 @@
         "commons"
       ],
       "files": {
-        "lib/turfu.lua": "b0574a756dbeba371eb07c448e8e48810c5058ee21f8bcd04a3e1f71c9167be6"
+        "lib/turfu.lua": "11e28f4bf58e6887b5ab177353fa7531f12a3e47afb541a5da89ffb29a1b0c57"
       }
     }
   }
