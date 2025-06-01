@@ -16,9 +16,9 @@
 
 local deptree = {}
 
-local turfu = require("turfu")
-local ctable = require("commons.table")
-local util = require("commons.util")
+local turfu = require("lib.turfu")
+local ctable = require("lib.commons.table")
+local util = require("lib.commons.util")
 
 --- Check if there is dependency constraint violation in a node pool.
 ---
@@ -118,18 +118,15 @@ end
 --- every node in the tree). However, the function should always return a table, even if the node is unknown (returning
 --- an empty table is fine).
 ---
---- @param brokenPool table List of all the nodes in the tree.
+--- @param queue table List of all the nodes in the tree (NOTE: Will be modified during execution).
 --- @param getDependencies function Dependencies getter, accepting a node and returning its dependencies as a list of nodes.
 --- @return table A turfu.Future object, eventually returning a list of nodes to be added to resolve constraint violations.
-function deptree.expand(brokenPool, getDependencies)
+function deptree.expand(queue, getDependencies)
 
     local get = util.cacheFn(getDependencies)
 
-    local queue = {}
     local pool = {}
     local additions = {}
-
-    ctable.insertAll(queue, brokenPool)
 
     local function poll()
         local node = table.remove(queue)
@@ -174,11 +171,11 @@ end
 --- every node in the tree). However, the function should always return a table, even if the node is unknown (returning
 --- an empty table is fine).
 ---
---- @param brokenPool table List of all the nodes in the tree.
+--- @param pool table List of all the nodes in the tree (NOTE: Will be modified during execution).
 --- @param getDependencies function Dependencies getter, accepting a node and returning its dependencies as a list of nodes.
 --- @param isPinned function Predicate, accepting a node and returning true if it should be kept in the tree even when no other nodes depends on it.
 --- @return table A turfu.Future object, eventually returning a list of nodes to be removed to resolve constraint violations.
-function deptree.shrink(brokenPool, getDependencies, isPinned)
+function deptree.shrink(pool, getDependencies, isPinned)
 
     local get = util.cacheFn(getDependencies)
     local pin = util.cacheFn(isPinned)
@@ -186,10 +183,7 @@ function deptree.shrink(brokenPool, getDependencies, isPinned)
     local index
     local flag = true
     local changed = false
-    local pool = {}
     local deletions = {}
-
-    ctable.insertAll(pool, brokenPool)
 
     local function poll()
         local node

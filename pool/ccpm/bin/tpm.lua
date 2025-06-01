@@ -1,4 +1,4 @@
-local tpm = require("tpm")
+local tpm = require("lib.tpm")
 
 local function showUsage()
     print("Usage: ")

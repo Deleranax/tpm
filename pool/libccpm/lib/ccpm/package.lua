@@ -16,14 +16,14 @@
 
 local package = {}
 
-local deptree = require("deptree")
-local tact = require("tact")
-local turfu = require("turfu")
-local sha256 = require("crypt.sha256")
-local tamed = require("tamed")
-local ctable = require("commons.table")
-local storage = require("ccpm.storage")
-local drivers = require("ccpm.drivers")
+local deptree = require("lib.deptree")
+local tact = require("lib.tact")
+local turfu = require("lib.turfu")
+local sha256 = require("lib.crypt.sha256")
+local tamed = require("lib.tamed")
+local ctable = require("lib.commons.table")
+local storage = require("lib.ccpm.storage")
+local drivers = require("lib.ccpm.drivers")
 
 --- Retrieve all packages that matches a certain name. The same package can appear in multiple repositories.
 ---
@@ -224,7 +224,7 @@ function package.deleteFiles(pack)
         return
     end
 
-    for path, _ in ipairs(pack.files) do
+    for path, _ in pairs(pack.files) do
         deleteWithParent(path)
     end
 
@@ -258,7 +258,7 @@ function package.moveFiles(pack)
         return
     end
 
-    for path, _ in ipairs(pack.files) do
+    for path, _ in pairs(pack.files) do
         moveWithParent(path)
     end
 
@@ -298,10 +298,6 @@ function package.restoreFiles(pack)
     return true
 end
 
-function package.getDependencies()
-
-end
-
 --- Add packages and their dependencies.
 ---
 --- IMPORTANT: Do not modify the open and close handlers of the transaction. They are used, respectively, to load and
@@ -309,7 +305,7 @@ end
 --- handler responsible for flushing the store by a load).
 ---
 --- @vararg string List of package names.
---- @return table, string A turfu.Future object (or nil) eventually returning a table containing a tact.Transaction and an array of error messages.
+--- @return table, string A turfu.Future object eventually returning a list containing a tact.Transaction (or nil) and array of error messages.
 function package.add(...)
     storage.unprotectedLoad()
 
@@ -319,13 +315,19 @@ function package.add(...)
     local actions = {}
     local result
 
-    for _, pack in ipairs({...}) do
+    local function findAll(_, pack)
         local results = package.find(pack)
 
         ctable.insertUniqueAll(addedPacks, results)
     end
 
-    ctable.insertAll(pool, addedPacks)
+    local function insertAll(_, pack)
+        if ctable.find(pool, pack) then
+            ctable.insertUnique(errors, "package already present: "..pack)
+        else
+            table.insert(pool, pack)
+        end
+    end
 
     local function getDeps(name)
         local pack = storage.index[name]
@@ -350,13 +352,24 @@ function package.add(...)
         return deps
     end
 
-    local future = deptree.expand(pool, getDeps)
+    local function getResult(r)
+        result = r
+    end
 
     local function poll()
-        if future.isPending() then
-            _, result = future.poll()
+        local name = table.remove(result)
+
+        if name ~= nil then
+            local pack = storage.index[name]
+
+            if pack == nil then
+                ctable.insertUnique(errors, "package not found: "..name)
+                return false
+            end
+
+            table.insert(actions, tact.Action(pack, package.downloadFiles, package.deleteFiles))
         else
-            local name = table.remove(result)
+            name = table.remove(addedPacks)
 
             if name ~= nil then
                 local pack = storage.index[name]
@@ -366,34 +379,33 @@ function package.add(...)
                     return false
                 end
 
+                pack.user_installed = true
+
                 table.insert(actions, tact.Action(pack, package.downloadFiles, package.deleteFiles))
             else
-                name = table.remove(addedPacks)
-
-                if name ~= nil then
-                    local pack = storage.index[name]
-
-                    if pack == nil then
-                        ctable.insertUnique(errors, "package not found: "..name)
-                        return false
-                    end
-
-                    pack.user_installed = true
-
-                    table.insert(actions, tact.Action(pack, package.downloadFiles, package.deleteFiles))
-                else
-                    return true, {
-                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
-                        errors = errors
-                    }
-                end
+                result = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush })
+                return true, nil
             end
         end
 
         return false
     end
 
-    return turfu.Future(poll)
+    local function merge(_)
+        if next(errors) then
+            return { nil, errors }
+        else
+            return { result, {} }
+        end
+    end
+
+    return turfu.merge(
+        merge,
+        turfu.foreach(findAll, ipairs({...})),
+        turfu.foreach(insertAll, next, addedPacks, nil),
+        turfu.map(deptree.expand(pool, getDeps), getResult),
+        turfu.Future(poll)
+    )
 end
 
 --- Remove packages and their unused dependencies.
@@ -413,15 +425,18 @@ function package.remove(...)
     local actions = {}
     local result
 
-    for _, pack in ipairs({...}) do
+    local function findAll(_, pack)
         local results = package.find(pack, true)
-
         ctable.insertUniqueAll(removedPacks, results)
     end
 
-    print(textutils.serialize(removedPacks))
-
-    ctable.removeAll(pool, removedPacks)
+    local function removeAll(_, pack)
+        if not ctable.find(pool, pack) then
+            ctable.insertUnique(errors, "package not present: "..pack)
+        else
+            ctable.removeValue(pool, pack)
+        end
+    end
 
     local function getDeps(name)
         local pack = storage.pool[name]
@@ -453,13 +468,23 @@ function package.remove(...)
         return storage.pool[name].user_installed
     end
 
-    local future = deptree.shrink(pool, getDeps, isPinned)
+    local function getResult(r)
+        result = r
+    end
 
     local function poll()
-        if future.isPending() then
-            _, result = future.poll()
+        local name = table.remove(result)
+
+        if name ~= nil then
+            local pack = storage.pool[name]
+
+            if pack == nil then
+                ctable.insertUnique(errors, "package not found: "..name)
+                return false
+            end
+            table.insert(actions, tact.Action(pack, package.moveFiles, package.restoreFiles))
         else
-            local name = table.remove(result)
+            name = table.remove(removedPacks)
 
             if name ~= nil then
                 local pack = storage.pool[name]
@@ -470,29 +495,29 @@ function package.remove(...)
                 end
                 table.insert(actions, tact.Action(pack, package.moveFiles, package.restoreFiles))
             else
-                name = table.remove(removedPacks)
-
-                if name ~= nil then
-                    local pack = storage.pool[name]
-
-                    if pack == nil then
-                        ctable.insertUnique(errors, "package not found: "..name)
-                        return false
-                    end
-                    table.insert(actions, tact.Action(pack, package.moveFiles, package.restoreFiles))
-                else
-                    return true, {
-                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
-                        errors = errors
-                    }
-                end
+                result = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush })
+                return true, nil
             end
         end
 
         return false
     end
 
-    return turfu.Future(poll)
+    local function merge(_)
+        if next(errors) then
+            return { nil, errors }
+        else
+            return { result, {} }
+        end
+    end
+
+    return turfu.merge(
+        merge,
+        turfu.foreach(findAll, ipairs({...})),
+        turfu.foreach(removeAll, next, removedPacks, nil),
+        turfu.map(deptree.shrink(pool, getDeps, isPinned), getResult),
+        turfu.Future(poll)
+    )
 end
 
 return package

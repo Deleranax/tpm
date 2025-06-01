@@ -1,5 +1,5 @@
 {
-  "description": "A wildcard library.",
+  "description": "Spinner library.",
   "version": "0.1.0",
   "license": "GPL-2.0-or-later",
   "authors": [
@@ -8,7 +8,5 @@
   "maintainers": [
     "Deleranax"
   ],
-  "dependencies": [
-    "commons"
-  ]
+  "dependencies": []
 }

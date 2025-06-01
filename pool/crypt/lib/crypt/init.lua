@@ -1,3 +1,3 @@
 return {
-    sha256 = require("crypt.sha256")
+    sha256 = require("lib.crypt.sha256")
 }

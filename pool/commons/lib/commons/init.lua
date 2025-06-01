@@ -15,6 +15,6 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 return {
-    table = require("commons.table"),
-    util = require("commons.util")
+    table = require("lib.commons.table"),
+    util = require("lib.commons.util")
 }

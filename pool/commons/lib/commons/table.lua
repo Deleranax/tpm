@@ -182,4 +182,18 @@ function ctable.retain(t, predicate)
     end
 end
 
+--- Map all entries.
+---
+--- @param t table Initial table.
+--- @param map function Mapping function, accepting a value, returning a new value.
+function ctable.map(t, map)
+    local rtn = {}
+
+    for key, value in pairs(t) do
+        rtn[key] = map(value)
+    end
+
+    return rtn
+end
+
 return ctable

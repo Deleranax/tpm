@@ -1,5 +1,5 @@
-local tpm = require("tpm")
-shell.setPath(shell.path()..":/programs/:/programs/http/")
+local tpm = require("lib.tpm")
+shell.setPath(shell.path()..":/bin/")
 
 tpm.reloadDatabase()
 

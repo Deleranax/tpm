@@ -16,7 +16,7 @@
 
 local turfu = {}
 
-local ctable = require("commons.table")
+local ctable = require("lib.commons.table")
 
 --- Construct a future object that need to be repeatedly polled until available.
 ---
@@ -86,6 +86,29 @@ function turfu.foreach(fnc, iter, list, initial)
         else
            results[index] = fnc(index, input)
         end
+    end
+
+    return turfu.Future(poll)
+end
+
+--- Execute the future, and its resulting future, and its resulting future... until it is not a future.
+---
+--- @param future table Initial Future object.
+--- @return table A Future object, eventually returning the final result.
+function turfu.chain(future)
+
+    local function poll()
+        local done, result = future.poll()
+
+        if done then
+            if result == nil or result.poll == nil then
+                return true, result
+            else
+                future = result
+            end
+        end
+
+        return false
     end
 
     return turfu.Future(poll)

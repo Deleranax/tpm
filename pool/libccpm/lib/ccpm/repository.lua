@@ -16,13 +16,13 @@
 
 local repository = {}
 
-local deptree = require("deptree")
-local tact = require("tact")
-local turfu = require("turfu")
-local tamed = require("tamed")
-local ctable = require("commons.table")
-local storage = require("ccpm.storage")
-local drivers = require("ccpm.drivers")
+local deptree = require("lib.deptree")
+local tact = require("lib.tact")
+local turfu = require("lib.turfu")
+local tamed = require("lib.tamed")
+local ctable = require("lib.commons.table")
+local storage = require("lib.ccpm.storage")
+local drivers = require("lib.ccpm.drivers")
 
 local cache = {}
 
@@ -129,7 +129,13 @@ function repository.add(...)
     local actions = {}
     local result
 
-    ctable.insertAll(pool, addedRepos)
+    local function insertAll(_, repo)
+        if ctable.find(pool, repo) then
+            ctable.insertUnique(errors, "repository already present: ".. repo)
+        else
+            table.insert(pool, repo)
+        end
+    end
 
     local function getDeps(name)
         local driver, index = repository.fetch(name)
@@ -142,13 +148,24 @@ function repository.add(...)
         end
     end
 
-    local future = deptree.expand(pool, getDeps)
+    local function getResult(r)
+        result = r
+    end
 
     local function poll()
-        if future.isPending() then
-            _, result = future.poll()
+        local name = table.remove(result)
+
+        if name ~= nil then
+            local repo, message = repository.fetchAndStore(name)
+
+            if repo == nil then
+                ctable.insertUnique(errors, name..": "..message)
+                return false
+            end
+
+            table.insert(actions, tact.Action(repo, repository.addUnchecked, repository.removeUnchecked))
         else
-            local name = table.remove(result)
+            name = table.remove(addedRepos)
 
             if name ~= nil then
                 local repo, message = repository.fetchAndStore(name)
@@ -158,34 +175,32 @@ function repository.add(...)
                     return false
                 end
 
+                repo.user_installed = true
+
                 table.insert(actions, tact.Action(repo, repository.addUnchecked, repository.removeUnchecked))
             else
-                name = table.remove(addedRepos)
-
-                if name ~= nil then
-                    local repo, message = repository.fetchAndStore(name)
-
-                    if repo == nil then
-                        ctable.insertUnique(errors, name..": "..message)
-                        return false
-                    end
-
-                    repo.user_installed = true
-
-                    table.insert(actions, tact.Action(repo, repository.addUnchecked, repository.removeUnchecked))
-                else
-                    return true, {
-                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
-                        errors = errors
-                    }
-                end
+                result = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush })
+                return true, nil
             end
         end
 
         return false
     end
 
-    return turfu.Future(poll)
+    local function merge(_)
+        if next(errors) then
+            return { nil, errors }
+        else
+            return { result, {} }
+        end
+    end
+
+    return turfu.merge(
+        merge,
+        turfu.foreach(insertAll, ipairs(addedRepos)),
+        turfu.map(deptree.expand(pool, getDeps), getResult),
+        turfu.Future(poll)
+    )
 end
 
 --- (Internal) Remove repository from the state. The dependencies are not checked.
@@ -216,7 +231,13 @@ function repository.remove(...)
     local actions = {}
     local result
 
-    ctable.removeAll(pool, removedRepos)
+    local function removeAll(_, repo)
+        if not ctable.find(pool, repo) then
+            ctable.insertUnique(errors, "repository not present: ".. repo)
+        else
+            ctable.removeValue(pool, repo)
+        end
+    end
 
     local function getDeps(name)
         if storage.store[name] == nil then
@@ -239,13 +260,24 @@ function repository.remove(...)
         return storage.store[name].user_installed
     end
 
-    local future = deptree.shrink(pool, getDeps, isPinned)
+    local function getResult(r)
+        result = r
+    end
 
     local function poll()
-        if future.isPending() then
-            _, result = future.poll()
+        local name = table.remove(result)
+
+        if name ~= nil then
+            local repo = storage.store[name]
+
+            if repo == nil then
+                ctable.insertUnique(errors, "repository not found: "..name)
+                return false
+            end
+
+            table.insert(actions, tact.Action(repo, repository.removeUnchecked, repository.addUnchecked))
         else
-            local name = table.remove(result)
+            name = table.remove(removedRepos)
 
             if name ~= nil then
                 local repo = storage.store[name]
@@ -257,30 +289,28 @@ function repository.remove(...)
 
                 table.insert(actions, tact.Action(repo, repository.removeUnchecked, repository.addUnchecked))
             else
-                name = table.remove(removedRepos)
-
-                if name ~= nil then
-                    local repo = storage.store[name]
-
-                    if repo == nil then
-                        ctable.insertUnique(errors, "repository not found: "..name)
-                        return false
-                    end
-
-                    table.insert(actions, tact.Action(repo, repository.removeUnchecked, repository.addUnchecked))
-                else
-                    return true, {
-                        transaction = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush }),
-                        errors = errors
-                    }
-                end
+                result = tact.Transaction(actions, { open = storage.unprotectedLoad, close = storage.unprotectedFlush })
+                return true, nil
             end
         end
 
         return false
     end
 
-    return turfu.Future(poll)
+    local function merge(_)
+        if next(errors) then
+            return { nil, errors }
+        else
+            return { result, {} }
+        end
+    end
+
+    return turfu.merge(
+        merge,
+        turfu.foreach(removeAll, ipairs(removedRepos)),
+        turfu.map(deptree.shrink(pool, getDeps, isPinned), getResult),
+        turfu.Future(poll)
+    )
 end
 
 --- List installed repositories corresponding to a pattern.

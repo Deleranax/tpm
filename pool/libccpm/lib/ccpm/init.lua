@@ -15,7 +15,7 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 return {
-    storage = require("ccpm.storage"),
-    repository = require("ccpm.repository"),
-    package = require("ccpm.package")
+    storage = require("lib.ccpm.storage"),
+    repository = require("lib.ccpm.repository"),
+    package = require("lib.ccpm.package")
 }
