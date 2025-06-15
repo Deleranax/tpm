@@ -1,0 +1,12 @@
+{
+  "description": "A collection of cryptographic primitives written in pure Lua.",
+  "version": "0.1.0+d91607d",
+  "license": "MIT",
+  "authors": [
+    "somesocks"
+  ],
+  "maintainers": [
+    "Deleranax"
+  ],
+  "dependencies": []
+}

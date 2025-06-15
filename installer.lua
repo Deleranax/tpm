@@ -27,13 +27,12 @@ print("Done.")
 
 -- Load driver
 write("Loading driver... ")
-local driver = load(response.readAll(), path, "t", _ENV)
+local ok, driver = pcall(load(response.readAll(), "ccpm.drivers.github", "t", _ENV))
 
-if driver == nil then
+if not ok then
     printError("Error!")
-    error("Unable to load driver")
+    error("Unable to load driver: ".. driver)
 end
-
 print("Done.")
 
 -- Fetch index
@@ -46,12 +45,13 @@ if msg then
 end
 
 local function onlineRequire(path)
-    local _path = string.gsub(path, ".", "/")
+    local _path = string.lower(string.gsub(path, "%.", "/"))
     local url
 
     for package, manifest in pairs(index.packages) do
         for file, _ in pairs(manifest.files) do
-            if _path ..".lua" == file or _path .."/init.lua" == file then
+            local _file = string.lower(file)
+            if _path ..".lua" == _file or _path .."/init.lua" == _file then
                 url = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/".. package .."/".. file
                 break
             end
