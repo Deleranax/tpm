@@ -1,5 +1,5 @@
 {
-  "timestamp": 1750027695,
+  "timestamp": 1750028457,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -7,6 +7,56 @@
   ],
   "companions": [],
   "packages": {
+    "lockbox": {
+      "name": "lockbox",
+      "description": "A collection of cryptographic primitives written in pure Lua.",
+      "version": "0.1.0+d91607d",
+      "license": "MIT",
+      "authors": [
+        "somesocks"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "lockbox/init.lua": "a94f27a52e67c62127d57f7c81eb20d51bc529c360ec2d098a40e133813568dd",
+        "lockbox/kdf/pbkdf2.lua": "90c5a1eab1b03362c48e94d4d8174860a17e8994d5068ad3c55b5d5b6c0c523f",
+        "lockbox/kdf/hkdf.lua": "40a49c4e867249bc68300bd13d09fbca9a24dc5fc1fef7feebfe07ac25df06b1",
+        "lockbox/padding/zero.lua": "b892e27b6927a9dd2c2cc26d5f4e608d682dd9d56b3aad86fe5f3fe71f984ed6",
+        "lockbox/padding/ansix923.lua": "e0b5922461e3b94ad4f2e68daf77bb54aa108c8ddabed8ea98f9e134a1f3b9ab",
+        "lockbox/padding/isoiec7816.lua": "06c2349c6388896b12e6b8c0474200c61b900bbad0e73aaa45483bf3484f9d03",
+        "lockbox/padding/pkcs7.lua": "ab137df21a28f92932c21cedb277ea3fddba9e443fbea526dc4507697ae93ef4",
+        "lockbox/digest/md5.lua": "34700b0dc20a7773959502620d14de67ff06892ea890001a217eb83fd00ec837",
+        "lockbox/digest/md2.lua": "dba0276773cf93d2a839ac7209e0bb94578509bf8d4eb3fa7a1602122e5b4a7c",
+        "lockbox/digest/ripemd160.lua": "4f65e80a592d1f04f80f8995fb761ea92a4e99ad0ec6bf9e000bc9667700388a",
+        "lockbox/digest/sha1.lua": "ea66153d13774fcb09aebe26ab405c2e695c37a786832f891d4efc6b283d83ad",
+        "lockbox/digest/sha2_256.lua": "eb71e45c9bdf0b96a96f0d249afbc14205e07c9eea42091064a353511f63222e",
+        "lockbox/digest/ripemd128.lua": "06aef2ea008d8d16f302d13462bd19739c3cd5a2b6b47c01fc187482053228c1",
+        "lockbox/digest/sha2_224.lua": "e634ea23b0b8750745e8ff16e5cad404920e7c894ce13bc607c9ce966e465c29",
+        "lockbox/digest/md4.lua": "7b0cf8c964badd845e03d517066704bdf9c67218ccc4198cdb3deb441d81a523",
+        "lockbox/cipher/aes256.lua": "1270f51ba8c6243a3d28460e1695422f063a5cf3a2c6fc4392dc879a8f138e1a",
+        "lockbox/cipher/tea.lua": "1043595047f842f851aedd7b589b2e8359a925e69afdacad0e03955e471beee0",
+        "lockbox/cipher/des.lua": "da19d3e393ab8ce61cbba092e211b48da205dee4a783e3a7b4834cd467057272",
+        "lockbox/cipher/xtea.lua": "2b9778baae2b679054e48a4d3e7a0cb5391ac8db32d2fad12a2769d3b334448b",
+        "lockbox/cipher/des3.lua": "ce1599e6caaa5718a9942cab76e0da9d83df6cb0215c1d74befed361907bc6d1",
+        "lockbox/cipher/aes128.lua": "b005a3befe23bd96f20e42abd8fd1578324a64b65f32b1072813df6d71d7e166",
+        "lockbox/cipher/aes192.lua": "6a8cbd62295cb1d6678a8554e90fc8770c288a8628f383668031ebd8bad6a6e9",
+        "lockbox/mac/hmac.lua": "29267ae322dbcd2082e4a036c05967dbeedd97cfdb1644a587640d404173fe9b",
+        "lockbox/util/base64.lua": "80acc3dfd4c28ac0be8afb3276406c0f38937d9f5a9a6854b2c2ac1a96ddfac5",
+        "lockbox/util/array.lua": "a7981e63858ba5ed8744cd3e63bd28bc86f47abce1ca20a30d37e376642dd61c",
+        "lockbox/util/bit.lua": "05a9d168c31f339b471eb9c4cab9da2c2bab87062cc331a9dc7769f2c88d9199",
+        "lockbox/util/queue.lua": "d8e33d1e1d408df057c5bf40857862dd3f9e05539e94e5144fb3ea3c7808a26d",
+        "lockbox/util/stream.lua": "df73343173b0f1bbab91837ab2324900781b36162225f3e520e853d59016d7c0",
+        "lockbox/cipher/mode/ofb.lua": "8fd8047e9e207de69d8e43e6b098b367e78a2db47045c90f8fdb33fd2cdf4716",
+        "lockbox/cipher/mode/ecb.lua": "054f0c2900dab4f1ff24b1411fd7ae4aaf223288aef2cca452a25888cb46858b",
+        "lockbox/cipher/mode/ige.lua": "3a8e524e756c4aa2345f1c1588d2ca0cf9269204fd025c0a46a050356a552f18",
+        "lockbox/cipher/mode/cbc.lua": "7e867179c96ceee49d772fa4886b19bd6bcfdaa8936fa424ed08277374e3e61c",
+        "lockbox/cipher/mode/cfb.lua": "55e8646a9deb87f675cbf7761e31b513e07f43198fc5f5d867beeb73c5f47500",
+        "lockbox/cipher/mode/ctr.lua": "d6bf5343ce3c7dc5327c5e2f8a904413cc5d04986f3e3fa6b480cbeac96f2782",
+        "lockbox/cipher/mode/pcbc.lua": "5e0f77a8885b6b16d6749f34c9ae68674f26db4966f622fe3cb11814667e687c"
+      }
+    },
     "libccpm-driver-github": {
       "name": "libccpm-driver-github",
       "description": "A GitHub repository driver for CCPM.",
