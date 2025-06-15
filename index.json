@@ -1,5 +1,5 @@
 {
-  "timestamp": 1750029520,
+  "timestamp": 1750030119,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -151,7 +151,7 @@
         "ccpm/storage.lua": "3c1cef43a42b15a1ae43a59f672ed51d6c8b195cc4eae292fb67eeb42fe243e8",
         "ccpm/init.lua": "fb094cc8d875f0d772b2ba697c31e889b73d36c16c5c51b4b35d4c04bfc07477",
         "ccpm/repository.lua": "19b08586e7fc9dd28214869a529e42531a14b5e02ea2362ae3cf48ee906590c6",
-        "ccpm/package.lua": "2dad9bd32d5213bc4ebdbd400ea1da389933cd5153f9a7baf7b8e9c2fbf22154"
+        "ccpm/package.lua": "8da654485fa5e259ba6fe1af9eeee0755c7bbbc0fce635cb70c7ec4016f29035"
       }
     },
     "spinny": {
