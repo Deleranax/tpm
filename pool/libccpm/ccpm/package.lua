@@ -20,6 +20,7 @@ local deptree = require("deptree")
 local tact = require("tact")
 local turfu = require("turfu")
 local SHA2_256 = require("lockbox.digest.sha2_256")
+local Array = require("lockbox.util.array")
 local tamed = require("tamed")
 local ctable = require("commons.table")
 local storage = require("ccpm.storage")
@@ -181,7 +182,9 @@ function package.downloadFiles(pack)
             error(pack.name .."/".. path ..": ".. message)
         end
 
-        local localDigest = tostring(sha256.digest(content))
+        local hasher = SHA2_256()
+        hasher.update(Array.fromString(content))
+        local localDigest = hasher.asString()
 
         if digest ~= localDigest then
             error(pack.name .."/".. path ..": mismatched digests (".. localDigest ..")")
