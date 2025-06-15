@@ -94,7 +94,7 @@ end
 
 local function resolveDeps(future)
     print()
-    write("Resolving dependencies ")
+    write("Resolving dependencies... ")
 
     executeFuture(future)
 
@@ -104,7 +104,7 @@ local function resolveDeps(future)
 
     if next(result[2]) then
         for _, err in ipairs(result[2]) do
-            print(err)
+            printError(err)
         end
 
         error()
@@ -163,7 +163,7 @@ local function doTrsct(installing, single, multiple, trsct)
 
     local function afterAll(_, _, errors)
         if errors then
-            print("Completed with errors!\n")
+            printError("Completed with errors!\n")
         else
            print("Completed!\n")
         end
@@ -182,7 +182,7 @@ local function doTrsct(installing, single, multiple, trsct)
 
     local function after(_, _, _, error)
         if error then
-            print(" Error!")
+            printError(" Error!")
         else
             print(" Done.")
         end
@@ -193,9 +193,9 @@ local function doTrsct(installing, single, multiple, trsct)
     local ok, errors = trsct.apply()
 
     if not ok then
-        print("Errors:")
+        printError("Errors:")
         for _, err in ipairs(errors) do
-            print(err.error)
+            printError(err.error)
         end
 
         error()
@@ -208,7 +208,7 @@ local result = resolveDeps(future)
 
 doTrsct(true, "repository", "repositories", result)
 
-write("Building index ")
+write("Building index... ")
 
 executeFuture(ccpm.package.buildIndex())
 
