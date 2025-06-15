@@ -14,35 +14,60 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-local PATH_TABLE = {
-    ["lib.ccpm"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/init.lua",
-    ["lib.ccpm.repository"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/repository.lua",
-    ["lib.ccpm.package"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/package.lua",
-    ["lib.ccpm.storage"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/storage.lua",
-    ["lib.ccpm.drivers"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/drivers.lua",
-    ["lib.ccpm.drivers.github"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm-driver-github/lib/ccpm/drivers/github.lua",
-    ["lib.crypt.sha256"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/crypt/lib/crypt/sha256.lua",
-    ["lib.deptree"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/deptree/lib/deptree.lua",
-    ["lib.tact"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/tact/lib/tact.lua",
-    ["lib.turfu"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/turfu/lib/turfu.lua",
-    ["lib.tamed"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/tamed/lib/tamed.lua",
-    ["lib.commons.table"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/commons/lib/commons/table.lua",
-    ["lib.commons.util"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/commons/lib/commons/util.lua",
-    ["lib.spinny"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/spinny/lib/spinny.lua",
-}
+-- Download the driver
+write("Downloading GitHub driver... ")
+local response, message = http.get("https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm-driver-github/ccpm/drivers/github.lua")
+
+if response == nil then
+    printError("Error!")
+    error("Cannot download GitHub driver: ".. message)
+end
+
+print("Done.")
+
+-- Load driver
+write("Loading driver... ")
+local driver = load(response.readAll(), path, "t", _ENV)
+
+if driver == nil then
+    printError("Error!")
+    error("Unable to load driver")
+end
+
+print("Done.")
+
+-- Fetch index
+write("Fetching index... ")
+local index, msg = driver.fetchIndex("Deleranax/ccpm")
+
+if msg then
+    printError("Error!")
+    error("Unable to fetch index: ".. msg)
+end
 
 local function onlineRequire(path)
-    local url = PATH_TABLE[path]
+    local _path = string.gsub(path, ".", "/")
+    local url
+
+    for package, manifest in pairs(index.packages) do
+        for file, _ in pairs(manifest.files) do
+            if _path ..".lua" == file or _path .."/init.lua" == file then
+                url = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/".. package .."/".. file
+                break
+            end
+        end
+    end
 
     if url == nil then
-        return nil, "no remote "..path
+        return nil, "no remote ".. path
     end
-    write("Downloading "..path.."... ")
+    write("Downloading ".. path .."... ")
 
     local response, message = http.get(url)
 
     if response == nil then
-        error("Cannot download "..path..": "..message)
+        printError("Error!")
+        error("Cannot download ".. path ..": ".. message)
     end
 
     print("Done.")
@@ -52,8 +77,8 @@ end
 
 table.insert(package.loaders, onlineRequire)
 
-local ccpm = require("lib.ccpm")
-local spinny = require("lib.spinny")
+local ccpm = require("ccpm")
+local spinny = require("spinny")
 
 local function executeFuture(future)
     local spinner = spinny.dot0(term)
@@ -108,7 +133,7 @@ local function doTrsct(installing, single, multiple, trsct)
 
     for _, item in ipairs(trsct.actions()) do
         local name = item.identifier or item.name
-        print("- "..name)
+        print("- ".. name)
     end
 
     print()
@@ -123,9 +148,9 @@ local function doTrsct(installing, single, multiple, trsct)
         end
 
         if rollback == installing then
-            write("Deleting "..n.." ")
+            write("Deleting ".. n .." ")
         else
-            write("Installing "..n.." ")
+            write("Installing ".. n .." ")
         end
 
         if n > 1 then
@@ -148,9 +173,9 @@ local function doTrsct(installing, single, multiple, trsct)
         local name = item.identifier or item.name
 
         if rollback == installing then
-            write("Removing "..name.."...")
+            write("Removing ".. name .."...")
         else
-            write("Installing "..name.."...")
+            write("Installing ".. name .."...")
         end
         sleep(0.1)
     end
