@@ -184,7 +184,7 @@ function package.downloadFiles(pack)
 
         local hasher = SHA2_256()
         hasher.update(Stream.fromString(content))
-        local localDigest = hasher.asString()
+        local localDigest = hasher.asHex()
 
         if digest ~= localDigest then
             error(pack.name .."/".. path ..": mismatched digests (".. localDigest ..")")
