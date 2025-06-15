@@ -20,7 +20,7 @@ local deptree = require("deptree")
 local tact = require("tact")
 local turfu = require("turfu")
 local SHA2_256 = require("lockbox.digest.sha2_256")
-local Array = require("lockbox.util.array")
+local Stream = require("lockbox.util.stream")
 local tamed = require("tamed")
 local ctable = require("commons.table")
 local storage = require("ccpm.storage")
@@ -183,7 +183,7 @@ function package.downloadFiles(pack)
         end
 
         local hasher = SHA2_256()
-        hasher.update(Array.fromString(content))
+        hasher.update(Stream.fromString(content))
         local localDigest = hasher.asString()
 
         if digest ~= localDigest then
