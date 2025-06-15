@@ -1,5 +1,5 @@
 {
-  "timestamp": 1750028457,
+  "timestamp": 1750029520,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -139,7 +139,7 @@
         "deptree",
         "tact",
         "turfu",
-        "crypt",
+        "lockbox",
         "commons",
         "tamed",
         "libccpm-driver-github",
