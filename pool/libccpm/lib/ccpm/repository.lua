@@ -123,7 +123,7 @@ end
 function repository.add(...)
     storage.unprotectedLoad()
 
-    local addedRepos = {...}
+    local addedRepos = { ... }
     local pool = repository.find()
     local errors = {}
     local actions = {}
@@ -225,7 +225,7 @@ end
 function repository.remove(...)
     storage.unprotectedLoad()
 
-    local removedRepos = {...}
+    local removedRepos = { ... }
     local pool = repository.find()
     local errors = {}
     local actions = {}

@@ -154,6 +154,32 @@ function package.find(pattern, installedOnly)
     return rtn
 end
 
+--- List all available/installed packages.
+---
+--- @param fullyQualified boolean True to return the fully qualified identifier (package@repository) instead of just the name (false otherwise).
+--- @param installedOnly boolean True to return only the installed packages (false otherwise).
+--- @return table List of package names/identifiers.
+function package.list(fullyQualified, installedOnly)
+    storage.unprotectedLoad()
+
+    local rtn = {}
+    local pool = storage.index
+
+    if installedOnly then
+        pool = storage.pool
+    end
+
+    for identifier, manifest in pairs(pool) do
+        if fullyQualified then
+            ctable.insertUnique(rtn, identifier)
+        else
+            ctable.insertUnique(rtn, manifest.name)
+        end
+    end
+
+    return rtn
+end
+
 --- Download package files. The dependencies are not checked.
 ---
 --- @param pack table Package manifest.
@@ -401,7 +427,7 @@ function package.add(...)
 
     return turfu.merge(
         merge,
-        turfu.foreach(findAll, ipairs({...})),
+        turfu.foreach(findAll, ipairs({ ... })),
         turfu.foreach(insertAll, next, addedPacks, nil),
         turfu.map(deptree.expand(pool, getDeps), getResult),
         turfu.Future(poll)
@@ -513,7 +539,7 @@ function package.remove(...)
 
     return turfu.merge(
         merge,
-        turfu.foreach(findAll, ipairs({...})),
+        turfu.foreach(findAll, ipairs({ ... })),
         turfu.foreach(removeAll, next, removedPacks, nil),
         turfu.map(deptree.shrink(pool, getDeps, isPinned), getResult),
         turfu.Future(poll)

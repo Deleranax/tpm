@@ -122,7 +122,7 @@ end
 --- @vararg table List of futures to merge.
 --- @return table A Future object, eventually returning the result from the merging function.
 function turfu.merge(merge, ...)
-    local futures = {...}
+    local futures = { ... }
     local results = {}
 
     local index = 1
