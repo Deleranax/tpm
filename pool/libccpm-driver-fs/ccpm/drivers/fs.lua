@@ -17,7 +17,7 @@
 local github = {}
 
 local function get_file_url(url, path)
-    return "https://raw.githubusercontent.com/".. url .."/main/".. path
+    return string.sub(url, 8) .."/".. path
 end
 
 --- Check URL compatibility.
@@ -28,7 +28,7 @@ function github.compatible(url)
     if url == nil then
         return false
     else
-        if string.find(url, "^[-%w]+/[-%w]+$") then
+        if string.find(url, "^file://.+") then
             return true
         else
             return false
@@ -41,13 +41,7 @@ end
 --- @param url string Repository URL.
 --- @return boolean Repository existence (true if it exists, false otherwise, or nil if there is an error), the error message.
 function github.exists(url)
-    local request, message = http.get(get_file_url(url, "manifest.json"))
-
-    if request == nil then
-        return nil, message
-    else
-        return true
-    end
+    return fs.exists(get_file_url(url, "manifest.json"))
 end
 
 --- Fetch repository index.
@@ -55,12 +49,12 @@ end
 --- @param url string Repository URL.
 --- @return table, string Repository index (or nil), the error message.
 function github.fetchIndex(url)
-    local request, message = http.get(get_file_url(url, "index.json"))
+    local file, message = fs.open(get_file_url(url, "manifest.json"), "r")
 
-    if request == nil then
+    if file == nil then
         return nil, message
     else
-        return textutils.unserializeJSON(request.readAll())
+        return textutils.unserializeJSON(file.readAll())
     end
 end
 
@@ -71,12 +65,12 @@ end
 --- @param path, string, File path.
 --- @return string, string Package file content (or nil), the error message.
 function github.fetchPackageFile(url, package, path)
-    local request, message = http.get(get_file_url(url, "pool/".. package .."/".. path))
+    local file, message = fs.open(get_file_url(url, "pool/".. package .."/".. path), "r")
 
-    if request == nil then
+    if file == nil then
         return nil, message
     else
-        return request.readAll()
+        return textutils.unserializeJSON(file.readAll())
     end
 end
 

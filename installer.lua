@@ -115,6 +115,8 @@ end
 
 local function doTrsct(installing, single, multiple, trsct)
 
+    local spinner
+
     print()
 
     write("You are about to ")
@@ -143,25 +145,30 @@ local function doTrsct(installing, single, multiple, trsct)
 
     local function beforeAll(rollback, n)
         if rollback then
-            print("There was errors during transaction. Roll backing...")
-            print()
+            print("There was errors during transaction. Roll backing... ")
+            spinner = spinny.dot0(term)
         end
 
-        if rollback == installing then
-            write("Deleting ".. n .." ")
-        else
-            write("Installing ".. n .." ")
-        end
+        if not rollback then
+            if installing then
+                write("Installing ".. n .." ")
+            else
+                write("Deleting ".. n .." ")
+            end
 
-        if n > 1 then
-            write(multiple)
-        else
-            write(single)
+            if n > 1 then
+                write(multiple)
+            else
+                write(single)
+            end
+            print("...")
         end
-        print("...")
     end
 
     local function afterAll(_, _, errors)
+        if rollback then
+            spinner.go()
+        end
         if errors then
             printError("Completed with errors!\n")
         else
@@ -172,19 +179,25 @@ local function doTrsct(installing, single, multiple, trsct)
     local function before(rollback, _, item)
         local name = item.identifier or item.name
 
-        if rollback == installing then
-            write("Removing ".. name .."...")
+        if not rollback then
+            if installing then
+                write("Installing ".. name .."...")
+            else
+                write("Removing ".. name .."...")
+            end
         else
-            write("Installing ".. name .."...")
+            spinner.progress()
         end
         sleep(0.1)
     end
 
     local function after(_, _, _, error)
-        if error then
-            printError(" Error!")
-        else
-            print(" Done.")
+        if not rollback then
+            if error then
+                printError(" Error!")
+            else
+                print(" Done.")
+            end
         end
     end
 

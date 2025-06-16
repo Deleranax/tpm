@@ -182,9 +182,7 @@ function package.downloadFiles(pack)
             error(pack.name .."/".. path ..": ".. message)
         end
 
-        local hasher = SHA2_256()
-        hasher.update(Stream.fromString(content))
-        local localDigest = hasher.asHex()
+        local localDigest = SHA2_256().update(Stream.fromString(content)).finish().asHex()
 
         if digest ~= localDigest then
             error(pack.name .."/".. path ..": mismatched digests (".. localDigest ..")")
@@ -286,7 +284,7 @@ function package.restoreFiles(pack)
         local content = file.readAll()
         file.close()
 
-        local localDigest = tostring(sha256.digest(content))
+        local localDigest = SHA2_256().update(Stream.fromString(content)).finish().asHex()
 
         if digest ~= localDigest then
             error(pack.identifier .."/".. path ..": mismatched digests (".. localDigest ..")")
