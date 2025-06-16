@@ -1,5 +1,5 @@
 {
-  "timestamp": 1750070075,
+  "timestamp": 1750070910,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -20,7 +20,7 @@
       ],
       "dependencies": [],
       "files": {
-        "lockbox/init.lua": "a94f27a52e67c62127d57f7c81eb20d51bc529c360ec2d098a40e133813568dd",
+        "lockbox/init.lua": "5c71cf0492be62442817aa37527557708d7b98f2f364d3d929359a1b65a66d22",
         "lockbox/kdf/pbkdf2.lua": "90c5a1eab1b03362c48e94d4d8174860a17e8994d5068ad3c55b5d5b6c0c523f",
         "lockbox/kdf/hkdf.lua": "40a49c4e867249bc68300bd13d09fbca9a24dc5fc1fef7feebfe07ac25df06b1",
         "lockbox/padding/zero.lua": "b892e27b6927a9dd2c2cc26d5f4e608d682dd9d56b3aad86fe5f3fe71f984ed6",
