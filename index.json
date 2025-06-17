@@ -1,5 +1,5 @@
 {
-  "timestamp": 1750070910,
+  "timestamp": 1750161558,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -150,8 +150,8 @@
         "ccpm/drivers.lua": "e0098f14cfd658ce09844f31d642f361533adeee8ec273ce170d0528046a1e23",
         "ccpm/storage.lua": "3c1cef43a42b15a1ae43a59f672ed51d6c8b195cc4eae292fb67eeb42fe243e8",
         "ccpm/init.lua": "fb094cc8d875f0d772b2ba697c31e889b73d36c16c5c51b4b35d4c04bfc07477",
-        "ccpm/repository.lua": "19b08586e7fc9dd28214869a529e42531a14b5e02ea2362ae3cf48ee906590c6",
-        "ccpm/package.lua": "ffae8a2a87a4306cf36047f2298b6b2449eb6bc110527dfa2a3674b94f8b2cb3"
+        "ccpm/repository.lua": "0a537dcbd30b7fb97bae92437615512cc20cd8f8246cfe9218f8f922fef87807",
+        "ccpm/package.lua": "cd00945b4d31ff8254d2c139cf483e721d9d74490ca5f115c5b2dd5227be974c"
       }
     },
     "spinny": {
@@ -185,7 +185,7 @@
         "commons"
       ],
       "files": {
-        "turfu/init.lua": "c945bde74086056e6f3aaf91951c37c0ae0ea7f969a989c36da9d3c664f7f761"
+        "turfu/init.lua": "b6e9e89494cc6143bfd234198ec07464d54fafa3d07f24da88e945f61b05dd97"
       }
     },
     "libccpm-driver-fs": {
@@ -237,8 +237,8 @@
         "libccpm"
       ],
       "files": {
-        "startup/tpm.lua": "2c2b674d0f2432f94e3b7646b4e4b6e3d0394302431f121dba4ee45e399d8fed",
-        "bin/tpm.lua": "83cd379cbf8ea050c09fa75f15257c117f9d167cfe9b3dc5471aeca6feea2ffe"
+        "startup/ccpm.lua": "b29b64897b0662c9579e11ae4a1db5214d8ad2ac6ff40a589b8067e0e0f8f946",
+        "bin/ccpm.lua": "c8ab5affbb9e31355db13278243914fc99a3d38f90aa31d6c352781d81adcd35"
       }
     },
     "tact": {
