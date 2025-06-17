@@ -1,5 +1,5 @@
 {
-  "timestamp": 1748187639,
+  "timestamp": 1750070910,
   "name": "Official CCPM repository",
   "priority": 0,
   "maintainers": [
@@ -7,6 +7,56 @@
   ],
   "companions": [],
   "packages": {
+    "lockbox": {
+      "name": "lockbox",
+      "description": "A collection of cryptographic primitives written in pure Lua.",
+      "version": "0.1.0+d91607d",
+      "license": "MIT",
+      "authors": [
+        "somesocks"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "lockbox/init.lua": "5c71cf0492be62442817aa37527557708d7b98f2f364d3d929359a1b65a66d22",
+        "lockbox/kdf/pbkdf2.lua": "90c5a1eab1b03362c48e94d4d8174860a17e8994d5068ad3c55b5d5b6c0c523f",
+        "lockbox/kdf/hkdf.lua": "40a49c4e867249bc68300bd13d09fbca9a24dc5fc1fef7feebfe07ac25df06b1",
+        "lockbox/padding/zero.lua": "b892e27b6927a9dd2c2cc26d5f4e608d682dd9d56b3aad86fe5f3fe71f984ed6",
+        "lockbox/padding/ansix923.lua": "e0b5922461e3b94ad4f2e68daf77bb54aa108c8ddabed8ea98f9e134a1f3b9ab",
+        "lockbox/padding/isoiec7816.lua": "06c2349c6388896b12e6b8c0474200c61b900bbad0e73aaa45483bf3484f9d03",
+        "lockbox/padding/pkcs7.lua": "ab137df21a28f92932c21cedb277ea3fddba9e443fbea526dc4507697ae93ef4",
+        "lockbox/digest/md5.lua": "34700b0dc20a7773959502620d14de67ff06892ea890001a217eb83fd00ec837",
+        "lockbox/digest/md2.lua": "dba0276773cf93d2a839ac7209e0bb94578509bf8d4eb3fa7a1602122e5b4a7c",
+        "lockbox/digest/ripemd160.lua": "4f65e80a592d1f04f80f8995fb761ea92a4e99ad0ec6bf9e000bc9667700388a",
+        "lockbox/digest/sha1.lua": "ea66153d13774fcb09aebe26ab405c2e695c37a786832f891d4efc6b283d83ad",
+        "lockbox/digest/sha2_256.lua": "eb71e45c9bdf0b96a96f0d249afbc14205e07c9eea42091064a353511f63222e",
+        "lockbox/digest/ripemd128.lua": "06aef2ea008d8d16f302d13462bd19739c3cd5a2b6b47c01fc187482053228c1",
+        "lockbox/digest/sha2_224.lua": "e634ea23b0b8750745e8ff16e5cad404920e7c894ce13bc607c9ce966e465c29",
+        "lockbox/digest/md4.lua": "7b0cf8c964badd845e03d517066704bdf9c67218ccc4198cdb3deb441d81a523",
+        "lockbox/cipher/aes256.lua": "1270f51ba8c6243a3d28460e1695422f063a5cf3a2c6fc4392dc879a8f138e1a",
+        "lockbox/cipher/tea.lua": "1043595047f842f851aedd7b589b2e8359a925e69afdacad0e03955e471beee0",
+        "lockbox/cipher/des.lua": "da19d3e393ab8ce61cbba092e211b48da205dee4a783e3a7b4834cd467057272",
+        "lockbox/cipher/xtea.lua": "2b9778baae2b679054e48a4d3e7a0cb5391ac8db32d2fad12a2769d3b334448b",
+        "lockbox/cipher/des3.lua": "ce1599e6caaa5718a9942cab76e0da9d83df6cb0215c1d74befed361907bc6d1",
+        "lockbox/cipher/aes128.lua": "b005a3befe23bd96f20e42abd8fd1578324a64b65f32b1072813df6d71d7e166",
+        "lockbox/cipher/aes192.lua": "6a8cbd62295cb1d6678a8554e90fc8770c288a8628f383668031ebd8bad6a6e9",
+        "lockbox/mac/hmac.lua": "29267ae322dbcd2082e4a036c05967dbeedd97cfdb1644a587640d404173fe9b",
+        "lockbox/util/base64.lua": "80acc3dfd4c28ac0be8afb3276406c0f38937d9f5a9a6854b2c2ac1a96ddfac5",
+        "lockbox/util/array.lua": "a7981e63858ba5ed8744cd3e63bd28bc86f47abce1ca20a30d37e376642dd61c",
+        "lockbox/util/bit.lua": "05a9d168c31f339b471eb9c4cab9da2c2bab87062cc331a9dc7769f2c88d9199",
+        "lockbox/util/queue.lua": "d8e33d1e1d408df057c5bf40857862dd3f9e05539e94e5144fb3ea3c7808a26d",
+        "lockbox/util/stream.lua": "df73343173b0f1bbab91837ab2324900781b36162225f3e520e853d59016d7c0",
+        "lockbox/cipher/mode/ofb.lua": "8fd8047e9e207de69d8e43e6b098b367e78a2db47045c90f8fdb33fd2cdf4716",
+        "lockbox/cipher/mode/ecb.lua": "054f0c2900dab4f1ff24b1411fd7ae4aaf223288aef2cca452a25888cb46858b",
+        "lockbox/cipher/mode/ige.lua": "3a8e524e756c4aa2345f1c1588d2ca0cf9269204fd025c0a46a050356a552f18",
+        "lockbox/cipher/mode/cbc.lua": "7e867179c96ceee49d772fa4886b19bd6bcfdaa8936fa424ed08277374e3e61c",
+        "lockbox/cipher/mode/cfb.lua": "55e8646a9deb87f675cbf7761e31b513e07f43198fc5f5d867beeb73c5f47500",
+        "lockbox/cipher/mode/ctr.lua": "d6bf5343ce3c7dc5327c5e2f8a904413cc5d04986f3e3fa6b480cbeac96f2782",
+        "lockbox/cipher/mode/pcbc.lua": "5e0f77a8885b6b16d6749f34c9ae68674f26db4966f622fe3cb11814667e687c"
+      }
+    },
     "libccpm-driver-github": {
       "name": "libccpm-driver-github",
       "description": "A GitHub repository driver for CCPM.",
@@ -20,12 +70,12 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/ccpm/drivers/github.lua": "1f40dec0a90464033e90ee471538c8d9e5e58928f4ebbc7b1adf04cab4189732"
+        "ccpm/drivers/github.lua": "ccf7eb71c659932fd7640902109a9a45b1f1b33e46884ebb1da953c4f56b9666"
       }
     },
-    "libccpm-driver-fs": {
-      "name": "libccpm-driver-fs",
-      "description": "A file system repository driver for CCPM.",
+    "libccpm-driver-http": {
+      "name": "libccpm-driver-http",
+      "description": "An HTTP repository driver for CCPM.",
       "version": "0.1.0",
       "license": "GPL-2.0-or-later",
       "authors": [
@@ -36,69 +86,6 @@
       ],
       "dependencies": [],
       "files": {}
-    },
-    "libccpm": {
-      "name": "libccpm",
-      "description": "A complete package manager API for ComputerCraft.",
-      "version": "1.0.0",
-      "license": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [
-        "deptree",
-        "tact",
-        "turfu",
-        "crypt",
-        "commons",
-        "tamed",
-        "libccpm-driver-github",
-        "libccpm-driver-http",
-        "libccpm-driver-fs"
-      ],
-      "files": {
-        "lib/ccpm/package.lua": "897cdb6959cebca673715fea4f5c2559e6e02c58c327c8ff802284d7b911469d",
-        "lib/ccpm/repository.lua": "16198f680503ebe718096296e76a0ba5e6ede83b52680d59e8c6090af4be8c4d",
-        "lib/ccpm/init.lua": "fb094cc8d875f0d772b2ba697c31e889b73d36c16c5c51b4b35d4c04bfc07477",
-        "lib/ccpm/drivers.lua": "d9fe77195116f6869e1f2325cb4c9bd04559cbda26039ddf8e83e04bd3df3f19",
-        "lib/ccpm/storage.lua": "e165e2c64bea2015d861bbf9e647cb131b35b6d226f55e25bce282c5ed2b22e3"
-      }
-    },
-    "tact": {
-      "name": "tact",
-      "description": "A transaction framework library.",
-      "version": "0.1.0",
-      "license": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [],
-      "files": {
-        "lib/tact.lua": "908e3911ebe4807fb9c84cf6e75e140a14155efa752826481539ad4b48cb26e8"
-      }
-    },
-    "crypt": {
-      "name": "crypt",
-      "description": "Basic SHA-256-based cryptographic primitives (SHA-256, HMAC and PBKDF2).",
-      "version": "0.2.0",
-      "license": "MIT",
-      "authors": [
-        "Anavrins"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [],
-      "files": {
-        "lib/crypt/sha256.lua": "048aeaa4b7de5dc92ca1ba24d0655a0194cf5bfc0a21c81f6f40a1d9d3bf20a7",
-        "lib/crypt/init.lua": "3103526652c7ca358fc5b455ade1339276b41f532dabd051e0a33bf3666a4d1c"
-      }
     },
     "deptree": {
       "name": "deptree",
@@ -116,26 +103,7 @@
         "commons"
       ],
       "files": {
-        "lib/deptree.lua": "ed1929bbfabc9cc90a33bafc738ad1955d63db18ef739fcf9092ae01734f3a45"
-      }
-    },
-    "ccpm": {
-      "name": "ccpm",
-      "description": "A complete package manager for ComputerCraft.",
-      "version": "1.0.0",
-      "license": "GPL-2.0-or-later",
-      "authors": [
-        "Deleranax"
-      ],
-      "maintainers": [
-        "Deleranax"
-      ],
-      "dependencies": [
-        "libccpm"
-      ],
-      "files": {
-        "startup/tpm.lua": "8b949d66c02dfd588be741455a0a93f80944f3156291c116da39675734630b08",
-        "programs/tpm.lua": "83cd379cbf8ea050c09fa75f15257c117f9d167cfe9b3dc5471aeca6feea2ffe"
+        "deptree/init.lua": "d9245a6415686a47c294fdb7ff1f5eedbb1b4b1fa3a4f530c4595e26c9bc63e0"
       }
     },
     "commons": {
@@ -151,15 +119,15 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/commons/table.lua": "4b26cfdf81238a401ab429ab251587c379dc468817fee0f83c35ff49386ff2d2",
-        "lib/commons/init.lua": "f7a5e5cc358d0c860eb31ed63317d6b76c905db5c9cdc81f6e0dc1325c1b5bc9",
-        "lib/commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
+        "commons/table.lua": "caa77eb11890fb64f15900a04fd84daa8f906b827e379adb080a06c34ee2c59c",
+        "commons/init.lua": "f7a5e5cc358d0c860eb31ed63317d6b76c905db5c9cdc81f6e0dc1325c1b5bc9",
+        "commons/util.lua": "61cb25b63b041f121bd12ebc31c3bf46d613982047a4f59eae1d683f90204a07"
       }
     },
-    "libccpm-driver-http": {
-      "name": "libccpm-driver-http",
-      "description": "An HTTP repository driver for CCPM.",
-      "version": "0.1.0",
+    "libccpm": {
+      "name": "libccpm",
+      "description": "A complete package manager API for ComputerCraft.",
+      "version": "1.0.0",
       "license": "GPL-2.0-or-later",
       "authors": [
         "Deleranax"
@@ -167,12 +135,28 @@
       "maintainers": [
         "Deleranax"
       ],
-      "dependencies": [],
-      "files": {}
+      "dependencies": [
+        "deptree",
+        "tact",
+        "turfu",
+        "lockbox",
+        "commons",
+        "tamed",
+        "libccpm-driver-github",
+        "libccpm-driver-http",
+        "libccpm-driver-fs"
+      ],
+      "files": {
+        "ccpm/drivers.lua": "e0098f14cfd658ce09844f31d642f361533adeee8ec273ce170d0528046a1e23",
+        "ccpm/storage.lua": "3c1cef43a42b15a1ae43a59f672ed51d6c8b195cc4eae292fb67eeb42fe243e8",
+        "ccpm/init.lua": "fb094cc8d875f0d772b2ba697c31e889b73d36c16c5c51b4b35d4c04bfc07477",
+        "ccpm/repository.lua": "19b08586e7fc9dd28214869a529e42531a14b5e02ea2362ae3cf48ee906590c6",
+        "ccpm/package.lua": "ffae8a2a87a4306cf36047f2298b6b2449eb6bc110527dfa2a3674b94f8b2cb3"
+      }
     },
-    "tamed": {
-      "name": "tamed",
-      "description": "A wildcard library.",
+    "spinny": {
+      "name": "spinny",
+      "description": "Spinner library.",
       "version": "0.1.0",
       "license": "GPL-2.0-or-later",
       "authors": [
@@ -183,7 +167,7 @@
       ],
       "dependencies": [],
       "files": {
-        "lib/tamed.lua": "8f4623a08aacb8cfdbdf9941199ab3052dc662e0d2caa1464c424dde810b9973"
+        "spinny/init.lua": "d242a1818e37826a021177f02107c3c170b16d6fed46cd45ddcfaa91214db1cb"
       }
     },
     "turfu": {
@@ -201,7 +185,76 @@
         "commons"
       ],
       "files": {
-        "lib/turfu.lua": "b0574a756dbeba371eb07c448e8e48810c5058ee21f8bcd04a3e1f71c9167be6"
+        "turfu/init.lua": "c945bde74086056e6f3aaf91951c37c0ae0ea7f969a989c36da9d3c664f7f761"
+      }
+    },
+    "libccpm-driver-fs": {
+      "name": "libccpm-driver-fs",
+      "description": "A file system repository driver for CCPM.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "ccpm/drivers/fs.lua": "8f015dcbb8c2ab9033b814edc572864aa5a2e0cdcc6feb3f58c4e5395cd93021"
+      }
+    },
+    "tamed": {
+      "name": "tamed",
+      "description": "A wildcard library.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [
+        "commons"
+      ],
+      "files": {
+        "tamed/init.lua": "f6a2117768402c509d7c0cd98f05336bc49ae25b4c9274958243cd9abee27e71"
+      }
+    },
+    "ccpm": {
+      "name": "ccpm",
+      "description": "A complete package manager for ComputerCraft.",
+      "version": "1.0.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [
+        "libccpm"
+      ],
+      "files": {
+        "startup/tpm.lua": "2c2b674d0f2432f94e3b7646b4e4b6e3d0394302431f121dba4ee45e399d8fed",
+        "bin/tpm.lua": "83cd379cbf8ea050c09fa75f15257c117f9d167cfe9b3dc5471aeca6feea2ffe"
+      }
+    },
+    "tact": {
+      "name": "tact",
+      "description": "A transaction framework library.",
+      "version": "0.1.0",
+      "license": "GPL-2.0-or-later",
+      "authors": [
+        "Deleranax"
+      ],
+      "maintainers": [
+        "Deleranax"
+      ],
+      "dependencies": [],
+      "files": {
+        "tact/init.lua": "908e3911ebe4807fb9c84cf6e75e140a14155efa752826481539ad4b48cb26e8"
       }
     }
   }

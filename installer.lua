@@ -14,35 +14,60 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-local PATH_TABLE = {
-    ["lib.ccpm"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/init.lua",
-    ["lib.ccpm.repository"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/repository.lua",
-    ["lib.ccpm.package"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/package.lua",
-    ["lib.ccpm.storage"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/storage.lua",
-    ["lib.ccpm.drivers"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm/lib/ccpm/drivers.lua",
-    ["lib.ccpm.drivers.github"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm-driver-github/lib/ccpm/drivers/github.lua",
-    ["lib.crypt.sha256"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/crypt/lib/crypt/sha256.lua",
-    ["lib.deptree"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/deptree/lib/deptree.lua",
-    ["lib.tact"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/tact/lib/tact.lua",
-    ["lib.turfu"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/turfu/lib/turfu.lua",
-    ["lib.tamed"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/tamed/lib/tamed.lua",
-    ["lib.commons.table"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/commons/lib/commons/table.lua",
-    ["lib.commons.util"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/commons/lib/commons/util.lua",
-    ["lib.spinny"] = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/spinny/lib/spinny.lua",
-}
+-- Download the driver
+write("Downloading GitHub driver... ")
+local response, message = http.get("https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/libccpm-driver-github/ccpm/drivers/github.lua")
+
+if response == nil then
+    printError("Error!")
+    error("Cannot download GitHub driver: ".. message)
+end
+
+print("Done.")
+
+-- Load driver
+write("Loading driver... ")
+local ok, driver = pcall(load(response.readAll(), "ccpm.drivers.github", "t", _ENV))
+
+if not ok then
+    printError("Error!")
+    error("Unable to load driver: ".. driver)
+end
+print("Done.")
+
+-- Fetch index
+write("Fetching index... ")
+local index, msg = driver.fetchIndex("Deleranax/ccpm")
+
+if msg then
+    printError("Error!")
+    error("Unable to fetch index: ".. msg)
+end
 
 local function onlineRequire(path)
-    local url = PATH_TABLE[path]
+    local _path = string.lower(string.gsub(path, "%.", "/"))
+    local url
+
+    for package, manifest in pairs(index.packages) do
+        for file, _ in pairs(manifest.files) do
+            local _file = string.lower(file)
+            if _path ..".lua" == _file or _path .."/init.lua" == _file then
+                url = "https://raw.githubusercontent.com/Deleranax/ccpm/main/pool/".. package .."/".. file
+                break
+            end
+        end
+    end
 
     if url == nil then
-        return nil, "no remote "..path
+        return nil, "no remote ".. path
     end
-    write("Downloading "..path.."... ")
+    write("Downloading ".. path .."... ")
 
     local response, message = http.get(url)
 
     if response == nil then
-        error("Cannot download "..path..": "..message)
+        printError("Error!")
+        error("Cannot download ".. path ..": ".. message)
     end
 
     print("Done.")
@@ -52,8 +77,8 @@ end
 
 table.insert(package.loaders, onlineRequire)
 
-local ccpm = require("lib.ccpm")
-local spinny = require("lib.spinny")
+local ccpm = require("ccpm")
+local spinny = require("spinny")
 
 local function executeFuture(future)
     local spinner = spinny.dot0(term)
@@ -69,7 +94,7 @@ end
 
 local function resolveDeps(future)
     print()
-    write("Resolving dependencies ")
+    write("Resolving dependencies... ")
 
     executeFuture(future)
 
@@ -79,7 +104,7 @@ local function resolveDeps(future)
 
     if next(result[2]) then
         for _, err in ipairs(result[2]) do
-            print(err)
+            printError(err)
         end
 
         error()
@@ -89,6 +114,8 @@ local function resolveDeps(future)
 end
 
 local function doTrsct(installing, single, multiple, trsct)
+
+    local spinner
 
     print()
 
@@ -108,7 +135,7 @@ local function doTrsct(installing, single, multiple, trsct)
 
     for _, item in ipairs(trsct.actions()) do
         local name = item.identifier or item.name
-        print("- "..name)
+        print("- ".. name)
     end
 
     print()
@@ -118,27 +145,32 @@ local function doTrsct(installing, single, multiple, trsct)
 
     local function beforeAll(rollback, n)
         if rollback then
-            print("There was errors during transaction. Roll backing...")
-            print()
+            print("There was errors during transaction. Roll backing... ")
+            spinner = spinny.dot0(term)
         end
 
-        if rollback == installing then
-            write("Deleting "..n.." ")
-        else
-            write("Installing "..n.." ")
-        end
+        if not rollback then
+            if installing then
+                write("Installing ".. n .." ")
+            else
+                write("Deleting ".. n .." ")
+            end
 
-        if n > 1 then
-            write(multiple)
-        else
-            write(single)
+            if n > 1 then
+                write(multiple)
+            else
+                write(single)
+            end
+            print("...")
         end
-        print("...")
     end
 
     local function afterAll(_, _, errors)
+        if rollback then
+            spinner.go()
+        end
         if errors then
-            print("Completed with errors!\n")
+            printError("Completed with errors!\n")
         else
            print("Completed!\n")
         end
@@ -147,19 +179,25 @@ local function doTrsct(installing, single, multiple, trsct)
     local function before(rollback, _, item)
         local name = item.identifier or item.name
 
-        if rollback == installing then
-            write("Removing "..name.."...")
+        if not rollback then
+            if installing then
+                write("Installing ".. name .."...")
+            else
+                write("Removing ".. name .."...")
+            end
         else
-            write("Installing "..name.."...")
+            spinner.progress()
         end
         sleep(0.1)
     end
 
     local function after(_, _, _, error)
-        if error then
-            print(" Error!")
-        else
-            print(" Done.")
+        if not rollback then
+            if error then
+                printError(" Error!")
+            else
+                print(" Done.")
+            end
         end
     end
 
@@ -168,9 +206,9 @@ local function doTrsct(installing, single, multiple, trsct)
     local ok, errors = trsct.apply()
 
     if not ok then
-        print("Errors:")
+        printError("Errors:")
         for _, err in ipairs(errors) do
-            print(err.error)
+            printError(err.error)
         end
 
         error()
@@ -183,7 +221,7 @@ local result = resolveDeps(future)
 
 doTrsct(true, "repository", "repositories", result)
 
-write("Building index ")
+write("Building index... ")
 
 executeFuture(ccpm.package.buildIndex())
 
